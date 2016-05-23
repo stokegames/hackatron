@@ -33,6 +33,18 @@ Open `localhost:8080` in your browser & enjoy! :)
 
 Checkout the [Game Design Document](GDD.md)!
 
+### Technology Stack
+
+* Game Engine: Phaser.io
+* Graphics Lib: Pixi.js
+* AI Lib: EasyStar
+* UI: React.js
+
+### Apps
+
+Facebook: https://apps.facebook.com/233102823719500/
+iTunes: TBD
+
 ### Credits
 
 Core Game Programmers:
@@ -40,7 +52,7 @@ Core Game Programmers:
 [**@mingchia-andy-liu**](https://github.com/mingchia-andy-liu)
 [**@ericmuyser**](https://github.com/ericmuyser)
 
-Original Prototype:
+Original Prototype @ nwHacks2016:
 [**@wesleytsai**](https://github.com/wesleytsai)
 [**@stellafang**](https://github.com/stellafang)
 [**@chan-kelv**](https://github.com/chan-kelv)

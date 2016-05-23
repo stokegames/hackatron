@@ -1,8 +1,18 @@
 var express = require('express');
 var http = require('http');
+var request = require('request');
+
+const SERVER_HOST = 'localhost';
+const SERVER_PORT = process.env.PORT || 8080;
 
 var app = express();
 
+// Facebook Canvas needs to send a POST request
+app.post('/', function(req, res, next) {
+    req.pipe(request.get('http://' + SERVER_HOST + ':' + SERVER_PORT + '/')).pipe(res);
+});
+
+// Web server
 app.use(express.static(__dirname + '/../App'));
 
 // app.configure(function() {
@@ -32,7 +42,7 @@ GameService.prototype = {
             }.bind(this));
         }.bind(this));
 
-        console.log('Open localhost:8080 on your browser.');
+        console.log('Open ' + SERVER_HOST + ':' + SERVER_PORT + ' on your browser.');
         console.log('Listening...');
 
         this.monitorHost();
@@ -44,7 +54,7 @@ GameService.prototype = {
             console.log('Host: ', this.host.player.id);
         }.bind(this), 2000);
 
-        this.server.listen(process.env.PORT || 8080);
+        this.server.listen(SERVER_PORT);
     },
 
     setHost: function(client) {
