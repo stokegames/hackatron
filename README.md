@@ -13,7 +13,7 @@ Hackatron is a multiplayer deathmatch action game.
 ## Installation
 Clone the project:
 ```
-git clone https://github.com/tony-dinh/hackatron.git
+git clone https://github.com/stokegames/hackatron.git
 ```
 
 Install dependencies:

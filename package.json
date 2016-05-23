@@ -21,12 +21,12 @@
     "start": "node GameService/Server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/tony-dinh/hackatron#readme",
+  "homepage": "https://github.com/stokegames/hackatron#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tony-dinh/hackatron.git"
+    "url": "git+https://github.com/stokegames/hackatron.git"
   },
   "bugs": {
-    "url": "https://github.com/tony-dinh/hackatron/issues"
+    "url": "https://github.com/stokegames/hackatron/issues"
   }
 }
