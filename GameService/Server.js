@@ -3,7 +3,7 @@ var http = require('http');
 
 var app = express();
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname + '/../'));
 
 // app.configure(function() {
 //     app.use(express.static(__dirname));
@@ -14,7 +14,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-var Game = function() {
+var GameService = function() {
     this.server = http.createServer(app);
     this.io = require('socket.io').listen(this.server);
     this.events = [];
@@ -22,7 +22,7 @@ var Game = function() {
     this.host = null;
 };
 
-Game.prototype = {
+GameService.prototype = {
     startServer: function() {
         this.io.sockets.on('connection', function(socket) {
             this.onSocketConnect(socket);
@@ -168,6 +168,6 @@ Game.prototype = {
     }
 };
 
-var server = new Game();
+var server = new GameService();
 
 server.startServer();
