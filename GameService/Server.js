@@ -3,7 +3,7 @@ var http = require('http');
 
 var app = express();
 
-app.use(express.static(__dirname + '/../'));
+app.use(express.static(__dirname + '/../App'));
 
 // app.configure(function() {
 //     app.use(express.static(__dirname));
