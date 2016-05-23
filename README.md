@@ -22,9 +22,9 @@ cd hackatron
 npm install
 ```
 
-Spin up a local server:
+Spin up a local game server:
 ```
-node server.js
+npm start
 ```
 
 Open `localhost:8080` in your browser & enjoy! :)
