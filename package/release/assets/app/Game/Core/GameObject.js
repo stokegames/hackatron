@@ -53,3 +53,5 @@ class GameObject {
         return {x: (this.position.x / 16), y: (this.position.y / 16)};
     }
 }
+
+export default GameObject;

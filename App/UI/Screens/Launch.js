@@ -51,7 +51,7 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width,
         color: '#fff',
-        backgroundColor: '#2D749A',
+        backgroundColor: '#000',
         padding: 10,
         opacity: 0.75,
     },

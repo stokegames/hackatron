@@ -32,7 +32,7 @@ Hackatron.Game.prototype = {
     getTileAt: function(params) {
         if (!typeof(params) === 'object') { throw new Error('Invalid args'); }
 
-        for(var i = 0; i < this.map.collideTiles.length; i++) {
+        for (var i = 0; i < this.map.collideTiles.length; i++) {
             var tile = this.map.collideTiles[i];
             if (tile.tilePosition.x === params.x && tile.tilePosition.y === params.y) {
                 return tile;
@@ -181,6 +181,76 @@ Hackatron.Game.prototype = {
         this.fullscreenKey.onDown.add(this.toggleFullscreen, this);
         this.aiKey = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
         this.aiKey.onDown.add(this.toggleAI, this);
+
+        // variables used to detect and manage swipes
+        var startX;
+        var startY;
+        var endX;
+        var endY;
+
+        // when the player begins to swipe we only save mouse/finger coordinates, remove the touch/click
+        // input listener and add a new listener to be fired when the mouse/finger has been released,
+        // then we call endSwipe function
+        var beginSwipe = function() {
+            startX = this.game.input.worldX;
+            startY = this.game.input.worldY;
+            this.game.input.onDown.remove(beginSwipe, this);
+            this.game.input.onUp.add(endSwipe, this);
+        };
+
+        // function to be called when the player releases the mouse/finger
+        var endSwipe = function() {
+            // saving mouse/finger coordinates
+            endX = this.game.input.worldX;
+            endY = this.game.input.worldY;
+            // determining x and y distance travelled by mouse/finger from the start
+            // of the swipe until the end
+            var distX = startX-endX;
+            var distY = startY-endY;
+            // in order to have an horizontal swipe, we need that x distance is at least twice the y distance
+            // and the amount of horizontal distance is at least 10 pixels
+            if (Math.abs(distX)>Math.abs(distY)*2 && Math.abs(distX)>10){
+                // moving left, calling move function with horizontal and vertical tiles to move as arguments
+                if (distX > 0) {
+                    this.onAction('swipeLeft');
+                }
+                // moving right, calling move function with horizontal and vertical tiles to move as arguments
+                else {
+                    this.onAction('swipeRight');
+                }
+            }
+            // in order to have a vertical swipe, we need that y distance is at least twice the x distance
+            // and the amount of vertical distance is at least 10 pixels
+            if (Math.abs(distY)>Math.abs(distX)*2 && Math.abs(distY)>10){
+                // moving up, calling move function with horizontal and vertical tiles to move as arguments
+                if (distY > 0) {
+                    this.onAction('swipeUp');
+                }
+                // moving down, calling move function with horizontal and vertical tiles to move as arguments
+                else {
+                    this.onAction('swipeDown');
+                }
+            }
+
+            // stop listening for the player to release finger/mouse, let's start listening for the player to click/touch
+            this.game.input.onDown.add(beginSwipe, this);
+            this.game.input.onUp.remove(endSwipe, this);
+        };
+
+        // Wait for the player to touch or click
+        this.game.input.onDown.add(beginSwipe, this);
+    },
+
+    onAction: function(action) {
+        if (action === 'swipeLeft') {
+            this.player.character.inputLeft = true;
+        } else if (action === 'swipeRight') {
+            this.player.character.inputRight = true;
+        } else if (action === 'swipeUp') {
+            this.player.character.inputUp = true;
+        } else if (action === 'swipeDown') {
+            this.player.character.inputDown = true;
+        }
     },
 
     toggleAI: function() {
@@ -202,7 +272,7 @@ Hackatron.Game.prototype = {
                 game: this.game,
                 speed: DEFAULT_PLAYER_SPEED,
                 worldPosition: worldPosition,
-                keys: {
+                keys: { // TODO: Could be architected better
                     up: Phaser.Keyboard.W,
                     down: Phaser.Keyboard.S,
                     left: Phaser.Keyboard.A,
@@ -222,7 +292,7 @@ Hackatron.Game.prototype = {
             speed: DEFAULT_PLAYER_SPEED,
             worldPosition: worldPosition,
             points: 1000,
-            keys: {
+            keys: { // TODO: Could be architected better
                 up: Phaser.Keyboard.UP,
                 down: Phaser.Keyboard.DOWN,
                 left: Phaser.Keyboard.LEFT,
@@ -233,6 +303,10 @@ Hackatron.Game.prototype = {
 
         this.player = new Player();
         this.player.init(playerParams);
+
+        if (Utils.env.os.mobile) {
+            this.game.camera.follow(this.player.character.sprite, Phaser.Camera.FOLLOW_LOCKON);
+        }
     },
 
     initMap: function() {

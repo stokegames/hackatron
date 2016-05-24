@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import StartScreen from './UI/Screens/StartScreen';
-import IngameScreen from './UI/Screens/IngameScreen';
+import StartScreen from './Screens/StartScreen';
+import IngameScreen from './Screens/IngameScreen';
 
 window.UI_state = {
     screenKey: null

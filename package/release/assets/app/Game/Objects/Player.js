@@ -1,3 +1,6 @@
+import GameObject from '../Core/GameObject';
+import Tron from '../Objects/Tron';
+
 var Player = function() {
 };
 
@@ -109,3 +112,5 @@ Object.defineProperty(Player.prototype, 'name', {
 // const instance = new Interface();
 
 // console.log(instance.findByEmail());
+
+export default Player;

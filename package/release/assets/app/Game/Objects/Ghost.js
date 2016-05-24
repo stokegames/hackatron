@@ -1,3 +1,5 @@
+import Character from './Character';
+
 class Ghost extends Character {
     toString() { '[Ghost]' };
 
@@ -5,3 +7,5 @@ class Ghost extends Character {
         super.init(params);
     }
 }
+
+export default Ghost;

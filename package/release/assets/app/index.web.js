@@ -4,38 +4,27 @@ import ReactDOM from 'react-dom';
 import { renderToString } from 'react-dom/server';
 
 require('./Assets/Vendor/react-universal');
-
 require('./Game/Core/Utils');
-require('./Game/Core/GameObject');
-require('./Game/Core/GamePlugin');
-require('./Game/Core/AI');
 
-require('./Game/Objects/Map2D');
-require('./Game/Objects/Powerup');
-require('./Game/Objects/Character');
-require('./Game/Objects/Countdown');
-require('./Game/Objects/Gameover');
-require('./Game/Objects/Ghost');
-require('./Game/Objects/Pellet');
-require('./Game/Objects/Tron');
-require('./Game/Objects/Player');
-require('./Game/Objects/Enemy');
+import UI from './UI/UI';
+
+ReactDOM.render(<UI />, document.getElementById('ui'));
+
+window.Hackatron = {};
 
 require('./Game/States/Boot');
 require('./Game/States/Preload');
 require('./Game/States/Menu');
 require('./Game/States/Game');
 
-require('./UI/Screens/StartScreen');
-require('./UI/Screens/IngameScreen');
+if (Utils.env.os.mobile) {
+    Hackatron.GAME_WIDTH = 256; // Game originally designed for 512px
+    Hackatron.GAME_HEIGHT = 256; // Game originally designed for 512px
+} else {
+    Hackatron.GAME_WIDTH = 512; // Game originally designed for 512px
+    Hackatron.GAME_HEIGHT = 512; // Game originally designed for 512px
+}
 
-import UI from './UI/UI';
-
-
-ReactDOM.render(<UI />, document.getElementById('ui'));
-
-Hackatron.GAME_WIDTH = 512; // Game originally designed for 256px
-Hackatron.GAME_HEIGHT = 512; // Game originally designed for 256px
 Hackatron.UI_WIDTH = 700; // UI originally designed for 700px
 Hackatron.UI_HEIGHT = 700; // UI originally designed for 700px
 Hackatron.TILE_COUNT_HORIZONTAL = 32;
@@ -73,9 +62,9 @@ window.onload = function () {
     Hackatron.loader = new Phaser.Game(Hackatron.GAME_WIDTH, Hackatron.GAME_HEIGHT, Phaser.AUTO, gameContainer, null, true);
 
     // Game Constants
-    DEFAULT_PLAYER_SPEED = 200;
-    POWERUP_SPAWN_INTERVAL = 5000;
-    UPDATE_INTERVAL = 100;
+    window.DEFAULT_PLAYER_SPEED = 200;
+    window.POWERUP_SPAWN_INTERVAL = 5000;
+    window.UPDATE_INTERVAL = 100;
 
     Hackatron.loader.state.add('Boot', Hackatron.Boot);
     Hackatron.loader.state.add('Preload', Hackatron.Preload);

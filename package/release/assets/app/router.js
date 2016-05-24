@@ -3,21 +3,19 @@
 import CodePush from 'react-native-code-push';
 import React, {Component} from 'react';
 import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
-var Launch = require('./UI/Screens/Launch');
-var Register = require('./UI/Screens/Register');
-var Login = require('./UI/Screens/Login');
-var Login2 = require('./UI/Screens/Login2');
+import Launch from './UI/Screens/Launch';
+import Register from './UI/Screens/Register';
+import Login from './UI/Screens/Login';
+import Login2 from './UI/Screens/Login2';
+import Error from './UI/Screens/Error';
+import Home from './UI/Screens/Home';
+import TabView from './UI/Screens/TabView';
+import Modal from './UI/Screens/Modal';
+import { createStore } from 'redux';
+import { Provider, connect } from 'react-redux';
+
 var RNRF = require('react-native-router-flux');
 var {Route, Schema, Animations, Actions, TabBar} = RNRF;
-var Error = require('./UI/Screens/Error');
-var Home = require('./UI/Screens/Home');
-var TabView = require('./UI/Screens/TabView');
-var Modal = require('./UI/Screens/Modal');
-
-
-// Redux stuff is optional
-import { createStore } from 'redux'
-import { Provider, connect } from 'react-redux'
 
 function reducer(state = {}, action) {
     switch (action.type) {
@@ -42,92 +40,93 @@ function reducer(state = {}, action) {
         default:
             return state;
     }
-
 }
+
 let store = createStore(reducer);
 const RouteContainer = connect()(RNRF.Router);
 
-class TabIcon extends React.Component {
-    render(){
+class TabIcon extends Component {
+    render() {
         return (
             <Text style={{color: this.props.selected ? 'red' :'black'}}>{this.props.title}</Text>
         );
     }
 }
 
-class Header extends React.Component {
-    render(){
+class Header extends Component {
+    render() {
         return <Text style={styles.header}></Text>
     }
 }
 
-export default class Router extends React.Component {
-  async sync() {
-    let self = this;
-    try {
-      return await CodePush.sync(
-        {
-          updateDialog: false,
-          installMode: CodePush.InstallMode.ON_NEXT_RESUME
-        },
-        (syncStatus) => {
-          switch(syncStatus) {
-            case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
-              self.setState({
-                syncMessage: "Checking for update."
-              });
-              break;
-            case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
-              self.setState({
-                syncMessage: "Downloading package."
-              });
-              break;
-            case CodePush.SyncStatus.AWAITING_USER_ACTION:
-              self.setState({
-                syncMessage: "Awaiting user action."
-              });
-              break;
-            case CodePush.SyncStatus.INSTALLING_UPDATE:
-              self.setState({
-                syncMessage: "Installing update."
-              });
-              break;
-            case CodePush.SyncStatus.UP_TO_DATE:
-              self.setState({
-                syncMessage: "App up to date.",
-                progress: false
-              });
-              break;
-            case CodePush.SyncStatus.UPDATE_IGNORED:
-              self.setState({
-                syncMessage: "Update cancelled by user.",
-                progress: false
-              });
-              break;
-            case CodePush.SyncStatus.UPDATE_INSTALLED:
-              self.setState({
-                syncMessage: "Update installed and will be run when the app next resumes.",
-                progress: false
-              });
-              break;
-            case CodePush.SyncStatus.UNKNOWN_ERROR:
-              self.setState({
-                syncMessage: "An unknown error occurred.",
-                progress: false
-              });
-              break;
-          }
-        },
-        (progress) => {
-          self.setState({
-            progress: progress
-          });
+export default class Router extends Component {
+    async sync() {
+        let self = this;
+        try {
+            return await CodePush.sync(
+                {
+                    updateDialog: false,
+                    installMode: CodePush.InstallMode.ON_NEXT_RESUME
+                },
+                (syncStatus) => {
+                    switch(syncStatus) {
+                        case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
+                            self.setState({
+                                syncMessage: "Checking for update."
+                            });
+                            break;
+                        case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
+                            self.setState({
+                                syncMessage: "Downloading package."
+                            });
+                            break;
+                        case CodePush.SyncStatus.AWAITING_USER_ACTION:
+                            self.setState({
+                                syncMessage: "Awaiting user action."
+                            });
+                            break;
+                        case CodePush.SyncStatus.INSTALLING_UPDATE:
+                            self.setState({
+                                syncMessage: "Installing update."
+                            });
+                            break;
+                        case CodePush.SyncStatus.UP_TO_DATE:
+                            self.setState({
+                                syncMessage: "App up to date.",
+                                progress: false
+                            });
+                            break;
+                        case CodePush.SyncStatus.UPDATE_IGNORED:
+                            self.setState({
+                                syncMessage: "Update cancelled by user.",
+                                progress: false
+                            });
+                            break;
+                        case CodePush.SyncStatus.UPDATE_INSTALLED:
+                            self.setState({
+                                syncMessage: "Update installed and will be run when the app next resumes.",
+                                progress: false
+                            });
+                            break;
+                        case CodePush.SyncStatus.UNKNOWN_ERROR:
+                            self.setState({
+                                syncMessage: "An unknown error occurred.",
+                                progress: false
+                            });
+                            break;
+                    }
+                },
+                (progress) => {
+                    self.setState({
+                        progress: progress
+                    });
+                }
+            );
+        } catch (error) {
+            CodePush.log(error);
         }
-      );
-    } catch (error) {
-      CodePush.log(error);
     }
-  }
+
     componentDidMount() {
         CodePush.notifyApplicationReady();
         this.sync();
@@ -158,7 +157,7 @@ var styles = StyleSheet.create({
     header: {
         width: Dimensions.get('window').width,
         height: 10,
-        backgroundColor: '#2D749A',
+        backgroundColor: '#000',
         opacity: 0.8,
         color: '#fff'
     }

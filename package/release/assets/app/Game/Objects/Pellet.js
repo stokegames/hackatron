@@ -1,3 +1,5 @@
+import GameObject from '../Core/GameObject';
+
 var Pellet = function(type) {
     GameObject.apply(this, arguments);
 
@@ -29,3 +31,5 @@ Pellet.prototype.getPoints = function() {
         case 'HIGH': return 10;
     }
 };
+
+export default Pellet;

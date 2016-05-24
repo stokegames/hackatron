@@ -1,3 +1,5 @@
+import GameObject from '../Core/GameObject';
+
 class Character extends GameObject {
     toString() { '[Character]' }
 
@@ -245,3 +247,5 @@ class Character extends GameObject {
         }
     }
 }
+
+export default Character;
