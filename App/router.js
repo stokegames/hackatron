@@ -4,13 +4,6 @@ import CodePush from 'react-native-code-push';
 import React, {Component} from 'react';
 import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
 import Launch from './UI/Screens/Launch';
-import Register from './UI/Screens/Register';
-import Login from './UI/Screens/Login';
-import Login2 from './UI/Screens/Login2';
-import Error from './UI/Screens/Error';
-import Home from './UI/Screens/Home';
-import TabView from './UI/Screens/TabView';
-import Modal from './UI/Screens/Modal';
 import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
 

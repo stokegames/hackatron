@@ -8,11 +8,6 @@ var Actions = require('react-native-router-flux').Actions;
 var windowSize = Dimensions.get('window');
 import Dimensions from 'Dimensions';
 
-            // <View style={styles.container}>
-            //     <Text>Login page: {this.props.data}</Text>
-            //     <Button onPress={Actions.loginModal2}>Login 2</Button>
-            //     <Button onPress={Actions.pop}>Back</Button>
-            // </View>
 class Login extends React.Component {
     render() {
         return (

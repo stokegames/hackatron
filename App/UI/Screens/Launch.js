@@ -33,7 +33,6 @@ class Launch extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Button style={styles.header}>Hackatron</Button>
                 <WebView
                     ref="webviewbridge"
                     style={styles.webView}
@@ -59,7 +58,7 @@ var styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#000',
         padding: 0
     },
     webView: {
