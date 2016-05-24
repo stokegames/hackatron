@@ -1,0 +1,88 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import { renderToString } from 'react-dom/server';
+
+require('./Assets/Vendor/react-universal');
+
+require('./Game/Core/Utils');
+require('./Game/Core/GameObject');
+require('./Game/Core/GamePlugin');
+require('./Game/Core/AI');
+
+require('./Game/Objects/Map2D');
+require('./Game/Objects/Powerup');
+require('./Game/Objects/Character');
+require('./Game/Objects/Countdown');
+require('./Game/Objects/Gameover');
+require('./Game/Objects/Ghost');
+require('./Game/Objects/Pellet');
+require('./Game/Objects/Tron');
+require('./Game/Objects/Player');
+require('./Game/Objects/Enemy');
+
+require('./Game/States/Boot');
+require('./Game/States/Preload');
+require('./Game/States/Menu');
+require('./Game/States/Game');
+
+require('./UI/Screens/StartScreen');
+require('./UI/Screens/IngameScreen');
+
+import UI from './UI/UI';
+
+
+ReactDOM.render(<UI />, document.getElementById('ui'));
+
+Hackatron.GAME_WIDTH = 512; // Game originally designed for 256px
+Hackatron.GAME_HEIGHT = 512; // Game originally designed for 256px
+Hackatron.UI_WIDTH = 700; // UI originally designed for 700px
+Hackatron.UI_HEIGHT = 700; // UI originally designed for 700px
+Hackatron.TILE_COUNT_HORIZONTAL = 32;
+Hackatron.TILE_COUNT_VERTICAL = 32;
+
+var gameContainer = document.getElementById('game');
+var uiContainer = document.getElementById('ui');
+
+Hackatron.getWidthGameScale = function() {
+    return (window.innerWidth / Hackatron.GAME_WIDTH).toFixed(2);
+};
+
+Hackatron.getHeightGameScale = function() {
+    return (window.innerHeight / Hackatron.GAME_HEIGHT).toFixed(2);
+};
+
+Hackatron.getWidthRatioScale = function() {
+    return window.innerHeight > window.innerWidth ? 1 : (window.innerHeight / window.innerWidth).toFixed(2);
+};
+
+Hackatron.getHeightRatioScale = function() {
+    return window.innerHeight > window.innerWidth ? (window.innerWidth / window.innerHeight).toFixed(2) : 1;
+};
+
+// Resize UI
+window.onresize = function() {
+    var smallest = window.innerHeight > window.innerWidth ? gameContainer.offsetWidth / Hackatron.UI_WIDTH : gameContainer.offsetHeight / Hackatron.UI_HEIGHT;
+    uiContainer.style.left = (100 - parseInt(gameContainer.style.width)) / 2 + '%';
+    uiContainer.style.zoom = smallest;
+};
+
+// Load Game
+window.onload = function () {
+    Hackatron.debug = window.location.href.indexOf('localhost') !== -1;
+    Hackatron.loader = new Phaser.Game(Hackatron.GAME_WIDTH, Hackatron.GAME_HEIGHT, Phaser.AUTO, gameContainer, null, true);
+
+    // Game Constants
+    DEFAULT_PLAYER_SPEED = 200;
+    POWERUP_SPAWN_INTERVAL = 5000;
+    UPDATE_INTERVAL = 100;
+
+    Hackatron.loader.state.add('Boot', Hackatron.Boot);
+    Hackatron.loader.state.add('Preload', Hackatron.Preload);
+    Hackatron.loader.state.add('Menu', Hackatron.Menu);
+    Hackatron.loader.state.add('Game', Hackatron.Game);
+
+    Hackatron.loader.state.start('Boot');
+
+    window.onresize();
+};

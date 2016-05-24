@@ -45,6 +45,22 @@ Checkout the [Game Design Document](GDD.md)!
 Facebook: https://apps.facebook.com/233102823719500/
 iTunes: TBD
 
+### iTunes Deployment
+
+Test iOS: `rm -rf package/release/assets/app && cp -R App package/release/assets && mv package/release/assets/App package/release/assets/app && react-native bundle --platform ios --entry-file App/index.ios.js --bundle-output ./package/release/main.jsbundle --assets-dest ./package/release --dev false --resetCache`
+
+Deploy an iOS app: `rm -rf package/release/assets/app && cp -R App package/release/assets && mv package/release/assets/App package/release/assets/app && react-native bundle --platform ios --entry-file App/index.ios.js --bundle-output ./package/release/main.jsbundle --assets-dest ./package/release --dev false --resetCache && code-push release Hackatron ./package/release 1.0.0`
+
+Build webapp: `webpack --progress -p`
+
+Clean: `rm /Users/ericmuyser/Games/Alcyone/node_modules/react/lib/IOSDefaultEventPluginOrder.js`
+
+### TODO
+
+- [x] Webapp should be compiled with WebPack
+- [x] Should be able to deploy to App Store using React Native
+- [ ] Native button should be a core component
+
 ### Credits
 
 Core Game Programmers:
