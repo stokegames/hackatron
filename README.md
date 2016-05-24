@@ -35,15 +35,15 @@ Checkout the [Game Design Document](GDD.md)!
 
 ### Technology Stack
 
-* Game Engine: Phaser.io
-* Graphics Lib: Pixi.js
-* AI Lib: EasyStar
-* UI: React.js
+* Web Server: WebPack, Express, Postgres
+* iOS/Android App: React Native
+* Libs: Phaser.io (Game Engine), Pixi.js (Graphics), EasyStar (AI/Pathfinding), UI (React.js)
 
 ### Apps
 
 * Facebook: https://apps.facebook.com/233102823719500/
-* iTunes: TBD
+* Apple AppStore: TBD
+* Google PlayStore: TBD
 
 ### iTunes Deployment
 
