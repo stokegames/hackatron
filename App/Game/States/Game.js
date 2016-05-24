@@ -705,8 +705,14 @@ Hackatron.Game.prototype = {
             var rDeg = -3;
             var xSkew = 0; // (1 - ((2 / 32) * this.player.character.worldPosition.x));
 
-            this.game.canvas.style['width'] = '90%';
-            this.game.canvas.style['height'] = '90%';
+            if (Utils.env.os.mobile) {
+                this.game.canvas.style['width'] = '110%';
+                this.game.canvas.style['height'] = '110%';
+                this.game.canvas.style['margin-top'] = '-20%';
+            } else {
+                this.game.canvas.style['width'] = '90%';
+                this.game.canvas.style['height'] = '90%';
+            }
             this.game.canvas.style['transform'] = 'perspective(' + pers + 'px) skew(' + xSkew + 'deg, 0deg) rotateX(' + xDeg + 'deg) rotateY(' + yDeg + 'deg) rotate(' + rDeg + 'deg)';
         }
 

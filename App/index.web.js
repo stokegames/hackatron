@@ -19,7 +19,7 @@ require('./Game/States/Game');
 
 if (Utils.env.os.mobile) {
     Hackatron.GAME_WIDTH = 256; // Game originally designed for 512px
-    Hackatron.GAME_HEIGHT = 256; // Game originally designed for 512px
+    Hackatron.GAME_HEIGHT = 256 * (window.innerHeight / window.innerWidth); // Game originally designed for 512px
 } else {
     Hackatron.GAME_WIDTH = 512; // Game originally designed for 512px
     Hackatron.GAME_HEIGHT = 512; // Game originally designed for 512px

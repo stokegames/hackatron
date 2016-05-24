@@ -17,7 +17,15 @@
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		5F0E93FC1CF41F29009DF5A1 /* App in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E93FB1CF41F29009DF5A1 /* App */; };
+		5F0E94061CF421EF009DF5A1 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E93FD1CF421EF009DF5A1 /* Assets */; };
+		5F0E94071CF421EF009DF5A1 /* Build in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E93FE1CF421EF009DF5A1 /* Build */; };
+		5F0E94081CF421EF009DF5A1 /* Game in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E93FF1CF421EF009DF5A1 /* Game */; };
+		5F0E94091CF421EF009DF5A1 /* index.android.js in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E94001CF421EF009DF5A1 /* index.android.js */; };
+		5F0E940A1CF421EF009DF5A1 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E94011CF421EF009DF5A1 /* index.html */; };
+		5F0E940B1CF421EF009DF5A1 /* index.ios.js in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E94021CF421EF009DF5A1 /* index.ios.js */; };
+		5F0E940C1CF421EF009DF5A1 /* index.web.js in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E94031CF421EF009DF5A1 /* index.web.js */; };
+		5F0E940D1CF421EF009DF5A1 /* router.js in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E94041CF421EF009DF5A1 /* router.js */; };
+		5F0E940E1CF421EF009DF5A1 /* UI in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E94051CF421EF009DF5A1 /* UI */; };
 		5F10E1691CF3C6FB00EF9242 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F10E1681CF3C6FB00EF9242 /* libc++.tbd */; };
 		5F11057C1CF31E2F00307B52 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 5F11057B1CF31E2F00307B52 /* Base.lproj */; };
 		5F54BC651C91E81700D51662 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F54BC641C91E81700D51662 /* libz.tbd */; };
@@ -161,7 +169,15 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		159576234385494DB226FC0A /* libRNHTTPServer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNHTTPServer.a; sourceTree = "<group>"; };
 		3F40508386254E508CA55383 /* RCTFBLogin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBLogin.xcodeproj; path = "../../node_modules/react-native-facebook-login/RCTFBLogin.xcodeproj"; sourceTree = "<group>"; };
-		5F0E93FB1CF41F29009DF5A1 /* App */ = {isa = PBXFileReference; lastKnownFileType = folder; name = App; path = ../../App; sourceTree = "<group>"; };
+		5F0E93FD1CF421EF009DF5A1 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets; path = ../../App/Assets; sourceTree = "<group>"; };
+		5F0E93FE1CF421EF009DF5A1 /* Build */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Build; path = ../../App/Build; sourceTree = "<group>"; };
+		5F0E93FF1CF421EF009DF5A1 /* Game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Game; path = ../../App/Game; sourceTree = "<group>"; };
+		5F0E94001CF421EF009DF5A1 /* index.android.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = index.android.js; path = ../../App/index.android.js; sourceTree = "<group>"; };
+		5F0E94011CF421EF009DF5A1 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = index.html; path = ../../App/index.html; sourceTree = "<group>"; };
+		5F0E94021CF421EF009DF5A1 /* index.ios.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = index.ios.js; path = ../../App/index.ios.js; sourceTree = "<group>"; };
+		5F0E94031CF421EF009DF5A1 /* index.web.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = index.web.js; path = ../../App/index.web.js; sourceTree = "<group>"; };
+		5F0E94041CF421EF009DF5A1 /* router.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = router.js; path = ../../App/router.js; sourceTree = "<group>"; };
+		5F0E94051CF421EF009DF5A1 /* UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UI; path = ../../App/UI; sourceTree = "<group>"; };
 		5F10E1681CF3C6FB00EF9242 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		5F11057B1CF31E2F00307B52 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Hackatron/Base.lproj; sourceTree = "<group>"; };
 		5F54BC641C91E81700D51662 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -408,7 +424,15 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* HackatronTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
-				5F0E93FB1CF41F29009DF5A1 /* App */,
+				5F0E93FD1CF421EF009DF5A1 /* Assets */,
+				5F0E93FE1CF421EF009DF5A1 /* Build */,
+				5F0E93FF1CF421EF009DF5A1 /* Game */,
+				5F0E94001CF421EF009DF5A1 /* index.android.js */,
+				5F0E94011CF421EF009DF5A1 /* index.html */,
+				5F0E94021CF421EF009DF5A1 /* index.ios.js */,
+				5F0E94031CF421EF009DF5A1 /* index.web.js */,
+				5F0E94041CF421EF009DF5A1 /* router.js */,
+				5F0E94051CF421EF009DF5A1 /* UI */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -682,10 +706,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F0E93FC1CF41F29009DF5A1 /* App in Resources */,
+				5F0E940D1CF421EF009DF5A1 /* router.js in Resources */,
+				5F0E94081CF421EF009DF5A1 /* Game in Resources */,
 				5F99820A1CF31D3200BBC7E6 /* Images.xcassets in Resources */,
+				5F0E94091CF421EF009DF5A1 /* index.android.js in Resources */,
+				5F0E940E1CF421EF009DF5A1 /* UI in Resources */,
+				5F0E94061CF421EF009DF5A1 /* Assets in Resources */,
+				5F0E940B1CF421EF009DF5A1 /* index.ios.js in Resources */,
 				5F11057C1CF31E2F00307B52 /* Base.lproj in Resources */,
+				5F0E940A1CF421EF009DF5A1 /* index.html in Resources */,
+				5F0E940C1CF421EF009DF5A1 /* index.web.js in Resources */,
 				5F99820B1CF31D3200BBC7E6 /* Info.plist in Resources */,
+				5F0E94071CF421EF009DF5A1 /* Build in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

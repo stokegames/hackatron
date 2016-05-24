@@ -37,7 +37,7 @@ class Launch extends React.Component {
                 <WebView
                     ref="webviewbridge"
                     style={styles.webView}
-                    url={"http://127.0.0.1:8082/App/index.html"}
+                    url={"http://127.0.0.1:8082/index.html"}
                 />
             </View>
         );
@@ -53,7 +53,7 @@ var styles = StyleSheet.create({
         color: '#fff',
         backgroundColor: '#000',
         padding: 10,
-        opacity: 0.75,
+        opacity: 1,
     },
     container: {
         flex: 1,
