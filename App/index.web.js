@@ -73,9 +73,9 @@ window.onload = function () {
     Hackatron.loader = new Phaser.Game(Hackatron.GAME_WIDTH, Hackatron.GAME_HEIGHT, Phaser.AUTO, gameContainer, null, true);
 
     // Game Constants
-    DEFAULT_PLAYER_SPEED = 200;
-    POWERUP_SPAWN_INTERVAL = 5000;
-    UPDATE_INTERVAL = 100;
+    window.DEFAULT_PLAYER_SPEED = 200;
+    window.POWERUP_SPAWN_INTERVAL = 5000;
+    window.UPDATE_INTERVAL = 100;
 
     Hackatron.loader.state.add('Boot', Hackatron.Boot);
     Hackatron.loader.state.add('Preload', Hackatron.Preload);

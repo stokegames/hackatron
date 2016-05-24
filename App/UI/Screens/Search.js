@@ -1,17 +1,7 @@
 'use strict';
 
-var React = require('react-native');
-
-var {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-  WebView
-} = React;
-
-
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} from 'react-native';
 import WebViewBridge from 'react-native-webview-bridge';
 import Dimensions from 'Dimensions';
 

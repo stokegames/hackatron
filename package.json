@@ -44,8 +44,9 @@
     "npm": "3.7.2"
   },
   "scripts": {
-    "start": "node GameService/Server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "babel-node ./GameService/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --progress -p"
   },
   "homepage": "https://github.com/stokegames/hackatron#readme",
   "repository": {

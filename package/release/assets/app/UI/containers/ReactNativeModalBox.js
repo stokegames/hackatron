@@ -1,27 +1,26 @@
 'use strict';
 
-var React = require('react-native');
-var {View, Text, StyleSheet} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
 var Button = require('react-native-button');
 var Actions = require('react-native-router-flux').Actions;
-
 var Modal   = require('react-native-modalbox');
 
 // Example integration with react-native-modalbox (https://github.com/maxs15/react-native-modalbox)
 // For those people who don't want to animate their own modal
 class ReactNativeModalBox extends React.Component {
-    constructor(){
+    constructor() {
         super();
     }
-    componentWillMount(){
+    componentWillMount() {
         this.setState({isOpen: true});
     }
-    render(){
+    render() {
         return (
             <Modal  animationDuration={200}
                     swipeThreshold={100}
-                    style={styles.modal} 
-                    position={"center"} 
+                    style={styles.modal}
+                    position={"center"}
                     isOpen={this.state.isOpen}
                     onClosed={Actions.dismiss}>
                 <Text style={styles.text}>

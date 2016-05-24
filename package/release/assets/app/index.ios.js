@@ -1,7 +1,7 @@
 'use strict';
 
-var React = require('react-native');
-var {AppRegistry} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
 import Router from '../package/release/assets/app/router';
 
 console.disableYellowBox = true;

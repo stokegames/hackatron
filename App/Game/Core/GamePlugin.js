@@ -1,6 +1,8 @@
-var Plugin = function() {
+var GamePlugin = function() {
 };
 
-Plugin.prototype.toString = function() {
-    return '[Plugin]';
+GamePlugin.prototype.toString = function() {
+    return '[GamePlugin]';
 };
+
+export default GamePlugin;

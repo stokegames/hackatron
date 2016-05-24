@@ -1,7 +1,7 @@
 'use strict';
 
-var React = require('react-native');
-var {View, Text, StyleSheet, Animated, Dimensions} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
 var Button = require('react-native-button');
 var Actions = require('react-native-router-flux').Actions;
 
@@ -35,7 +35,7 @@ class Error extends React.Component {
 
     render(){
         return (
-            <Animated.View style={[styles.container, {backgroundColor:'rgba(52,52,52,0.5)'}, 
+            <Animated.View style={[styles.container, {backgroundColor:'rgba(52,52,52,0.5)'},
                                   {transform: [{translateY: this.state.offset}]}]}>
                 <View style={{  width:250,
                                 height:250,
@@ -65,4 +65,3 @@ var styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
-

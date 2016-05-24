@@ -1,7 +1,7 @@
 'use strict';
 
-var React = require('react-native');
-var {View, Text, StyleSheet} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} from 'react-native';
 var Button = require('react-native-button');
 var Actions = require('react-native-router-flux').Actions;
 //import FacebookButton from '../elements/FacebookButton/FacebookButton';
@@ -24,7 +24,7 @@ class Login extends React.Component {
                 <View style={styles.inputs}>
                     <View style={styles.inputContainer}>
                         <Image style={styles.inputUsername} source={{uri: 'http://i.imgur.com/iVVVMRX.png'}}/>
-                        <TextInput 
+                        <TextInput
                             style={[styles.input, styles.whiteFont]}
                             placeholder="Username"
                             placeholderTextColor="#FFF"
@@ -45,7 +45,7 @@ class Login extends React.Component {
                         <Text style={styles.greyFont}>Forgot Password</Text>
                     </View>
                     <View style={styles.forgotContainer}>
-                        
+
                     </View>
                 </View>
                 <View style={styles.signin}>

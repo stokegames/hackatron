@@ -267,3 +267,5 @@ class AI {
         clearInterval(this.followInterval);
     }
 }
+
+export default AI;

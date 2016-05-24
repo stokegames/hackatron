@@ -1,3 +1,5 @@
+import GameObject from '../Core/GameObject';
+
 class Powerup extends GameObject {
     toString() { `[Powerup handler={this.key}]` }
 
@@ -515,3 +517,5 @@ class PortalHandler extends PowerupHandler {
         this.emit('destroyed', {positions: [this.state.entryPortalPosition, this.state.exitPortalPosition]});
     }
 }
+
+export default Powerup;

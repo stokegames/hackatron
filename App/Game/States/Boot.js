@@ -1,4 +1,4 @@
-Hackatron = {
+window.Hackatron = {
     skipIntro: true
 };
 

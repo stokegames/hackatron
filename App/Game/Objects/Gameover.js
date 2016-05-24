@@ -18,3 +18,5 @@ Gameover.prototype.start = function() {
     this.sprite.anchor.setTo(0.5);
     tween = self.game.add.tween(this.sprite.scale).to({ x: 2.5, y: 2.5}, 600, Phaser.Easing.Exponential.In, true);
 };
+
+export default Gameover;

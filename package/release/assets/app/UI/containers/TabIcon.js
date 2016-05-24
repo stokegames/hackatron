@@ -1,9 +1,9 @@
 'use strict';
 
-var React = require('react-native');
-var {View, Text, StyleSheet} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
 
-class TabIcon extends React.Component {
+class TabIcon extends Component {
     render(){
         return (
             <Text style={{color: this.props.selected ? 'red' :'black'}}>{this.props.title}</Text>

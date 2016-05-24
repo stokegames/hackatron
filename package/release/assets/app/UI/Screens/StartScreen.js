@@ -1,4 +1,6 @@
-window.StartScreen = React.createClass({
+import React, {Component} from 'react';
+
+var StartScreen = React.createClass({
     getInitialState: function() {
         return {instantActionTimer: 5};
     },
@@ -71,3 +73,5 @@ var styles = {
         //'color': '#FE0313',
     }
 };
+
+export default StartScreen;

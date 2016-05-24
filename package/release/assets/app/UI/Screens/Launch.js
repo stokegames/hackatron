@@ -1,12 +1,12 @@
 'use strict';
 
-var React = require('react-native');
-var {View, Text, StyleSheet, TouchableHighlight, WebView} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} from 'react-native';
 var Button = require('react-native-button');
 var Actions = require('react-native-router-flux').Actions;
 
 import Dimensions from 'Dimensions';
-import CodePush from "react-native-code-push";
+import CodePush from 'react-native-code-push';
 
 var HTTPServer = require('react-native-httpserver');
 

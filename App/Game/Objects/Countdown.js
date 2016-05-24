@@ -48,3 +48,5 @@ Countdown.prototype.start = function() {
         });
     });
 };
+
+export default Countdown;

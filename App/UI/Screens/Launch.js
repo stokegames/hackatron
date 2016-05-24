@@ -1,7 +1,7 @@
 'use strict';
 
-var React = require('react');
-var {View, Text, StyleSheet, TouchableHighlight, WebView} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} from 'react-native';
 var Button = require('react-native-button');
 var Actions = require('react-native-router-flux').Actions;
 

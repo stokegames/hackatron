@@ -1,3 +1,5 @@
+import Character from './Character';
+
 class Tron extends Character {
     toString() { '[Tron]' }
 
@@ -98,3 +100,5 @@ class Tron extends Character {
         setTimeout(() => { this.teleported = false; }, 2000);
     }
 }
+
+export default Tron;

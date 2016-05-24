@@ -1,14 +1,7 @@
 'use strict';
 
-var React = require('react-native');
-
-var {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} from 'react-native';
 
 
 var styles = StyleSheet.create({

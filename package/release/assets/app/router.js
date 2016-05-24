@@ -1,8 +1,8 @@
 'use strict';
 
-var React = require('react-native');
-import CodePush from "react-native-code-push";
-var {AppRegistry, Navigator, StyleSheet, Text, View} = React;
+import CodePush from 'react-native-code-push';
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
 var Launch = require('./UI/Screens/Launch');
 var Register = require('./UI/Screens/Register');
 var Login = require('./UI/Screens/Login');
@@ -146,52 +146,14 @@ export default class Router extends React.Component {
         // Provider is optional (if you want to use redux)
         return (
             <Provider store={store}>
-                <RouteContainer hideNavBar={true} name="root">
-                    <Schema name="modal" sceneConfig={Navigator.SceneConfigs.FloatFromBottom}/>
-                    <Schema name="default" sceneConfig={Navigator.SceneConfigs.FloatFromRight}/>
-                    <Schema name="withoutAnimation"/>
-                    <Schema name="tab" type="switch" icon={TabIcon} />
-
-                    <Route name="register" component={Register} title="Register"/>
-                    <Route name="showActionSheet" type="actionSheet" title="What do you want to do?" options={['Delete', 'Save', 'Cancel']} cancelButtonIndex={2} destructiveButtonIndex={0}/>
-                    <Route name="home" component={Home} title="Replace" type="replace"/>
-                    <Route name="login" schema="modal">
-                        <RouteContainer name="loginRouter">
-                            <Route name="loginModal" component={Login} schema="modal"/>
-                            <Route name="loginModal2" hideNavBar={true} component={Login2} title="Login2"/>
-                        </RouteContainer>
-                    </Route>
-                    <Route name="register2" component={Register} title="Register2"  schema="withoutAnimation"/>
-                    <Route name="error" type="modal" component={Error}/>
-                    <Route name="modalBox" type="modal" component={Modal}/>
-                    <Route name="tabbar">
-                        <RouteContainer footer={TabBar} hideNavBar={true}>
-                            <Route name="tab1" schema="tab" title="Tab #1" >
-                                <RouteContainer onPop={()=>{console.log("onPop is called!"); return true} }>
-                                    <Route name="tab1_1" component={TabView} title="Tab #1_1" />
-                                    <Route name="tab1_2" component={TabView} title="Tab #1_2" />
-                                </RouteContainer>
-                            </Route>
-                            <Route name="tab2" schema="tab" title="Tab #2" hideNavBar={true} initial={true}>
-                                <RouteContainer onPop={()=>{console.log("onPop is called!"); return true} }>
-                                    <Route name="tab2_1" component={TabView} title="Tab #2_1" />
-                                    <Route name="tab2_2" component={TabView} title="Tab #2_2" />
-                                </RouteContainer>
-                            </Route>
-                            <Route name="tab3" schema="tab" title="Tab #3" component={TabView} hideTabBar={true}/>
-                            <Route name="tab4" schema="tab" title="Tab #4" component={TabView} />
-                            <Route name="tab5" schema="tab" title="Tab #5" component={TabView} />
-                        </RouteContainer>
-                    </Route>
-                    <Route name="launch" header={Header} initial={true} component={Launch} wrapRouter={true} title="Launch" hideNavBar={true}/>
+                <RouteContainer hideNavBar={true} key="root">
+                    <Route key="launch" header={Header} initial={true} component={Launch} wrapRouter={true} title="Launch" hideNavBar={true}/>
                 </RouteContainer>
             </Provider>
         );
     }
 }
 
-
-import Dimensions from 'Dimensions';
 var styles = StyleSheet.create({
     header: {
         width: Dimensions.get('window').width,

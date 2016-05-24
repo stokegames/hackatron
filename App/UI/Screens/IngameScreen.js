@@ -1,3 +1,5 @@
+import React, {Component} from 'react';
+
 window.IngameState = {
     show: true,
     showOthers: false,
@@ -5,7 +7,7 @@ window.IngameState = {
     allCharacters: ['tron', 'ghost', 'frosty', 'one'],
 };
 
-window.IngameScreen = React.createClass({
+var IngameScreen = React.createClass({
     getInitialState: function() {
         window.UI_IngameController = this;
         return window.IngameState;
@@ -94,3 +96,5 @@ var styles = {
         fontFamily: 'Helvetica, sans-serif'
     }
 };
+
+export default IngameScreen;

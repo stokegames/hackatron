@@ -1,3 +1,5 @@
+import Ghost from './Ghost';
+
 class Enemy {
     toString() { '[Enemy]' }
 
@@ -21,3 +23,5 @@ class Enemy {
         this.character.sprite.rightKey = this.game.input.keyboard.addKey(keys.right);
     }
 }
+
+export default Enemy;

@@ -1,8 +1,12 @@
+import React, {Component} from 'react';
+import StartScreen from './Screens/StartScreen';
+import IngameScreen from './Screens/IngameScreen';
+
 window.UI_state = {
     screenKey: null
 };
 
-window.UI = React.createClass({
+var UI = React.createClass({
   getInitialState: function() {
     window.UI_controller = this;
     return window.UI_state;
@@ -24,3 +28,5 @@ var styles = {
       left: 0
     }
 };
+
+export default UI;

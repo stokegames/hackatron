@@ -1,8 +1,8 @@
 'use strict';
 
 var NavigationBar = require('react-native-navbar');
-var React = require('react-native');
-var {StyleSheet,View} = React;
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} from 'react-native';
 var {Router, Route, Actions, Animations, Schema} = require('react-native-router-flux');
 
 class NavBarBase extends React.Component {

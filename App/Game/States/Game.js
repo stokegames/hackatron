@@ -1,3 +1,11 @@
+import Map2D from '../Objects/Map2D';
+import Tron from '../Objects/Tron';
+import Player from '../Objects/Player';
+import Enemy from '../Objects/Enemy';
+import Countdown from '../Objects/Countdown';
+import Gameover from '../Objects/Gameover';
+import Powerup from '../Objects/Powerup';
+import AI from '../Core/AI';
 
 Hackatron.Game = function(game) {
     this.enemy = null;
@@ -9,6 +17,7 @@ Hackatron.Game = function(game) {
 };
 
 var updateTimeout;
+var alpha = 0;
 
 Hackatron.Game.prototype = {
     toggleFullscreen: function() {
