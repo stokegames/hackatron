@@ -8,7 +8,7 @@ module.exports = {
         // 'index.ios': ['./app/index.ios.js']
     },
     output: {
-        path: __dirname + '/package/release',
+        path: __dirname + '/App/Build/Release',
         filename: '[name].bundle.js',
         chunkFilename: '[id].chunk.js'
     },

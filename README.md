@@ -49,12 +49,12 @@ Checkout the [Game Design Document](GDD.md)!
 
 Test iOS:
 ```
-rm -rf package/release/assets/app && cp -R App package/release/assets && mv package/release/assets/App package/release/assets/app && react-native bundle --platform ios --entry-file App/index.ios.js --bundle-output ./package/release/main.jsbundle --assets-dest ./package/release --dev false --resetCache
+react-native bundle --platform ios --entry-file ./App/index.ios.js --bundle-output ./App/Build/Release/main.jsbundle --dev false --resetCache && webpack --progress -p
 ```
 
 Deploy an iOS app:
 ```
-rm -rf package/release/assets/app && cp -R App package/release/assets && mv package/release/assets/App package/release/assets/app && react-native bundle --platform ios --entry-file App/index.ios.js --bundle-output ./package/release/main.jsbundle --assets-dest ./package/release --dev false --resetCache && code-push release Hackatron ./package/release 1.0.0
+react-native bundle --platform ios --entry-file ./App/index.ios.js --bundle-output ./App/Build/Release/main.jsbundle --dev false --resetCache && webpack --progress -p && code-push release Hackatron ./App 1.0.0
 ```
 
 Build webapp: `webpack --progress -p`
@@ -65,7 +65,7 @@ Build webapp: `webpack --progress -p`
 - [x] Should be able to deploy to App Store using React Native
 - [ ] Native button should be a core component
 - [ ] Proxy react native stuff so it works on web
-- [ ] Rename /package/release to /Build/Release
+- [x] Rename /package/release to /Build/Release
 
 ### Credits
 

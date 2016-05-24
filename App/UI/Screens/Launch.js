@@ -37,7 +37,7 @@ class Launch extends React.Component {
                 <WebView
                     ref="webviewbridge"
                     style={styles.webView}
-                    url={"http://127.0.0.1:8082/package/release/assets/app/index.html"}
+                    url={"http://127.0.0.1:8082/App/index.html"}
                 />
             </View>
         );

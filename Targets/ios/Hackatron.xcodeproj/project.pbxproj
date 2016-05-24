@@ -17,10 +17,10 @@
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		5F0E93FC1CF41F29009DF5A1 /* App in Resources */ = {isa = PBXBuildFile; fileRef = 5F0E93FB1CF41F29009DF5A1 /* App */; };
 		5F10E1691CF3C6FB00EF9242 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F10E1681CF3C6FB00EF9242 /* libc++.tbd */; };
 		5F11057C1CF31E2F00307B52 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 5F11057B1CF31E2F00307B52 /* Base.lproj */; };
 		5F54BC651C91E81700D51662 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F54BC641C91E81700D51662 /* libz.tbd */; };
-		5F76C0E61CF32D4000BA2E01 /* package in Resources */ = {isa = PBXBuildFile; fileRef = 5F76C0E51CF32D4000BA2E01 /* package */; };
 		5F9982081CF31D3200BBC7E6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9982031CF31D3200BBC7E6 /* AppDelegate.m */; };
 		5F99820A1CF31D3200BBC7E6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F9982051CF31D3200BBC7E6 /* Images.xcassets */; };
 		5F99820B1CF31D3200BBC7E6 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5F9982061CF31D3200BBC7E6 /* Info.plist */; };
@@ -161,10 +161,10 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		159576234385494DB226FC0A /* libRNHTTPServer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNHTTPServer.a; sourceTree = "<group>"; };
 		3F40508386254E508CA55383 /* RCTFBLogin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBLogin.xcodeproj; path = "../../node_modules/react-native-facebook-login/RCTFBLogin.xcodeproj"; sourceTree = "<group>"; };
+		5F0E93FB1CF41F29009DF5A1 /* App */ = {isa = PBXFileReference; lastKnownFileType = folder; name = App; path = ../../App; sourceTree = "<group>"; };
 		5F10E1681CF3C6FB00EF9242 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		5F11057B1CF31E2F00307B52 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Hackatron/Base.lproj; sourceTree = "<group>"; };
 		5F54BC641C91E81700D51662 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		5F76C0E51CF32D4000BA2E01 /* package */ = {isa = PBXFileReference; lastKnownFileType = folder; name = package; path = ../../package; sourceTree = "<group>"; };
 		5F9982021CF31D3200BBC7E6 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Hackatron/AppDelegate.h; sourceTree = "<group>"; };
 		5F9982031CF31D3200BBC7E6 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Hackatron/AppDelegate.m; sourceTree = "<group>"; };
 		5F9982051CF31D3200BBC7E6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Hackatron/Images.xcassets; sourceTree = "<group>"; };
@@ -403,12 +403,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				5F76C0E51CF32D4000BA2E01 /* package */,
 				5FD8C01F1C8F2ABD00F7C012 /* Frameworks */,
 				13B07FAE1A68108700A75B9A /* Hackatron */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* HackatronTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
+				5F0E93FB1CF41F29009DF5A1 /* App */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -682,10 +682,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F0E93FC1CF41F29009DF5A1 /* App in Resources */,
 				5F99820A1CF31D3200BBC7E6 /* Images.xcassets in Resources */,
 				5F11057C1CF31E2F00307B52 /* Base.lproj in Resources */,
 				5F99820B1CF31D3200BBC7E6 /* Info.plist in Resources */,
-				5F76C0E61CF32D4000BA2E01 /* package in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

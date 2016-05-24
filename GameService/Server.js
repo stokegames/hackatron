@@ -31,7 +31,7 @@ class Server {
         if (this.env === 'development') {
             webpackConfig.devtool = 'eval'; // Speed up incremental builds
             webpackConfig.entry['webapp'].unshift('webpack-hot-middleware/client?path=/__webpack_hmr');
-            webpackConfig.output.publicPath = '/package/release/';
+            webpackConfig.output.publicPath = '/Build/Release/';
             webpackConfig.plugins.unshift(new webpack.HotModuleReplacementPlugin());
             webpackConfig.plugins.unshift(new webpack.NoErrorsPlugin());
             webpackConfig.module.loaders[0].query.presets.push('react-hmre');
@@ -81,7 +81,7 @@ class Server {
 
         setInterval(() => {
             if (!this.hostClient) return console.log('No host');
-            if (!this.hostClient) return console.log('Host has no player');
+            if (!this.hostClient.player) return console.log('Host has no player');
 
             console.log('Host: ', this.hostClient.player.id);
         }, 2000);
