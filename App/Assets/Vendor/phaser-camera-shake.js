@@ -26,6 +26,8 @@ Phaser.Plugin.CameraShake = function(game, parent) {
     this.game.camera.bounds = null;
     var originalTarget = this.game.camera.target;
     this.game.camera.target = null;
+    var originalCameraX = this.game.camera.x;
+    var originalCameraY = this.game.camera.y;
 
     var temp_cnt = this._settings.shakeCount;
     var shake_timer = this.game.time.create(false);
@@ -34,8 +36,8 @@ Phaser.Plugin.CameraShake = function(game, parent) {
 
     shake_timer.loop(this._settings.randomizeInterval ? (Math.random() * this._settings.shakeInterval +
     this._settings.shakeInterval) : this._settings.shakeInterval, function () {
-        this.game.camera.x = 0;
-        this.game.camera.y = 0;
+      this.game.camera.x = originalCameraX;
+      this.game.camera.y = originalCameraY;
 
       if (this._settings.shakeCount == 0) {
         this.game.camera.bounds = originalBounds;

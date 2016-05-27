@@ -5,9 +5,6 @@ class Countdown {
     }
 
     start() {
-        var tween1 = null;
-        var tween2 = null;
-        var tween3 = null;
         var centerX = this.game.camera.view.x + this.game.camera.width / 2;
         var centerY = this.game.camera.view.y + this.game.camera.height / 2;
         this.player.character.invincible = true;
@@ -18,7 +15,7 @@ class Countdown {
         count3.frame = 2;
         count3.anchor.setTo(0.5);
         this.game.world.bringToTop(count3);
-        tween3 = this.game.add.tween(count3.scale).to({ x: 3, y: 3}, 600, Phaser.Easing.Exponential.In, true);
+        var tween3 = this.game.add.tween(count3.scale).to({ x: 3, y: 3}, 600, Phaser.Easing.Exponential.In, true);
 
         tween3.onComplete.add(() => {
             this.game.add.tween(count3).to( { alpha: 0 }, 200, 'Linear', true);
@@ -29,7 +26,7 @@ class Countdown {
             count2.anchor.setTo(0.5);
             this.game.world.bringToTop(count2);
 
-            tween2 = this.game.add.tween(count2.scale).to({ x: 3, y: 3}, 600, Phaser.Easing.Exponential.In, true);
+            var tween2 = this.game.add.tween(count2.scale).to({ x: 3, y: 3}, 600, Phaser.Easing.Exponential.In, true);
             tween2.onComplete.add(() => {
                 this.game.add.tween(count2).to( { alpha: 0 }, 200, 'Linear', true);
 
@@ -39,7 +36,7 @@ class Countdown {
                 count1.anchor.setTo(0.5);
                 this.game.world.bringToTop(count1);
 
-                tween1 = this.game.add.tween(count1.scale).to({ x: 3, y: 3}, 600, Phaser.Easing.Exponential.In, true);
+                var tween1 = this.game.add.tween(count1.scale).to({ x: 3, y: 3}, 600, Phaser.Easing.Exponential.In, true);
                 tween1.onComplete.add(() => {
                     this.game.add.tween(count1).to( { alpha: 0 }, 200, 'Linear', true);
                     this.player.character.invincible = false;
