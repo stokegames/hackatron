@@ -118,8 +118,11 @@ class PowerupHandler {
         if (this.player.id === Hackatron.game.player.id) {
             var text = this.name;
             var style = { font: '35px "Press Start 2P"', fill: '#ffffff', align: 'center', textTransform: 'uppercase' };
-            this.impactText = this.game.add.text(this.game.world.centerX, this.game.world.centerY, text, style);
+            this.impactText = this.game.add.text(this.game.camera.view.x + this.game.camera.width / 2, this.game.camera.view.y + this.game.camera.height / 2, text, style);
             this.impactText.anchor.set(0.5);
+            var scale = this.game.width / this.game.height;
+            this.impactText.width = this.game.width * 0.8;
+            this.impactText.height /= scale; // TODO: should work
             this.game.add.tween(this.impactText).to({alpha: 0}, 1000, 'Linear', true, 0);
         }
 
