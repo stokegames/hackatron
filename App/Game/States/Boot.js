@@ -1,9 +1,9 @@
-Hackatron.Boot = function(game) {
-    this.game = game;
-};
+class Boot {
+    constructor(game) {
+        this.game = game;
+    }
 
-Hackatron.Boot.prototype = {
-    preload: function() {
+    preload() {
         // console.log("inside boot state");
         this.game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
         this.game.scale.setUserScale(window.innerWidth / Hackatron.GAME_WIDTH, window.innerWidth / Hackatron.GAME_WIDTH);
@@ -14,9 +14,11 @@ Hackatron.Boot.prototype = {
 
         var assetsPath = 'Assets/';
         this.load.image('gfx/overlays/preloader',  assetsPath + 'GFX/overlays/preloader.gif');
-    },
+    }
 
-    create: function() {
+    create() {
         this.game.state.start('Preload');
     }
-};
+}
+
+Hackatron.Boot = Boot;

@@ -7,29 +7,30 @@ import Gameover from '../Objects/Gameover';
 import Powerup from '../Objects/Powerup';
 import AI from '../Core/AI';
 
-Hackatron.Game = function(game) {
-    this.enemy = null;
-    this.hostId = null;
-    this.player = null;
-    this.blocks = [];
-    this.fireballs = [];
-    this.players = null;
-};
 
 var updateTimeout;
 var alpha = 0;
 
-Hackatron.Game.prototype = {
-    toggleFullscreen: function() {
+class Game {
+    constructor(game) {
+        this.enemy = null;
+        this.hostId = null;
+        this.player = null;
+        this.blocks = [];
+        this.fireballs = [];
+        this.players = null;
+    }
+
+    toggleFullscreen() {
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
         if (this.game.scale.isFullScreen) {
             this.game.scale.stopFullScreen();
         } else {
             this.game.scale.startFullScreen();
         }
-    },
+    }
 
-    getTileAt: function(params) {
+    getTileAt(params) {
         if (!typeof(params) === 'object') { throw new Error('Invalid args'); }
 
         for (var i = 0; i < this.map.collideTiles.length; i++) {
@@ -40,9 +41,9 @@ Hackatron.Game.prototype = {
         }
 
         return null;
-    },
+    }
 
-    getValidPosition: function() {
+    getValidPosition() {
         var position = null;
         var currentPosition = 0;
         var totalPositions = Hackatron.TILE_COUNT_HORIZONTAL * Hackatron.TILE_COUNT_VERTICAL * 2;
@@ -70,9 +71,9 @@ Hackatron.Game.prototype = {
         //console.log(position);
 
         return position;
-    },
+    }
 
-    resizeGame: function(width, height) {
+    resizeGame(width, height) {
         this.game.width = width;
         this.game.height = height;
 
@@ -80,9 +81,9 @@ Hackatron.Game.prototype = {
             this.game.renderer.resize(width, height);
             Phaser.Canvas.setSmoothingEnabled(this.game.context, false);
         }
-    },
+    }
 
-    create: function() {
+    create() {
         Hackatron.game = this;
 
         document.body.className += ' game';
@@ -121,9 +122,9 @@ Hackatron.Game.prototype = {
 
         window.UI_state.screenKey = 'ingame';
         window.UI_controller.setState(window.UI_state);
-    },
+    }
 
-    initEvents: function() {
+    initEvents() {
         this.eventsInterval = setInterval(this.broadcastEvents.bind(this), 100);
 
         var lastUpdateInfo = null;
@@ -170,13 +171,13 @@ Hackatron.Game.prototype = {
                 this.fireEvent({key: 'updateEnemy', info: info});
             }
         }, UPDATE_INTERVAL);
-    },
+    }
 
-    initPhysics: function() {
+    initPhysics() {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    },
+    }
 
-    initHotkeys: function() {
+    initHotkeys() {
         this.fullscreenKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
         this.fullscreenKey.onDown.add(this.toggleFullscreen, this);
         this.aiKey = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
@@ -239,9 +240,9 @@ Hackatron.Game.prototype = {
 
         // Wait for the player to touch or click
         this.game.input.onDown.add(beginSwipe, this);
-    },
+    }
 
-    onAction: function(action) {
+    onAction(action) {
         if (action === 'swipeLeft') {
             this.player.character.inputLeft = true;
         } else if (action === 'swipeRight') {
@@ -251,18 +252,18 @@ Hackatron.Game.prototype = {
         } else if (action === 'swipeDown') {
             this.player.character.inputDown = true;
         }
-    },
+    }
 
-    toggleAI: function() {
+    toggleAI() {
         this.ai.enabled = !this.ai.enabled;
-    },
+    }
 
-    runAiSystem: function() {
+    runAiSystem() {
         this.ai = new AI();
         this.ai.init({game: this.game, player: this.player, enemy: this.enemy, map: this.map});
-    },
+    }
 
-    runEnemySystem: function() {
+    runEnemySystem() {
         // Create enemy for the host
         if (!this.enemy) {
             var worldPosition = this.getValidPosition();
@@ -280,9 +281,9 @@ Hackatron.Game.prototype = {
                 }
             });
         }
-    },
+    }
 
-    initPlayer: function() {
+    initPlayer() {
         var worldPosition = this.getValidPosition();
 
         var playerParams = {
@@ -307,9 +308,9 @@ Hackatron.Game.prototype = {
         if (Utils.env.os.mobile) {
             this.game.camera.follow(this.player.character.sprite, Phaser.Camera.FOLLOW_LOCKON);
         }
-    },
+    }
 
-    initMap: function() {
+    initMap() {
         this.map = new Map2D();
         this.map.init({game: this.game, player: this.player, enemy: this.enemy});
 
@@ -320,15 +321,15 @@ Hackatron.Game.prototype = {
         // var teleEnd = new Phaser.Rectangle(end.x, end.y, end.width, end.height);
         // TODO: do stuff with tele points
 
-    },
+    }
 
-    initCountdown: function() {
+    initCountdown() {
         var countdown = new Countdown();
         countdown.init({game: this.game, player: this.player});
         countdown.start();
-    },
+    }
 
-    initGameover: function() {
+    initGameover() {
         this.isGameOver = true;
 
         this.game.plugins.cameraShake.shake();
@@ -341,9 +342,9 @@ Hackatron.Game.prototype = {
             window.location.reload();
         }, 2000);
         //this.shutdown();
-    },
+    }
 
-    initDeathScreen: function() {
+    initDeathScreen() {
         this.game.plugins.cameraShake.shake();
 
         this.enemy.character.worldPosition = this.getValidPosition();
@@ -377,18 +378,18 @@ Hackatron.Game.prototype = {
                 this.enemy.character.frozen = false;
             }, 1000);
         }, 2000);
-    },
+    }
 
-    initSFX: function() {
+    initSFX() {
         this.musicKey = this.input.keyboard.addKey(Phaser.Keyboard.M);
         // var fx = this.game.add.audio('sfx');
         // fx.addMarker('monsterRoar', 2, 1.2);
         // fx.addMarker('playerEaten', 5, 0.5);
         // fx.addMarker('playerInWater', 7, 0.5);
         // fx.addMarker('jump', 0, 0.24);
-    },
+    }
 
-    initPowerUps: function() {
+    initPowerUps() {
         this.powerups = [];
         for (var i = 0; i <= Hackatron.TILE_COUNT_VERTICAL; i++) {
             this.powerups.push([]);
@@ -404,9 +405,9 @@ Hackatron.Game.prototype = {
                 });
             });
         }, 1000);
-    },
+    }
 
-    runPowerUpSystem: function() {
+    runPowerUpSystem() {
         var run = () => {
             var powerupHandlers = Object.keys(Powerup.handlers);
             var randomHandler = powerupHandlers[this.game.rnd.integerInRange(0, powerupHandlers.length-1)];
@@ -423,27 +424,31 @@ Hackatron.Game.prototype = {
         this.powerupInterval = setInterval(run, POWERUP_SPAWN_INTERVAL);
 
         run();
-    },
-    fireEvent: function(event) {
+    }
+
+    fireEvent(event) {
         this.events.push(event);
 
         if (event.key === 'fireballFired') {
             this.parseEvent(event);
         }
-    },
-    broadcastEvents: function() {
+    }
+
+    broadcastEvents() {
         if (!this.events.length) { return; }
 
         //console.log('Broadcasting events...', JSON.stringify({events: this.events}));
 
         this.socket.emit('events', JSON.stringify({events: this.events}));
         this.events = [];
-    },
-    moveToPointer: function() {
+    }
+
+    moveToPointer() {
         // Use path finder
 
-    },
-    followMouse: function() {
+    }
+
+    followMouse() {
         // top = -1.25
         // bottom = 1
         // left = 2.5
@@ -473,8 +478,9 @@ Hackatron.Game.prototype = {
         //     this.player.character.sprite.body.velocity.x = 0;
         //     this.player.character.sprite.body.velocity.y = 0;
         // }
-    },
-    constrainVelocity: function(sprite, maxVelocity) {
+    }
+
+    constrainVelocity(sprite, maxVelocity) {
         if (!sprite || !sprite.body) { return; }
         var body = sprite.body;
         var angle, currVelocitySqr, vx, vy;
@@ -488,8 +494,9 @@ Hackatron.Game.prototype = {
             body.velocity.x = vx;
             body.velocity.y = vy;
         }
-    },
-    update: function() {
+    }
+
+    update() {
         if (this.musicKey.isDown) {
             this.game.music.mute = !this.game.music.mute;
         }
@@ -691,9 +698,9 @@ Hackatron.Game.prototype = {
         if (this.player) {
             this.game.world.bringToTop(this.player.character.sprite);
         }
-    },
+    }
 
-    fitToWindow: function() {
+    fitToWindow() {
         this.game.canvas.style['margin'] = 'auto';
 
         if (this.isGameOver) {
@@ -719,8 +726,9 @@ Hackatron.Game.prototype = {
         document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%';
         document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%';
         document.getElementById('ui').style['transform'] = 'none';
-    },
-    shutdown: function() {
+    }
+
+    shutdown() {
         this.socket.removeAllListeners('events');
         this.powerupInterval && clearInterval(this.powerupInterval);
         this.updatePosInterval && clearInterval(this.updatePosInterval);
@@ -731,9 +739,9 @@ Hackatron.Game.prototype = {
         this.enemy = null;
         this.hostId = null;
         this.events = [];
-    },
+    }
 
-    render: function() {
+    render() {
         this.fitToWindow();
         //this.enableCollisionDebugging();
 
@@ -753,14 +761,14 @@ Hackatron.Game.prototype = {
                 //this.tweenRed = this.game.add.tween(this.map.tilemap.layers[2]).to({alpha: alpha}, 50, 'Linear', true, 0, 1);
             }
         }
-    },
+    }
 
-    enableCollisionDebugging: function() {
+    enableCollisionDebugging() {
         this.game.debug.bodyInfo(this.player.character.sprite, 32, 32);
         this.game.debug.body(this.player.character.sprite);
-    },
+    }
 
-    getPlayerById: function(playerId) {
+    getPlayerById(playerId) {
         if (playerId == this.player.id) {
             return this.player;
         }
@@ -769,15 +777,15 @@ Hackatron.Game.prototype = {
         }
 
         return null;
-    },
+    }
 
-    getRandomName: function() {
+    getRandomName() {
         var names = ['riffongrief', 'Blood', 'Midnight', 'Puritytempest', 'Jester', 'Goldmagus', 'Lightning', 'Madguard', 'Lionshadow', 'Tempest', 'Eternity', 'Faunaguard', 'Lordbeast', 'Darklord', 'Veil', 'Tombmourner', 'Hateghost', 'Spirittotem', 'Cometzealot', 'Wind', 'Paradox', 'Tombsinner', 'Darkgod', 'Reaper', 'Firereaper', 'Shadowhowl', 'Spiritlord', 'Gust', 'Song', 'Lord', 'Gunner', 'Dawn', 'King', 'King', 'Knightkiller', 'Rubyguard', 'Whitemidnight', 'Flame', 'Roseice', 'Mourner', 'Lordicon', 'Pandemonium', 'Fellkiller', 'Rascalfinder', 'Claw', 'Ragechaos', 'Ragnarok', 'Demonheart', 'Talonknight', 'Bane', 'Windseeker', 'Warsaber', 'Lionslayer', 'Veil', 'Darkbeast', 'Honorreaper', 'Lancequake', 'Victory', 'Warlockmage', 'Nemesis', 'Queen', 'Bloodbattler', 'Jericho', 'Roguegriffon', 'Wanderlust', 'Mageslayer', 'Cursefinder', 'Legend', 'Beastclaw', 'Shadow', 'Faunaknight', 'Grave', 'Demonfinder', 'Fauna', 'Cult', 'Noblewarlock', 'Faunachanter', 'Battler', 'Talonreaper', 'Steeliron'];
 
         return names[Math.floor(Math.random() * names.length)]
-    },
+    }
 
-    createPlayer: function(playerId) {
+    createPlayer(playerId) {
         var player = new Player();
 
         player.init({
@@ -796,9 +804,9 @@ Hackatron.Game.prototype = {
         }, null, this.game);
 
         return player;
-    },
+    }
 
-    welcomePlayer: function(playerId) {
+    welcomePlayer(playerId) {
         // Add players
         var players = [];
         for(playerId in this.players) {
@@ -842,12 +850,12 @@ Hackatron.Game.prototype = {
         };
 
         this.fireEvent({key: 'welcomePlayer', info: gameData});
-    },
+    }
 
 // ============================================================================
 //                          Socket Event Handlers
 // ============================================================================
-    parseEvent: function(event) {
+    parseEvent(event) {
         console.log('Got event: ' + event.key, event.info);
 
         // Method for updating board local client game state using info
@@ -1071,18 +1079,18 @@ Hackatron.Game.prototype = {
                 }, 3000);
             }
         }
-    },
-    registerToEvents: function () {
+    }
+    registerToEvents () {
         // Method for receiving multiple events at once
         // {events: [{key: 'eventName', info: {...data here...}]}
         this.socket.on('events', (data) => {
             data.events.forEach((event) => { this.parseEvent(event); });
         });
-    },
+    }
 
     // Method to broadcast to  other clients (if there are any) that you have
     // joined the game
-    joinGame: function () {
+    joinGame () {
         this.fireEvent({key: 'newPlayer', info: {
             player: {
                 id: this.player.id,
@@ -1091,4 +1099,6 @@ Hackatron.Game.prototype = {
             }
         }});
     }
-};
+}
+
+Hackatron.Game = Game;

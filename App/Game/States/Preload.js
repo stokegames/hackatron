@@ -1,10 +1,10 @@
-Hackatron.Preload = function(game) {
-    this.game = game;
-    this.ready = false;
-};
+class Preload {
+    constructor(game) {
+        this.game = game;
+        this.ready = false;
+    }
 
-Hackatron.Preload.prototype = {
-    preload: function() {
+    preload() {
         this.preloaderBar = this.add.sprite(this.width/2,this.height/2, 'gfx/overlays/preloader');
         this.preloaderBar.x = Hackatron.GAME_WIDTH/4;
         this.preloaderBar.y = Hackatron.GAME_HEIGHT/2;
@@ -52,15 +52,17 @@ Hackatron.Preload.prototype = {
 
         // Audio
         this.load.audio('audio/bg-0002', [assetsPath + 'Audio/bg-0002.mp3']);
-    },
+    }
 
-    update: function() {
+    update() {
         if(!!this.ready) {
             this.game.state.start('Menu');
         }
-    },
+    }
 
-    onLoadComplete: function() {
+    onLoadComplete() {
         this.ready = true;
     }
-};
+}
+
+Hackatron.Preload = Preload;

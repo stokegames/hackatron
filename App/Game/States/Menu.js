@@ -1,9 +1,9 @@
-Hackatron.Menu = function(game) {
-    this.game = game;
-};
+class Menu {
+    constructor(game) {
+        this.game = game;
+    }
 
-Hackatron.Menu.prototype = {
-    fitToWindow: function() {
+    fitToWindow() {
         this.game.canvas.style['width'] = '100%';
         this.game.canvas.style['height'] = '100%';
         //this.game.canvas.style['transform'] = 'perspective(900px) rotateX(15deg) rotate(-3deg)';
@@ -11,9 +11,9 @@ Hackatron.Menu.prototype = {
         document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%';
         //document.getElementById('ui').style['transform'] = 'perspective(1000px) rotateX(10deg) rotate(-2deg)';
         window.onresize();
-    },
+    }
 
-    create: function() {
+    create() {
         if (Hackatron.debug) {
             //this.game.add.plugin(Phaser.Plugin.Debug);
         }
@@ -36,9 +36,9 @@ Hackatron.Menu.prototype = {
         this.game.music = this.game.add.audio('audio/bg-0002', 1, true);
         this.game.music.play('', 0, 1, true);
         this.game.music.mute = true;
-    },
+    }
 
-    update: function() {
+    update() {
         if (this.startKey.isDown) {
             this.game.state.start('Game');
         }
@@ -46,9 +46,11 @@ Hackatron.Menu.prototype = {
         if (this.musicKey.isDown) {
             this.game.music.mute = !this.game.music.mute;
         }
-    },
+    }
 
-    render: function() {
+    render() {
         this.fitToWindow();
     }
-};
+}
+
+Hackatron.Menu = Menu;
