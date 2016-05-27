@@ -5,16 +5,17 @@ class Preload {
     }
 
     preload() {
-        this.preloaderBar = this.add.sprite(this.width/2,this.height/2, 'gfx/overlays/preloader');
-        this.preloaderBar.x = Hackatron.GAME_WIDTH/4;
-        this.preloaderBar.y = Hackatron.GAME_HEIGHT/2;
-        this.preloaderBar.width = Hackatron.GAME_WIDTH/2;
+        var width = Hackatron.GAME_WIDTH;
+        var height = Hackatron.GAME_HEIGHT;
+        this.preloaderBar = this.add.sprite(width/4,height/2, 'gfx/overlays/preloader');
+        this.preloaderBar.width = width/2;
         this.preloaderBar.anchor.setTo(0, 0);
 
         this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
         this.load.setPreloadSprite(this.preloaderBar);
 
-        var text = this.game.add.text(Hackatron.GAME_WIDTH/4, Hackatron.GAME_HEIGHT/2-50, "Loading...", {fill: '#ffffff' });
+        var text = this.game.add.text(width/4, height/2-50, "Loading...", {fill: '#ffffff' });
+        text.width = width/4;
         this.game.load.onFileComplete.add((progress, cacheKey, success, totalLoaded, totalFiles) => {
             // console.log(progress);
             text.setText("Loading... " + progress + "%");
