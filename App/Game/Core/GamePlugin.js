@@ -1,8 +1,7 @@
-var GamePlugin = function() {
-};
-
-GamePlugin.prototype.toString = function() {
-    return '[GamePlugin]';
-};
+class GamePlugin {
+    toString() {
+        return '[GamePlugin]';
+    }
+}
 
 export default GamePlugin;
