@@ -9,8 +9,8 @@ class Countdown {
         var tween1 = null;
         var tween2 = null;
         var tween3 = null;
-        var centerX = self.game.camera.width / 2;
-        var centerY = self.game.camera.height / 2;
+        var centerX = self.game.camera.view.x + self.game.camera.width / 2;
+        var centerY = self.game.camera.view.y + self.game.camera.height / 2;
         self.player.character.invincible = true;
         self.player.character.frozen = true;
 

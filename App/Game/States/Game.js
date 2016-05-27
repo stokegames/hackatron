@@ -107,7 +107,6 @@ class Game {
         this.initMap();
         this.initPowerUps();
         this.initPlayer();
-        this.initCountdown();
         this.initSFX();
         this.initHotkeys();
 
@@ -1061,6 +1060,11 @@ class Game {
                 }
             }, FIREBALL_DURATION);
         } else if (event.key === 'setHost') {
+            // If there's currently no host then this is a new game
+            // There should be a countdown
+            if (!this.hostId) {
+                this.initCountdown();
+            }
             // Check if we already know this is the host,
             // And if it's this player, we don't need to set ourselves up again
             if (this.hostId === event.info.player.id) { return; }
