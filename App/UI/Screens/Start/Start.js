@@ -9,7 +9,7 @@ var StartScreen = React.createClass({
 
         if (this.state.instantActionTimer === 0) {
             clearInterval(this.interval);
-            Hackatron.loader.state.start('Game');
+            //Hackatron.loader.state.start('Game');
         }
     },
     componentDidMount: function() {
@@ -43,8 +43,8 @@ var styles = {
     container: {
         position: 'absolute',
         top: 270,
-        left: 400,
-        width: 235,
+        right: 20,
+        width: '50%',
         height: 150,
         padding: '20px 0px 0px 10px',
         opacity: 0.9,

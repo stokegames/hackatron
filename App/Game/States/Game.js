@@ -119,7 +119,7 @@ class Game {
 
         this.game.stage.disableVisibilityChange = true;
 
-        window.UI_state.screenKey = 'ingame';
+        window.UI_state.screenKey = 'game';
         window.UI_controller.setState(window.UI_state);
     }
 

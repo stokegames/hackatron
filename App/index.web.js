@@ -25,8 +25,8 @@ if (Utils.env.os.mobile) {
     Hackatron.GAME_HEIGHT = 512; // Game originally designed for 512px
 }
 
-Hackatron.UI_WIDTH = 700; // UI originally designed for 700px
-Hackatron.UI_HEIGHT = 700; // UI originally designed for 700px
+Hackatron.UI_WIDTH = Hackatron.GAME_WIDTH; // UI originally designed for 700px
+Hackatron.UI_HEIGHT = Hackatron.GAME_HEIGHT; // UI originally designed for 700px
 Hackatron.TILE_COUNT_HORIZONTAL = 32;
 Hackatron.TILE_COUNT_VERTICAL = 32;
 

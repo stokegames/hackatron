@@ -3,7 +3,7 @@
 import CodePush from 'react-native-code-push';
 import React, {Component} from 'react';
 import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
-import Launch from './UI/Screens/Launch';
+import LaunchScreen from './UI/Screens/LaunchScreen';
 import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
 
@@ -139,7 +139,7 @@ export default class Router extends Component {
         return (
             <Provider store={store}>
                 <RouteContainer hideNavBar={true} key="root">
-                    <Route key="launch" header={Header} initial={true} component={Launch} wrapRouter={true} title="Launch" hideNavBar={true}/>
+                    <Route key="launch" header={Header} initial={true} component={LaunchScreen} wrapRouter={true} title="Launch Screen" hideNavBar={true}/>
                 </RouteContainer>
             </Provider>
         );
