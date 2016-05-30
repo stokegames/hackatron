@@ -53,7 +53,8 @@ Hackatron.getHeightRatioScale = function() {
 
 // Resize UI
 window.onresize = function() {
-    uiContainer.style.zoom = window.innerWidth / Hackatron.UI_WIDTH;
+    var smallest = window.innerWidth < window.innerHeight ? window.innerWidth / Hackatron.UI_WIDTH : window.innerHeight / Hackatron.UI_HEIGHT;
+    uiContainer.style.zoom = smallest;
 };
 
 // Load Game
