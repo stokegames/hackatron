@@ -74,6 +74,7 @@ class Preload {
         if(!!this.ready) {
             this.game.state.start('Menu');
         }
+        Hackatron.fitToWindow();
     }
 
     onLoadComplete() {

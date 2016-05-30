@@ -12,6 +12,10 @@ ReactDOM.render(<UI />, document.getElementById('ui'));
 
 window.Hackatron = {};
 
+const Framework = require('./Framework');
+const {React, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} = Framework;
+
+
 require('./Game/States/Boot');
 require('./Game/States/Preload');
 require('./Game/States/Menu');
@@ -51,9 +55,7 @@ Hackatron.getHeightRatioScale = function() {
 
 // Resize UI
 window.onresize = function() {
-    var smallest = window.innerHeight > window.innerWidth ? gameContainer.offsetWidth / Hackatron.UI_WIDTH : gameContainer.offsetHeight / Hackatron.UI_HEIGHT;
-    uiContainer.style.left = (100 - parseInt(gameContainer.style.width)) / 2 + '%';
-    uiContainer.style.zoom = smallest;
+    uiContainer.style.zoom = window.innerWidth / Hackatron.UI_WIDTH;
 };
 
 // Load Game
@@ -73,5 +75,22 @@ window.onload = function () {
 
     Hackatron.loader.state.start('Boot');
 
+    window.onresize();
+};
+
+
+
+window.Hackatron.fitToWindow = function() {
+    if (window.Hackatron.game) {
+        window.Hackatron.game.game.canvas.style['width'] = '100%';
+        window.Hackatron.game.game.canvas.style['height'] = '100%';
+    }
+    //this.game.canvas.style['transform'] = 'perspective(900px) rotateX(15deg) rotate(-3deg)';
+    document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%';
+    document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%';
+    if (Platform.Env.isMobile) {
+        document.body.style['background-size'] = 'contain';
+    }
+    //document.getElementById('ui').style['transform'] = 'perspective(1000px) rotateX(10deg) rotate(-2deg)';
     window.onresize();
 };

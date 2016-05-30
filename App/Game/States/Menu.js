@@ -3,16 +3,6 @@ class Menu {
         this.game = game;
     }
 
-    fitToWindow() {
-        this.game.canvas.style['width'] = '100%';
-        this.game.canvas.style['height'] = '100%';
-        //this.game.canvas.style['transform'] = 'perspective(900px) rotateX(15deg) rotate(-3deg)';
-        document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%';
-        document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%';
-        //document.getElementById('ui').style['transform'] = 'perspective(1000px) rotateX(10deg) rotate(-2deg)';
-        window.onresize();
-    }
-
     create() {
         if (Hackatron.debug) {
             //this.game.add.plugin(Phaser.Plugin.Debug);
@@ -31,8 +21,6 @@ class Menu {
         window.UI_state.screenKey = 'start';
         window.UI_controller.setState(window.UI_state);
 
-        this.fitToWindow();
-
         this.game.music = this.game.add.audio('audio/bg-0002', 1, true);
         this.game.music.play('', 0, 1, true);
         this.game.music.mute = true;
@@ -46,10 +34,8 @@ class Menu {
         if (this.musicKey.isDown) {
             this.game.music.mute = !this.game.music.mute;
         }
-    }
 
-    render() {
-        this.fitToWindow();
+        Hackatron.fitToWindow();
     }
 }
 
