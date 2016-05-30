@@ -13,7 +13,7 @@ class StartScreen extends Component {
         };
     }
 
-    tick() {
+    tick: () => {
         this.setState({instantActionTimer: this.state.instantActionTimer - 1});
 
         if (this.state.instantActionTimer === 0) {
@@ -23,7 +23,7 @@ class StartScreen extends Component {
     }
 
     componentDidMount() {
-        this.interval = setInterval(this.tick.bind(this), 1000);
+        this.interval = setInterval(this.tick, 1000);
     }
 
     componentWillUnmount() {
