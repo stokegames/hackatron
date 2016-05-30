@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
+const Framework = require('../../../Framework');
+const {React, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} = Framework;
 
 window.GameState = {
     show: true,
     showOthers: false,
     currentCharacter: 'tron',
     allCharacters: ['tron', 'ghost', 'frosty', 'one'],
+    styles: Framework.getStyles(require('./Game.css'))
 };
-
 
 class GameScreen extends Component {
     toString() { '[GameScreen]' }
@@ -18,11 +19,11 @@ class GameScreen extends Component {
         this.state = window.GameState;
     }
 
-    _clickCharacter() {
+    clickCharacter() {
         this.setState({showOthers: !this.state.showOthers});
     }
 
-    _changeCharacter(key) {
+    changeCharacter(key) {
         this.setState({currentCharacter: key});
         Hackatron.game.player.character.changeSkin(key);
     }
@@ -39,9 +40,9 @@ class GameScreen extends Component {
             var index = otherCharacters.indexOf(this.state.currentCharacter);
             otherCharacters.splice(index, 1);
 
-            otherElements = <div style={styles.otherCharacterChooser}>
+            otherElements = <div styles={this.state.styles.otherCharacterChooser}>
                 {otherCharacters.map((key) => {
-                    return <div style={{width: 32, height: 32, marginBottom: 10, background: 'transparent url(Assets/GFX/characters/' + key + '/walkDown-0002.png) no-repeat 0 0'}} onClick={()=>this._changeCharacter(key)}></div>;
+                    return <div style={{width: 32, height: 32, marginBottom: 10, background: 'transparent url(/Assets/GFX/characters/' + key + '/walkDown-0002.png) no-repeat 0 0'}} onClick={()=>this.changeCharacter(key)}></div>;
                 })}
             </div>
         }
@@ -54,13 +55,13 @@ class GameScreen extends Component {
             players.push({name: player.name, points: '?'});
         }
 
-        return (
+        return Framework.wrapStyles(
             <div>
-                <div style={styles.characterChooser}>
-                    <div style={{width: 32, height: 32, background: '#01242C url(Assets/GFX/characters/' + this.state.currentCharacter + '/walkDown-0002.png) no-repeat 0 0'}} onClick={() => this._clickCharacter}></div>
+                <div styles={this.state.styles.characterChooser}>
+                    <div style={{width: 32, height: 32, background: '#01242C url(/Assets/GFX/characters/' + this.state.currentCharacter + '/walkDown-0002.png) no-repeat 0 0'}} onClick={()=>this.clickCharacter()}></div>
                     {this.state.showOthers && otherElements}
                 </div>
-                <div style={styles.scoreboard}>
+                <div styles={this.state.styles.scoreboard}>
                     {players.map(function(item) {
                       return <div key={item.name}>{item.name}: {item.points}</div>;
                     })}
@@ -69,40 +70,5 @@ class GameScreen extends Component {
         );
     }
 }
-
-var styles = {
-    scoreboard: {
-        position: 'absolute',
-        top: 20,
-        right: 20,
-        width: '40%',
-        height: 100,
-        padding: 5,
-        opacity: 0.8,
-        'box-shadow': '2px 1px #000',
-        background: '#00191F',
-        border: '3px solid #1583C8',
-        color: '#fff',
-        fontFamily: 'Helvetica, sans-serif'
-    },
-    characterChooser: {
-        position: 'absolute',
-        top: 20,
-        left: 20,
-        width: 50,
-        padding: 5,
-        opacity: 0.8,
-        'box-shadow': '2px 1px #000',
-        background: '#00191F',
-        border: '3px solid #1583C8',
-        color: '#fff',
-        fontFamily: 'Helvetica, sans-serif'
-    },
-    otherCharacterChooser: {
-        color: '#fff',
-        padding: '15px 0 0 5px',
-        fontFamily: 'Helvetica, sans-serif'
-    }
-};
 
 export default GameScreen;

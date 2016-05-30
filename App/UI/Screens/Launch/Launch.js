@@ -1,5 +1,3 @@
-'use strict';
-
 const Framework = require('../../../Framework');
 const {React, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} = Framework;
 
@@ -69,7 +67,7 @@ class Launch extends Component {
         var isProd = false;
 
         if (isProd) {
-            host = 'http://localhost:8082';
+            host = 'https://stokegames.com';
         } else {
             host = 'http://localhost:8080';
         }

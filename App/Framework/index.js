@@ -324,7 +324,12 @@ Framework.wrapStyles = function(item) {
     }
 
     if (item.props.styles) {
-        extension[Framework.Platform.OS === 'web' ? 'className' : 'style'] = item.props.styles;
+        var attr = Framework.Platform.OS === 'web' ? 'className' : 'style';
+        if (item.props[attr]) {
+            extension[attr] = Object.assign({}, item.props[attr], item.props.styles);
+        } else {
+            extension[attr] = item.props.styles;
+        }
     }
 
     return React.cloneElement(item, extension);
