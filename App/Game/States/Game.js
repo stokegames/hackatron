@@ -359,7 +359,7 @@ class Game {
             this.players[id].addPoints(100 / this.players.length);
         }
 
-        window.UI_IngameController.setState(window.IngameState);
+        window.UI_GameController.setState(window.GameState);
 
         this.newGameKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         this.newGameKey.onDown.add(() => {
@@ -653,13 +653,13 @@ class Game {
             this.player.character.dirty = true;
 
             this.player.removePoints(10);
-            window.UI_IngameController.setState(window.IngameState);
+            window.UI_GameController.setState(window.GameState);
         };
 
         var collideBlockHandler = () => {
             this.player.character.dirty = true;
             this.player.removePoints(2);
-            window.UI_IngameController.setState(window.IngameState);
+            window.UI_GameController.setState(window.GameState);
         };
 
         this.blocks.forEach((block) => {
@@ -830,8 +830,8 @@ class Game {
 
         // Add powerups
         var powerups = [];
-        for(row in this.powerups) {
-            for(column in this.powerups[row]) {
+        for(var row in this.powerups) {
+            for(var column in this.powerups[row]) {
                 var powerup = this.powerups[row][column];
 
                 if (!powerup) { continue; }
@@ -945,7 +945,7 @@ class Game {
             }
 
             this.player.addPoints(100 / this.players.length);
-            window.UI_IngameController.setState(window.IngameState);
+            window.UI_GameController.setState(window.GameState);
         // Method for handling player leaves
         } else if (event.key === 'playerLeave') {
             if (this.players[event.info.player.id]) {

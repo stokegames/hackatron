@@ -2,6 +2,21 @@ class Preload {
     constructor(game) {
         this.game = game;
         this.ready = false;
+        this.initServerConnection();
+    }
+
+    initServerConnection() {
+        var wf = document.createElement('script');
+        // If we're on port 8082, we're inside the iOS app
+        // So we need to tell it to use the local server socket for now
+        if (window.location.host.indexOf('8082') !== -1) {
+            wf.src = 'http://localhost:8080/socket.io/socket.io.js';
+        } else {
+            wf.src = '/socket.io/socket.io.js';
+        }
+        wf.type = 'text/javascript';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
     }
 
     preload() {

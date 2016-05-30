@@ -1,25 +1,33 @@
 import React, {Component} from 'react';
 
-window.IngameState = {
+window.GameState = {
     show: true,
     showOthers: false,
     currentCharacter: 'tron',
     allCharacters: ['tron', 'ghost', 'frosty', 'one'],
 };
 
-var IngameScreen = React.createClass({
-    getInitialState: function() {
-        window.UI_IngameController = this;
-        return window.IngameState;
-    },
-    _clickCharacter: function() {
+
+class GameScreen extends Component {
+    toString() { '[GameScreen]' }
+
+    constructor(props) {
+        super(props);
+
+        window.UI_GameController = this;
+        this.state = window.GameState;
+    }
+
+    _clickCharacter() {
         this.setState({showOthers: !this.state.showOthers});
-    },
-    _changeCharacter: function(key) {
+    }
+
+    _changeCharacter(key) {
         this.setState({currentCharacter: key});
         Hackatron.game.player.character.changeSkin(key);
-    },
-    render: function() {
+    }
+
+    render() {
         var otherElements = null;
 
         if (!this.state.show) {
@@ -49,7 +57,7 @@ var IngameScreen = React.createClass({
         return (
             <div>
                 <div style={styles.characterChooser}>
-                    <div style={{width: 32, height: 32, background: '#01242C url(Assets/GFX/characters/' + this.state.currentCharacter + '/walkDown-0002.png) no-repeat 0 0'}} onClick={this._clickCharacter}></div>
+                    <div style={{width: 32, height: 32, background: '#01242C url(Assets/GFX/characters/' + this.state.currentCharacter + '/walkDown-0002.png) no-repeat 0 0'}} onClick={() => this._clickCharacter}></div>
                     {this.state.showOthers && otherElements}
                 </div>
                 <div style={styles.scoreboard}>
@@ -60,7 +68,7 @@ var IngameScreen = React.createClass({
             </div>
         );
     }
-});
+}
 
 var styles = {
     scoreboard: {
@@ -97,4 +105,4 @@ var styles = {
     }
 };
 
-export default IngameScreen;
+export default GameScreen;

@@ -6,7 +6,7 @@ import fs from 'fs';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-import webpackConfig from '../webpack.config.js';
+import webpackConfig from '../webpack.config.web.js';
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);

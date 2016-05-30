@@ -57,6 +57,12 @@ Deploy an iOS app:
 react-native bundle --platform ios --entry-file ./App/index.ios.js --bundle-output ./App/Build/Release/main.jsbundle --dev false --resetCache && webpack --progress -p && code-push release Hackatron ./App 1.0.0
 ```
 
+If it says 8081 is currently in use:
+```
+lsof -n -i4TCP:8081
+kill -9 <PID>
+```
+
 Build webapp: `webpack --progress -p`
 
 ### TODO

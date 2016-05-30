@@ -188,8 +188,8 @@ class KaihanHandler extends PowerupHandler {
             this.player.character.speed *= 1.5;
         }
 
-        window.IngameState.show = false;
-        window.UI_IngameController.setState(window.IngameState);
+        window.GameState.show = false;
+        window.UI_GameController.setState(window.GameState);
     }
 
     onStopped() {
@@ -204,8 +204,8 @@ class KaihanHandler extends PowerupHandler {
             this.player.character.speed = updatedSpeed;
         }
 
-        window.IngameState.show = true;
-        window.UI_IngameController.setState(window.IngameState);
+        window.GameState.show = true;
+        window.UI_GameController.setState(window.GameState);
     }
 }
 
@@ -228,8 +228,8 @@ class SaiyanHandler extends PowerupHandler {
             this.player.character.speed *= 1.5;
         }
 
-        window.IngameState.show = false;
-        window.UI_IngameController.setState(window.IngameState);
+        window.GameState.show = false;
+        window.UI_GameController.setState(window.GameState);
     }
 
     onStopped() {
@@ -244,8 +244,8 @@ class SaiyanHandler extends PowerupHandler {
             this.player.character.speed = updatedSpeed;
         }
 
-        window.IngameState.show = true;
-        window.UI_IngameController.setState(window.IngameState);
+        window.GameState.show = true;
+        window.UI_GameController.setState(window.GameState);
     }
 }
 

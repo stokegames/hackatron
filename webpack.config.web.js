@@ -20,7 +20,7 @@ module.exports = {
             {
                 test: /\.js?$/,
                 loader: 'babel',
-                include: path.join(__dirname + '/App'),
+                include: [path.join(__dirname + '/App'), path.join(__dirname + '/node_modules/react-native-extended-stylesheet')],
                 query: {
                     cacheDirectory: true,
                     plugins: [],
@@ -31,8 +31,7 @@ module.exports = {
                 test: /\.css$/,
                 include: path.join(__dirname + '/App'),
                 loaders: [
-                    'style?sourceMap',
-                    'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
+                    'raw'
                 ]
             },
             {
@@ -42,5 +41,7 @@ module.exports = {
             },
         ]
     },
-    plugins: []
+    plugins: [
+        new webpack.IgnorePlugin(/^(react-native)$/)
+    ]
 };

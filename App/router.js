@@ -3,9 +3,15 @@
 import CodePush from 'react-native-code-push';
 import React, {Component} from 'react';
 import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
-import LaunchScreen from './UI/Screens/LaunchScreen';
+import LaunchScreen from './UI/Screens/Launch';
 import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
+
+import EStyleSheet from 'react-native-extended-stylesheet';
+
+// calculate styles
+EStyleSheet.build();
+
 
 var RNRF = require('react-native-router-flux');
 var {Route, Schema, Animations, Actions, TabBar} = RNRF;

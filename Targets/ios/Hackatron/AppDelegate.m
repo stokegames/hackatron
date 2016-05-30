@@ -63,21 +63,25 @@
 
   NSURL *jsCodeLocation;
   
-  jsCodeLocation = [CodePush bundleURL];
+  NSString *jsBundleUrlString;
+  
+  if (TARGET_IPHONE_SIMULATOR) {
+    jsBundleUrlString = @"http://localhost:8081/App/index.ios.bundle?platform=ios&dev=false";
+  } else {
+    NSString *serverIP = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SERVER_IP"];
+    NSString *jsCodeUrlString = [NSString stringWithFormat:@"http://%@:8081/App/index.ios.bundle", serverIP];
+    jsBundleUrlString = [jsCodeUrlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+  }
+  jsCodeLocation = [NSURL URLWithString:jsBundleUrlString];
 
-
-    NSLog(@"bundle URL: %@", [jsCodeLocation absoluteString]);
-//  NSString *jsBundleUrlString;
+  
+//  jsCodeLocation = [CodePush bundleURL];
 //  
-//  if (TARGET_IPHONE_SIMULATOR) {
-//    jsBundleUrlString = @"http://localhost:8081/index.ios.bundle?platform=ios&dev=false";
-//  } else {
-//    NSString *serverIP = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SERVER_IP"];
-//    NSString *jsCodeUrlString = [NSString stringWithFormat:@"http://%@:8081/index.ios.bundle", serverIP];
-//    jsBundleUrlString = [jsCodeUrlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//  }
-//  jsCodeLocation = [NSURL URLWithString:jsBundleUrlString];
-
+//  
+//  NSLog(@"bundle URL: %@", [jsCodeLocation absoluteString]);
+  
+  
+  
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"Router"
