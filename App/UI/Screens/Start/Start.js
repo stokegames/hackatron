@@ -13,9 +13,9 @@ class StartScreen extends Component {
         };
     }
 
-    tick: () => {
+    tick() {
         this.setState({instantActionTimer: this.state.instantActionTimer - 1});
-debugger;
+
         if (this.state.instantActionTimer === 0) {
             Hackatron.loader.state.start('Game');
             clearInterval(this.interval);
@@ -23,7 +23,7 @@ debugger;
     }
 
     componentDidMount() {
-        this.interval = setInterval(this.tick, 1000);
+        this.interval = setInterval(this.tick.bind(this), 1000);
     }
 
     componentWillUnmount() {
