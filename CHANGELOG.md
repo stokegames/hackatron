@@ -1,4 +1,6 @@
-## To Be Released
+# Changelog
+
+## Pre-relase
 - New map tiles
 - Added SFX
 - Added buffs
