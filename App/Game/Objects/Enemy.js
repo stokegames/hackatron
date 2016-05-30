@@ -11,9 +11,9 @@ class Enemy {
 
         Object.assign(this, params); // extends this with the params
 
-        if (this.keys) {
-            this.setupKeys(this.keys);
-        }
+        // if (this.keys) {
+        //     this.setupKeys(this.keys);
+        // }
     }
 
     setupKeys(keys) {
