@@ -17,8 +17,8 @@ class StartScreen extends Component {
         this.setState({instantActionTimer: this.state.instantActionTimer - 1});
 
         if (this.state.instantActionTimer === 0) {
-            clearInterval(this.interval);
             Hackatron.loader.state.start('Game');
+            clearInterval(this.interval);
         }
     }
 
