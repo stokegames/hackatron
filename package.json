@@ -2,8 +2,8 @@
   "name": "Hackatron",
   "description": "Hackatron",
   "version": "1.0.0",
-  "author": "",
-  "license": "ISC",
+  "author": "Stoke Games",
+  "license": "Proprietary",
   "dependencies": {
     "babel-cli": "6.9.0",
     "babel-core": "6.9.0",
