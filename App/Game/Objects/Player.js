@@ -28,6 +28,11 @@ class Player {
         if (this.keys.left) { this.character.sprite.leftKey = this.game.input.keyboard.addKey(this.keys.left); }
         if (this.keys.right) { this.character.sprite.rightKey = this.game.input.keyboard.addKey(this.keys.right); }
 
+        if (this.keys.up) { this.character.sprite.wKey = this.game.input.keyboard.addKey(this.keys.w); }
+        if (this.keys.down) { this.character.sprite.sKey = this.game.input.keyboard.addKey(this.keys.s); }
+        if (this.keys.left) { this.character.sprite.aKey = this.game.input.keyboard.addKey(this.keys.a); }
+        if (this.keys.right) { this.character.sprite.dKey = this.game.input.keyboard.addKey(this.keys.d); }
+
         // register attack key if it exists
         if (this.keys.att) {
             this.character.sprite.attKey = this.game.input.keyboard.addKey(this.keys.att);

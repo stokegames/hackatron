@@ -7,6 +7,9 @@ import Gameover from '../Objects/Gameover';
 import Powerup from '../Objects/Powerup';
 import AI from '../Core/AI';
 
+const Framework = require('../../Framework');
+const {React, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} = Framework;
+
 
 var updateTimeout;
 var alpha = 0;
@@ -41,6 +44,24 @@ class Game {
         }
 
         return null;
+    }
+
+    onControlDown(key) {
+        if (key === 'att') {
+            this.player.character.sprite.attKey.onDown.dispatch();
+        } else {
+            this.player.character.sprite[key + 'Key'].isDown = true;
+        }
+    }
+
+    onControlUp(key) {
+        if (key === 'att') {
+        } else {
+            this.player.character.sprite['leftKey'].isDown = false;
+            this.player.character.sprite['rightKey'].isDown = false;
+            this.player.character.sprite['upKey'].isDown = false;
+            this.player.character.sprite['downKey'].isDown = false;
+        }
     }
 
     getValidPosition() {
@@ -722,9 +743,15 @@ class Game {
             this.game.canvas.style['transform'] = 'perspective(' + pers + 'px) skew(' + xSkew + 'deg, 0deg) rotateX(' + xDeg + 'deg) rotateY(' + yDeg + 'deg) rotate(' + rDeg + 'deg)';
         }
 
-        document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%';
-        document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%';
-        document.getElementById('ui').style['transform'] = 'none';
+        if (Platform.Env.isMobile) {
+            document.getElementById('game').style['width'] = 100 + '%';
+            document.getElementById('game').style['height'] = 100 + '%';
+            document.getElementById('ui').style['transform'] = 'none';
+        } else {
+            document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%';
+            document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%';
+            document.getElementById('ui').style['transform'] = 'none';
+        }
     }
 
     shutdown() {

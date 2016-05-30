@@ -261,7 +261,7 @@ if (Framework.Platform.OS === 'web') {
         return os;
     };
 
-    Framework.Env = detect(window.navigator.userAgent);
+    Framework.Platform.Env = detect(window.navigator.userAgent);
 } else {
 }
 
