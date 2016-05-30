@@ -1,4 +1,5 @@
-import React from 'react';
+const Framework = require('./Framework');
+const {React, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} = Framework;
 import ReactDOM from 'react-dom';
 
 import { renderToString } from 'react-dom/server';
@@ -11,9 +12,6 @@ import UI from './UI/UI';
 ReactDOM.render(<UI />, document.getElementById('ui'));
 
 window.Hackatron = {};
-
-const Framework = require('./Framework');
-const {React, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} = Framework;
 
 
 require('./Game/States/Boot');
