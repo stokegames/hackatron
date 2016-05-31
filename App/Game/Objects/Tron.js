@@ -58,8 +58,8 @@ class Tron extends Character {
             self.game.physics.arcade.enable(block, Phaser.Physics.ARCADE);
 
             block.body.immovable = true;
-            block.scale.x = 1;
-            block.scale.y = 1;
+            block.scale.x = 1.6;
+            block.scale.y = 1.3;
             Hackatron.game.blocks.push(block);
 
             // makes block fade away within a 2.0 seconds

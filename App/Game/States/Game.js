@@ -46,24 +46,6 @@ class Game {
         return null;
     }
 
-    onControlDown(key) {
-        if (key === 'att') {
-            this.player.character.sprite.attKey.onDown.dispatch();
-        } else {
-            this.player.character.sprite[key + 'Key'].isDown = true;
-        }
-    }
-
-    onControlUp(key) {
-        if (key === 'att') {
-        } else {
-            this.player.character.sprite['leftKey'].isDown = false;
-            this.player.character.sprite['rightKey'].isDown = false;
-            this.player.character.sprite['upKey'].isDown = false;
-            this.player.character.sprite['downKey'].isDown = false;
-        }
-    }
-
     getValidPosition() {
         var position = null;
         var currentPosition = 0;
@@ -262,15 +244,35 @@ class Game {
         this.game.input.onDown.add(beginSwipe, this);
     }
 
+    onControlDown(key) {
+        if (key === 'att') {
+            this.player.character.sprite.attKey.onDown.dispatch();
+        } else {
+            this.player.character.sprite[key + 'Key'].isDown = true;
+        }
+    }
+
+    onControlUp(key) {
+        if (key === 'att') {
+        } else {
+            this.player.character.sprite['leftKey'].isDown = false;
+            this.player.character.sprite['rightKey'].isDown = false;
+            this.player.character.sprite['upKey'].isDown = false;
+            this.player.character.sprite['downKey'].isDown = false;
+        }
+    }
+
     onAction(action) {
+        this.onControlUp();
+
         if (action === 'swipeLeft') {
-            this.player.character.inputLeft = true;
+            this.onControlDown('left');
         } else if (action === 'swipeRight') {
-            this.player.character.inputRight = true;
+            this.onControlDown('right');
         } else if (action === 'swipeUp') {
-            this.player.character.inputUp = true;
+            this.onControlDown('up');
         } else if (action === 'swipeDown') {
-            this.player.character.inputDown = true;
+            this.onControlDown('down');
         }
     }
 
@@ -1007,8 +1009,8 @@ class Game {
             this.game.physics.arcade.enable(block, Phaser.Physics.ARCADE);
             block.animations.add('glitch', [0,1,2], 12, true, true);
             block.animations.play('glitch');
-            block.scale.x = 1;
-            block.scale.y = 1;
+            block.scale.x = 1.6;
+            block.scale.y = 1.3;
             block.body.immovable = true;
 
             // Make block fade in 2.0 seconds
