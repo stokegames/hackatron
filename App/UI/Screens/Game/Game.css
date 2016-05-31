@@ -1,6 +1,6 @@
 scoreboard {
     position: absolute;
-    top: 10px;
+    top: 160px;
     right: 10px;
     width: 60%;
     height: 80px;
@@ -43,7 +43,7 @@ otherCharacterChooser {
 
 leftControl {
     position: absolute;
-    top: 250px;
+    top: 50px;
     right: 50px;
     background: #00191F url(/Assets/UI/Buttons/left-arrow.png) no-repeat 3px 3px;
     background-size: 27px auto;
@@ -60,7 +60,7 @@ leftControl {
 
 rightControl {
     position: absolute;
-    top: 250px;
+    top: 50px;
     right: 10px;
     background: #00191F url(/Assets/UI/Buttons/right-arrow.png) no-repeat 3px 3px;
     background-size: 27px auto;
@@ -77,7 +77,7 @@ rightControl {
 
 topControl {
     position: absolute;
-    top: 210px;
+    top: 10px;
     right: 33px;
     background: #00191F url(/Assets/UI/Buttons/up-arrow.png) no-repeat 3px 3px;
     background-size: auto 27px;
@@ -94,7 +94,7 @@ topControl {
 
 bottomControl {
     position: absolute;
-    top: 283px;
+    top: 83px;
     right: 33px;
     background: #00191F url(/Assets/UI/Buttons/down-arrow.png) no-repeat 3px 3px;
     background-size: auto 27px;
@@ -111,7 +111,7 @@ bottomControl {
 
 attackControl {
     position: absolute;
-    top: 283px;
+    top: 83px;
     right: 66px;
     background: #00191F url(/Assets/UI/Buttons/attack.png) no-repeat 3px 3px;
     background-size: auto 27px;
