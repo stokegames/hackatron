@@ -46,7 +46,7 @@ otherCharacterChooser {
 
 leftControl {
     position: absolute;
-    top: 380px;
+    top: 350px;
     right: 50px;
     background: #00191F url(/Assets/UI/Buttons/left-arrow.png) no-repeat 3px 3px;
     background-size: 27px auto;
@@ -63,7 +63,7 @@ leftControl {
 
 rightControl {
     position: absolute;
-    top: 380px;
+    top: 350px;
     right: 10px;
     background: #00191F url(/Assets/UI/Buttons/right-arrow.png) no-repeat 3px 3px;
     background-size: 27px auto;
@@ -80,7 +80,7 @@ rightControl {
 
 topControl {
     position: absolute;
-    top: 340px;
+    top: 310px;
     right: 33px;
     background: #00191F url(/Assets/UI/Buttons/up-arrow.png) no-repeat 3px 3px;
     background-size: auto 27px;
@@ -97,7 +97,7 @@ topControl {
 
 bottomControl {
     position: absolute;
-    top: 413px;
+    top: 383px;
     right: 33px;
     background: #00191F url(/Assets/UI/Buttons/down-arrow.png) no-repeat 3px 3px;
     background-size: auto 27px;
@@ -114,7 +114,7 @@ bottomControl {
 
 attackControl {
     position: absolute;
-    top: 413px;
+    top: 383px;
     right: 66px;
     background: #00191F url(/Assets/UI/Buttons/attack.png) no-repeat 3px 3px;
     background-size: auto 27px;
