@@ -23,14 +23,15 @@ if (Utils.env.os.mobile) {
     Hackatron.GAME_WIDTH = 256; // Game originally designed for 512px
     Hackatron.GAME_HEIGHT = 256 * (window.innerHeight / window.innerWidth); // Game originally designed for 512px
 } else {
-    Hackatron.GAME_WIDTH = 512; // Game originally designed for 512px
-    Hackatron.GAME_HEIGHT = 512; // Game originally designed for 512px
+    Hackatron.GAME_WIDTH = 640; // Game originally designed for 640px
+    Hackatron.GAME_HEIGHT = 640; // Game originally designed for 640px
 }
 
 Hackatron.UI_WIDTH = Hackatron.GAME_WIDTH; // UI originally designed for 700px
 Hackatron.UI_HEIGHT = Hackatron.GAME_HEIGHT; // UI originally designed for 700px
-Hackatron.TILE_COUNT_HORIZONTAL = 32;
-Hackatron.TILE_COUNT_VERTICAL = 32;
+Hackatron.TILE_COUNT_HORIZONTAL = 40;
+Hackatron.TILE_COUNT_VERTICAL = 40;
+Hackatron.GAME_TIME = 5 * 60;
 
 var gameContainer = document.getElementById('game');
 var uiContainer = document.getElementById('ui');

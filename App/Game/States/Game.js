@@ -22,6 +22,10 @@ class Game {
         this.blocks = [];
         this.fireballs = [];
         this.players = null;
+        this.gameState = {
+            startTime: null,
+            timeLeft: null
+        };
     }
 
     toggleFullscreen() {
@@ -352,6 +356,8 @@ class Game {
     }
 
     initGameover() {
+        if (this.isGameOver) { return; }
+
         this.isGameOver = true;
 
         this.game.plugins.cameraShake.shake();
@@ -789,6 +795,24 @@ class Game {
                 //this.tweenRed = this.game.add.tween(this.map.tilemap.layers[2]).to({alpha: alpha}, 50, 'Linear', true, 0, 1);
             }
         }
+
+        if (this.gameState.startTime) {
+            var dif = new Date(this.gameState.startTime).getTime() - new Date().getTime();
+
+            this.gameState.timeLeft = (Hackatron.GAME_TIME - Math.abs(dif / 1000)).toFixed(2);
+
+            if (this.gameState.timeLeft <= 0) {
+                this.gameState.timeLeft = 0;
+                // Show game over
+                // CONTINUE HERE
+                this.initGameover();
+            }
+
+            // TODO: remove this hack
+            window.GameState.timeLeft = this.gameState.timeLeft;
+            window.UI_GameController.setState(window.GameState);
+
+        }
     }
 
     enableCollisionDebugging() {
@@ -874,7 +898,8 @@ class Game {
             player: {id: playerId},
             enemy: {position: this.enemy.character.position},
             powerups: powerups,
-            players: players
+            players: players,
+            gameState: this.gameState
         };
 
         this.fireEvent({key: 'welcomePlayer', info: gameData});
@@ -964,6 +989,8 @@ class Game {
 
                     this.powerups[powerup.handler.state.position.x][powerup.handler.state.position.y] = powerup;
                 });
+
+                this.gameState = event.info.gameState;
             }
         // Method for handling received deaths of other clients
         } else if (event.key === 'playerKilled') {
@@ -1106,6 +1133,10 @@ class Game {
 
                 this.runEnemySystem();
 
+                if (!this.gameState.startTime) {
+                    this.gameState.startTime = new Date();
+                }
+
                 setTimeout(() => {
                     this.runAiSystem();
                     this.runPowerUpSystem();
@@ -1113,6 +1144,7 @@ class Game {
             }
         }
     }
+
     registerToEvents () {
         // Method for receiving multiple events at once
         // {events: [{key: 'eventName', info: {...data here...}]}

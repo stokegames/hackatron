@@ -74,6 +74,10 @@ class AI {
         return targets[Math.floor(Math.random() * (targets.length - 1))];
     }
 
+    reposition() {
+
+    }
+
     init(params) {
         if (!this.enabled) { return; }
 
@@ -83,14 +87,15 @@ class AI {
         this.player = params.player;
         this.enemy = params.enemy;
         this.enabled = true;
+        this.lastChanged = null;
 
         var originalLevel = Utils.transpose(this.map.data);
         var convertedLevel = [];
 
         // EasyStar expects a multidimensional array of the rows and columns
-        for(var i = 0; i < 32; i++) {
+        for(var i = 0; i < Hackatron.GAME_WIDTH; i++) {
             convertedLevel[i] = [];
-            for (var j = 0; j < 32; j++) {
+            for (var j = 0; j < Hackatron.GAME_HEIGHT; j++) {
                 convertedLevel[i][j] = 0;
             }
         }
@@ -109,12 +114,13 @@ class AI {
         // Unfortunately I dont think these are helping
         this.easyStar.disableDiagonals();
         this.easyStar.setIterationsPerCalculation(1000);
+        this.lastValidPosition = null;
         // this.easyStar.enableDiagonals();
         // this.easyStar.disableCornerCutting();
         // this.easyStar.enableCornerCutting();
 
         this.tileDimensions = {x: 16, y: 16};
-        this.gridDimensions = {y: 32, x: 32};
+        this.gridDimensions = {y: Hackatron.GAME_HEIGHT, x: Hackatron.GAME_WIDTH};
 
         var sourceCharacter = this.enemy.character;
         var targetCharacter = this.findTarget();
@@ -157,6 +163,27 @@ class AI {
                 sourceCharacter.resetPath();
                 return;
             }
+
+            var sourceTile = Hackatron.game.getTileAt({
+                x: Math.floor(sourceCharacter.worldPosition.x),
+                y: Math.floor(sourceCharacter.worldPosition.y)
+            });
+
+            // Check if the character is outside of map
+            // or if character collides on the current tile
+            // Reset his position
+            // And reset the path finding
+            if (sourceCharacter.worldPosition.x < 0
+                || sourceCharacter.worldPosition.y < 0
+                || (sourceTile && sourceTile.collides)) {
+                sourceCharacter.worldPosition = this.lastValidPosition;
+                this.pathToPosition = null;
+                this.resetTrace();
+                sourceCharacter.resetPath();
+                return;
+            }
+
+            this.lastValidPosition = sourceCharacter.worldPosition;
 
             if (!targetCharacter || !targetCharacter.isAlive) {
                 sourceCharacter.resetPath();
@@ -260,7 +287,7 @@ class AI {
                     this.pathToPosition = targetCharacter.position;
                 });
             }
-        }, 20);
+        }, 20); // TODO: why 20?
     }
 
     stopPathFinding() {

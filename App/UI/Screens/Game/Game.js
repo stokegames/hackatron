@@ -6,7 +6,9 @@ window.GameState = {
     showOthers: false,
     currentCharacter: 'tron',
     allCharacters: ['tron', 'ghost', 'frosty', 'one'],
-    styles: Framework.getStyles(require('./Game.css'))
+    styles: Framework.getStyles(require('./Game.css')),
+    showMenu: false,
+    timeLeft: null
 };
 
 class GameScreen extends Component {
@@ -34,6 +36,12 @@ class GameScreen extends Component {
 
     onControlUp(key) {
         Hackatron.game.onControlUp(key);
+    }
+
+    openMenu() {
+        this.setState({
+            showMenu: !this.state.showMenu
+        });
     }
 
     render() {
@@ -66,15 +74,24 @@ class GameScreen extends Component {
                     {this.state.showOthers && otherElements}
                 </div>
                 <div styles={this.state.styles.scoreboard}>
+                    <div>Time Left: {this.state.timeLeft}</div>
                     {players.map(function(item) {
-                      return <div key={item.name}>{item.name}: {item.points}</div>;
+                        return <div key={item.name}>{item.name}: {item.points}</div>;
                     })}
                 </div>
-                <div styles={this.state.styles.leftControl} onTouchStart={()=>{this.onControlDown('left')}} onTouchEnd={()=>{this.onControlUp('left')}} onMouseDown={()=>{this.onControlDown('left')}} onMouseUp={()=>{this.onControlUp('left')}}></div>
-                <div styles={this.state.styles.rightControl} onTouchStart={()=>{this.onControlDown('right')}} onTouchEnd={()=>{this.onControlUp('right')}} onMouseDown={()=>{this.onControlDown('right')}} onMouseUp={()=>{this.onControlUp('right')}}></div>
-                <div styles={this.state.styles.topControl} onTouchStart={()=>{this.onControlDown('up')}} onTouchEnd={()=>{this.onControlUp('up')}} onMouseDown={()=>{this.onControlDown('up')}} onMouseUp={()=>{this.onControlUp('up')}}></div>
-                <div styles={this.state.styles.bottomControl} onTouchStart={()=>{this.onControlDown('down')}} onTouchEnd={()=>{this.onControlUp('down')}} onMouseDown={()=>{this.onControlDown('down')}} onMouseUp={()=>{this.onControlUp('down')}}></div>
-                <div styles={this.state.styles.attackControl} onTouchStart={()=>{this.onControlDown('att')}} onTouchEnd={()=>{this.onControlUp('att')}} onMouseDown={()=>{this.onControlDown('att')}} onMouseUp={()=>{this.onControlUp('att')}}></div>
+                <div styles={this.state.styles.leftControl} onTouchStart={()=>this.onControlDown('left')} onTouchEnd={()=>this.onControlUp('left')} onMouseDown={()=>this.onControlDown('left')} onMouseUp={()=>this.onControlUp('left')}></div>
+                <div styles={this.state.styles.rightControl} onTouchStart={()=>this.onControlDown('right')} onTouchEnd={()=>this.onControlUp('right')} onMouseDown={()=>this.onControlDown('right')} onMouseUp={()=>this.onControlUp('right')}></div>
+                <div styles={this.state.styles.topControl} onTouchStart={()=>this.onControlDown('up')} onTouchEnd={()=>this.onControlUp('up')} onMouseDown={()=>this.onControlDown('up')} onMouseUp={()=>this.onControlUp('up')}></div>
+                <div styles={this.state.styles.bottomControl} onTouchStart={()=>this.onControlDown('down')} onTouchEnd={()=>this.onControlUp('down')} onMouseDown={()=>this.onControlDown('down')} onMouseUp={()=>this.onControlUp('down')}></div>
+                <div styles={this.state.styles.attackControl} onTouchStart={()=>this.onControlDown('att')} onTouchEnd={()=>this.onControlUp('att')} onMouseDown={()=>this.onControlDown('att')} onMouseUp={()=>this.onControlUp('att')}></div>
+                <div styles={this.state.styles.menuButton} onClick={()=>this.openMenu()}></div>
+                {this.state.showMenu && (
+                    <div styles={this.state.styles.menu}>
+                        <a href="#">Show Debug</a>
+                        <a href="#">Toggle AI</a>
+                        <a href="#">Exit</a>
+                    </div>
+                )}
             </div>
         );
     }

@@ -319,6 +319,7 @@ Framework.wrapStyles = function(item) {
     if (item.props.children && Array.isArray(item.props.children)) {
         extension.children = [];
         item.props.children.forEach(function(child, i) {
+            if (!child) { return; }
             extension.children[i] = Framework.wrapStyles(child);
         });
     }
