@@ -228,7 +228,7 @@ class Game {
             }
             // in order to have a vertical swipe, we need that y distance is at least twice the x distance
             // and the amount of vertical distance is at least 10 pixels
-            if (Math.abs(distY)>Math.abs(distX)*2 && Math.abs(distY)>10){
+            else if (Math.abs(distY)>Math.abs(distX)*2 && Math.abs(distY)>10){
                 // moving up, calling move function with horizontal and vertical tiles to move as arguments
                 if (distY > 0) {
                     this.onAction('swipeUp');
@@ -237,6 +237,9 @@ class Game {
                 else {
                     this.onAction('swipeDown');
                 }
+            }
+            else {
+                this.onAction('tap');
             }
 
             // stop listening for the player to release finger/mouse, let's start listening for the player to click/touch
@@ -277,6 +280,8 @@ class Game {
             this.onControlDown('up');
         } else if (action === 'swipeDown') {
             this.onControlDown('down');
+        } else if (action === 'tap') {
+            this.onControlDown('att');
         }
     }
 
