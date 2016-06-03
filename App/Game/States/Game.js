@@ -643,7 +643,7 @@ class Game {
         };
 
         if (this.enemy) {
-            this.constrainVelocity(this.enemy.character.sprite, 10);
+            //this.constrainVelocity(this.enemy.character.sprite, 10);
         }
 
         if (this.player.character.collisionEnabled) {

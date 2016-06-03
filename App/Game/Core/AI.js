@@ -78,6 +78,30 @@ class AI {
 
     }
 
+    monitorCharacter(character) {
+        var oldPosition = null;
+
+        this.monitorCharacterInterval = setInterval(function() {
+            if (!oldPosition) {
+                oldPosition = character.worldPosition;
+                return;
+            }
+
+            var newPosition = character.worldPosition;
+
+            // Character is stuck so lets reset him
+            if (oldPosition.x === newPosition.x
+            && oldPosition.y === newPosition.y) {
+                character.worldPosition = Hackatron.game.getValidPosition();
+                this.pathToPosition = null;
+                this.resetTrace();
+                character.resetPath();
+            }
+
+            oldPosition = character.worldPosition;
+        }.bind(this), 1000);
+    }
+
     init(params) {
         if (!this.enabled) { return; }
 
@@ -125,6 +149,8 @@ class AI {
         var sourceCharacter = this.enemy.character;
         var targetCharacter = this.findTarget();
 
+        this.monitorCharacter(sourceCharacter);
+
         var MODES = {
             'FOLLOW': 0.95,
             'PERSISTENT': 0.01,
@@ -156,27 +182,28 @@ class AI {
 
         var currentMode = findMode(MODES);
 
-        this.followInterval = setInterval(() => {
-            if (!this.enabled) {
-                this.pathToPosition = null;
-                this.resetTrace();
-                sourceCharacter.resetPath();
-                return;
-            }
+        setInterval(function() {
+            // Check if the character is outside of map
+            // or if character collides on the current tile
+            // Reset his position
+            // And reset the path finding
 
             var sourceTile = Hackatron.game.getTileAt({
                 x: Math.floor(sourceCharacter.worldPosition.x),
                 y: Math.floor(sourceCharacter.worldPosition.y)
             });
-
-            // Check if the character is outside of map
-            // or if character collides on the current tile
-            // Reset his position
-            // And reset the path finding
             if (sourceCharacter.worldPosition.x < 0
                 || sourceCharacter.worldPosition.y < 0
                 || (sourceTile && sourceTile.collides)) {
                 sourceCharacter.worldPosition = this.lastValidPosition;
+                this.pathToPosition = null;
+                this.resetTrace();
+                sourceCharacter.resetPath();
+            }
+        }.bind(this), 1000);
+
+        this.followInterval = setInterval(() => {
+            if (!this.enabled) {
                 this.pathToPosition = null;
                 this.resetTrace();
                 sourceCharacter.resetPath();

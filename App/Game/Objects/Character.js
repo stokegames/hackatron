@@ -108,7 +108,6 @@ class Character extends GameObject {
         if (this.path.length > 0) {
             var nextPosition = this.path[this.pathStep];
             var accuracy = 16; // within 16px
-            var speed = 50;
 
             // If we're on the last step, lets make sure we get to the exact spot
             // Set more accuracy, 2px
@@ -122,7 +121,7 @@ class Character extends GameObject {
                 velocity.x = Math.round(velocity.x);
                 velocity.y = Math.round(velocity.y);
 
-                this.speed = 200;
+                this.speed = 100;
                 this.inputRight = false;
                 this.inputLeft = false;
                 this.inputDown = false;
