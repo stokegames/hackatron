@@ -216,7 +216,7 @@ class Game {
             var distY = startY-endY;
             // in order to have an horizontal swipe, we need that x distance is at least twice the y distance
             // and the amount of horizontal distance is at least 10 pixels
-            if (Math.abs(distX)>Math.abs(distY)*2 && Math.abs(distX)>10){
+            if (Math.abs(distX)>Math.abs(distY)*2 && Math.abs(distX)>30){
                 // moving left, calling move function with horizontal and vertical tiles to move as arguments
                 if (distX > 0) {
                     this.onAction('swipeLeft');
@@ -228,7 +228,7 @@ class Game {
             }
             // in order to have a vertical swipe, we need that y distance is at least twice the x distance
             // and the amount of vertical distance is at least 10 pixels
-            else if (Math.abs(distY)>Math.abs(distX)*2 && Math.abs(distY)>10){
+            else if (Math.abs(distY)>Math.abs(distX)*2 && Math.abs(distY)>30){
                 // moving up, calling move function with horizontal and vertical tiles to move as arguments
                 if (distY > 0) {
                     this.onAction('swipeUp');
@@ -270,15 +270,17 @@ class Game {
     }
 
     onAction(action) {
-        this.onControlUp();
-
         if (action === 'swipeLeft') {
+            this.onControlUp();
             this.onControlDown('left');
         } else if (action === 'swipeRight') {
+            this.onControlUp();
             this.onControlDown('right');
         } else if (action === 'swipeUp') {
+            this.onControlUp();
             this.onControlDown('up');
         } else if (action === 'swipeDown') {
+            this.onControlUp();
             this.onControlDown('down');
         } else if (action === 'tap') {
             this.onControlDown('att');
