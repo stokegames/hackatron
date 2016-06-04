@@ -16,7 +16,12 @@ import PlayerLeaveBehaviour from '../Components/PlayerLeaveBehaviour';
 import CollideEnemyBehaviour from '../Components/CollideEnemyBehaviour';
 import CollideWallBehaviour from '../Components/CollideWallBehaviour';
 import FollowMouseBehaviour from '../Components/FollowMouseBehaviour';
-//import MovingBehaviour from '../Components/MovingBehaviour';
+import CharDeathBehaviour from '../Components/CharDeathBehaviour';
+import AiController from '../Components/AiController';
+import MobileMovementController from '../Components/MobileMovementController';
+import Multiplayer from '../Components/Multiplayer';
+import PowerupController from '../Components/PowerupController';
+import EnemyController from '../Components/EnemyController';
 
 
 var updateTimeout;
@@ -42,7 +47,13 @@ class Game {
             'PlayerLeaveBehaviour': new PlayerLeaveBehaviour(this),
             'CollideEnemyBehaviour': new CollideEnemyBehaviour(this),
             'CollideWallBehaviour': new CollideWallBehaviour(this),
-            'FollowMouseBehaviour': new FollowMouseBehaviour(this)
+            'FollowMouseBehaviour': new FollowMouseBehaviour(this),
+            'CharDeathBehaviour': new CharDeathBehaviour(this),
+            'AiController': new AiController(this),
+            'MobileMovementController': new MobileMovementController(this),
+            'Multiplayer': new Multiplayer(this),
+            'PowerupController': new PowerupController(this),
+            'EnemyController': new EnemyController(this)
         };
     }
 
@@ -130,7 +141,7 @@ class Game {
 
         this.initPhysics();
         this.initMap();
-        this.initPowerUps();
+        this.components['PowerupController'].init();
         this.initPlayer();
         this.initSFX();
         this.initHotkeys();
@@ -138,7 +149,6 @@ class Game {
         // Register to listen to events and inform
         // other players that you have joined the game
         this.registerToEvents();
-        this.joinGame();
 
         this.initEvents();
 
@@ -146,6 +156,8 @@ class Game {
 
         window.UI_state.screenKey = 'game';
         window.UI_controller.setState(window.UI_state);
+
+        this.components['Multiplayer'].joinGame();
     }
 
     initEvents() {
@@ -176,25 +188,6 @@ class Game {
 
             lastUpdateInfo = info;
         }, UPDATE_INTERVAL);
-
-        // If this is the host
-        // Send enemy position every 50ms
-        this.enemyInterval = setInterval(() => {
-            if (this.enemy && this.player.id === this.hostId) {
-                //this.enemy.character.updatePos();
-
-                if (!this.enemy.character.dirty) { return; }
-
-                this.enemy.character.dirty = false;
-
-                var info = {
-                    position: this.enemy.character.position,
-                    direction: this.enemy.character.direction
-                };
-
-                this.fireEvent({key: 'updateEnemy', info: info});
-            }
-        }, UPDATE_INTERVAL);
     }
 
     initPhysics() {
@@ -207,66 +200,7 @@ class Game {
         this.aiKey = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
         this.aiKey.onDown.add(this.toggleAI, this);
 
-        // variables used to detect and manage swipes
-        var startX;
-        var startY;
-        var endX;
-        var endY;
-
-        // when the player begins to swipe we only save mouse/finger coordinates, remove the touch/click
-        // input listener and add a new listener to be fired when the mouse/finger has been released,
-        // then we call endSwipe function
-        var beginSwipe = function() {
-            startX = this.game.input.worldX;
-            startY = this.game.input.worldY;
-            this.game.input.onDown.remove(beginSwipe, this);
-            this.game.input.onUp.add(endSwipe, this);
-        };
-
-        // function to be called when the player releases the mouse/finger
-        var endSwipe = function() {
-            // saving mouse/finger coordinates
-            endX = this.game.input.worldX;
-            endY = this.game.input.worldY;
-            // determining x and y distance travelled by mouse/finger from the start
-            // of the swipe until the end
-            var distX = startX-endX;
-            var distY = startY-endY;
-            // in order to have an horizontal swipe, we need that x distance is at least twice the y distance
-            // and the amount of horizontal distance is at least 10 pixels
-            if (Math.abs(distX)>Math.abs(distY)*2 && Math.abs(distX)>30){
-                // moving left, calling move function with horizontal and vertical tiles to move as arguments
-                if (distX > 0) {
-                    this.onAction('swipeLeft');
-                }
-                // moving right, calling move function with horizontal and vertical tiles to move as arguments
-                else {
-                    this.onAction('swipeRight');
-                }
-            }
-            // in order to have a vertical swipe, we need that y distance is at least twice the x distance
-            // and the amount of vertical distance is at least 10 pixels
-            else if (Math.abs(distY)>Math.abs(distX)*2 && Math.abs(distY)>30){
-                // moving up, calling move function with horizontal and vertical tiles to move as arguments
-                if (distY > 0) {
-                    this.onAction('swipeUp');
-                }
-                // moving down, calling move function with horizontal and vertical tiles to move as arguments
-                else {
-                    this.onAction('swipeDown');
-                }
-            }
-            else {
-                this.onAction('tap');
-            }
-
-            // stop listening for the player to release finger/mouse, let's start listening for the player to click/touch
-            this.game.input.onDown.add(beginSwipe, this);
-            this.game.input.onUp.remove(endSwipe, this);
-        };
-
-        // Wait for the player to touch or click
-        this.game.input.onDown.add(beginSwipe, this);
+        this.components['MobileMovementController'].init();
     }
 
     onControlDown(key) {
@@ -307,31 +241,6 @@ class Game {
 
     toggleAI() {
         this.ai.enabled = !this.ai.enabled;
-    }
-
-    runAiSystem() {
-        this.ai = new AI();
-        this.ai.init({game: this.game, player: this.player, enemy: this.enemy, map: this.map});
-    }
-
-    runEnemySystem() {
-        // Create enemy for the host
-        if (!this.enemy) {
-            var worldPosition = this.getValidPosition();
-
-            this.enemy = new Enemy();
-            this.enemy.init({
-                game: this.game,
-                speed: DEFAULT_PLAYER_SPEED,
-                worldPosition: worldPosition,
-                keys: { // TODO: Could be architected better
-                    up: Phaser.Keyboard.W,
-                    down: Phaser.Keyboard.S,
-                    left: Phaser.Keyboard.A,
-                    right: Phaser.Keyboard.D
-                }
-            });
-        }
     }
 
     initPlayer() {
@@ -397,41 +306,6 @@ class Game {
         //this.shutdown();
     }
 
-    initDeathScreen() {
-        this.game.plugins.cameraShake.shake();
-
-        this.enemy.character.worldPosition = this.getValidPosition();
-        this.enemy.character.frozen = true;
-
-        // var death = new Gameover();
-        // death.init(this.game);
-        // death.start();
-
-        this.player.removePoints(100);
-
-        for(var id in this.players) {
-            this.players[id].addPoints(100 / this.players.length);
-        }
-
-        window.UI_GameController.setState(window.GameState);
-
-        this.newGameKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-        this.newGameKey.onDown.add(() => {
-            // Remove death screen
-
-            this.newGameKey.onDown.remove();
-        });
-
-        setTimeout(() => {
-            //death.sprite.destroy();
-            this.player.character.worldPosition = this.getValidPosition();
-            this.player.character.revive();
-
-            setTimeout(() => {
-                this.enemy.character.frozen = false;
-            }, 1000);
-        }, 2000);
-    }
 
     initSFX() {
         this.musicKey = this.input.keyboard.addKey(Phaser.Keyboard.M);
@@ -440,43 +314,6 @@ class Game {
         // fx.addMarker('playerEaten', 5, 0.5);
         // fx.addMarker('playerInWater', 7, 0.5);
         // fx.addMarker('jump', 0, 0.24);
-    }
-
-    initPowerUps() {
-        this.powerups = [];
-        for (var i = 0; i <= Hackatron.TILE_COUNT_VERTICAL; i++) {
-            this.powerups.push([]);
-        }
-
-        this.powerupCheckInterval = setInterval(() => {
-            this.powerups.forEach((_, row) => {
-                this.powerups[row].forEach((_, column) => {
-                    var powerup = this.powerups[row][column];
-                    if (powerup && powerup.handler.ended) {
-                        this.powerups[row][column] = null;
-                    }
-                });
-            });
-        }, 1000);
-    }
-
-    runPowerUpSystem() {
-        var run = () => {
-            var powerupHandlers = Object.keys(Powerup.handlers);
-            var randomHandler = powerupHandlers[this.game.rnd.integerInRange(0, powerupHandlers.length-1)];
-            var powerup = new Powerup();
-            powerup.init({key: randomHandler, game: this.game, map: this.map, player: this.player});
-            powerup.handler.on('started', () => { this.fireEvent({key: 'foundPowerup', info: {state: powerup.handler.state, player: {id: this.player.id}}}); });
-            powerup.handler.on('destroyed', (params) => { params.positions.forEach((position) => { this.powerups[position.x][position.y] = null; }); });
-
-            this.powerups[powerup.handler.state.position.x][powerup.handler.state.position.y] = powerup;
-
-            this.fireEvent({key: 'powerupSpawned', info: {handler: {key: randomHandler, state: powerup.handler.state}}});
-        };
-
-        this.powerupInterval = setInterval(run, POWERUP_SPAWN_INTERVAL);
-
-        run();
     }
 
     fireEvent(event) {
@@ -515,14 +352,7 @@ class Game {
         this.components['FollowMouseBehaviour'].run();
         this.components['CollideWallBehaviour'].run();
         this.components['CollideEnemyBehaviour'].run();
-
-        this.powerups.forEach((row) => {
-            row.forEach((powerup) => {
-                if (powerup) {
-                    powerup.handler.update();
-                }
-            });
-        });
+        this.components['PowerupController'].update();
 
         var collideProjectileHandler = (index) => {
             // We don't want to destroy projectiles on contact
@@ -689,53 +519,6 @@ class Game {
         return player;
     }
 
-    welcomePlayer(playerId) {
-        // Add players
-        var players = [];
-        for(playerId in this.players) {
-            var player = this.players[playerId];
-
-            players.push({
-                id: player.id,
-                name: player.name,
-                position: player.character.position,
-                points: player.points
-            });
-        }
-
-        // Add the host
-        // TODO: Wat? Needs clarification
-        players.push({
-            id: this.player.id,
-            name: this.player.name,
-            position: this.player.character.position,
-            points: this.player.points
-        });
-
-        // Add powerups
-        var powerups = [];
-        for(var row in this.powerups) {
-            for(var column in this.powerups[row]) {
-                var powerup = this.powerups[row][column];
-
-                if (!powerup) { continue; }
-
-                powerups.push({handler: {key: powerup.handler.key, state: powerup.handler.state}});
-            }
-        }
-
-        // Compile the game data
-        var gameData = {
-            player: {id: playerId},
-            enemy: {position: this.enemy.character.position},
-            powerups: powerups,
-            players: players,
-            gameState: this.gameState
-        };
-
-        this.fireEvent({key: 'welcomePlayer', info: gameData});
-    }
-
 // ============================================================================
 //                          Socket Event Handlers
 // ============================================================================
@@ -764,79 +547,11 @@ class Game {
                 player.character.position = position;
             }
         } else if (event.key === 'updateEnemy') {
-            if (this.player.id !== this.hostId) {
-                if (this.enemy) {
-                    this.enemy.character.position = event.info.position;
-                }
-            }
+            if (event.info.owner === this.player.id) { return; }
+            if (!this.enemy) { return; }
+
+            this.enemy.character.position = event.info.position;
         // When new player joins, host shall send them data about the 'position'
-        } else if (event.key === 'newPlayer') {
-            // If we're this player, we don't need to do anything
-            if (this.player.id === event.info.player.id) { return; }
-
-            if (this.player.id === this.hostId) {
-                this.welcomePlayer(event.info.player.id);
-            }
-
-            var player = this.getPlayerById(event.info.player.id);
-
-            if (!player) {
-                player = this.createPlayer(event.info.player.id);
-            }
-
-            player.name = event.info.player.name;
-            player.character.position = event.info.player.position;
-
-            console.log('New player ' + event.info.player.id + ' has joined the game!');
-        // Set up game state as a new player receiving game data from host
-        } else if (event.key === 'welcomePlayer') {
-            if (this.player.id === event.info.player.id) {
-                // Setup players
-                event.info.players.forEach((playerInfo) => {
-                    var player = this.createPlayer(playerInfo.id);
-                    player.name = playerInfo.name;
-                    if (playerInfo.position) {
-                        player.character.position = playerInfo.position;
-                    }
-                    player.points = playerInfo.points;
-
-                    this.players[player.id] = player;
-                });
-
-                // Setup enemy
-                this.enemy = new Enemy();
-
-                this.enemy.init({
-                    game: this.game,
-                    speed: DEFAULT_PLAYER_SPEED,
-                    position: event.info.enemy.position
-                });
-
-                // Setup powerups
-                event.info.powerups.forEach((powerupInfo) => {
-                    var powerup = new Powerup();
-                    powerup.init({key: powerupInfo.handler.key, game: this.game, map: this.map, player: this.player, state: powerupInfo.handler.state});
-                    powerup.handler.on('destroyed', (params) => { params.positions.forEach((position) => { this.powerups[position.x][position.y] = null; }); });
-
-                    this.powerups[powerup.handler.state.position.x][powerup.handler.state.position.y] = powerup;
-                });
-
-                this.gameState = event.info.gameState;
-            }
-        // Method for handling received deaths of other clients
-        } else if (event.key === 'playerKilled') {
-            var player = this.players[event.info.player.id];
-
-            if (player) {
-                player.kill();
-            }
-
-            this.player.addPoints(100 / this.players.length);
-            window.UI_GameController.setState(window.GameState);
-        // Method for handling player leaves
-        } else if (event.key === 'playerLeave') {
-            this.components['PlayerLeaveBehaviour'].run(event);
-        // Method for handling spawned power ups by the host
         } else if (event.key === 'powerupSpawned') {
             // TODO: we already do this above, refactor it out
             var powerup = new Powerup();
@@ -860,34 +575,9 @@ class Game {
             this.components['Block'].run(event);
         } else if (event.key === 'projectileFired') {
             this.components['Projectile'].run(event);
-        } else if (event.key === 'setHost') {
-            // If there's currently no host then this is a new game
-            // There should be a countdown
-            if (!this.hostId) {
-                this.initCountdown();
-            }
-            // Check if we already know this is the host,
-            // And if it's this player, we don't need to set ourselves up again
-            if (this.hostId === event.info.player.id) { return; }
-
-            this.hostId = event.info.player.id;
-
-            // If this player is the new host, lets set them up
-            if (this.hostId === this.player.id) {
-                console.log('Hey now the host, lets do this!\n' + this.hostId);
-
-                this.runEnemySystem();
-
-                if (!this.gameState.startTime) {
-                    this.gameState.startTime = new Date();
-                }
-
-                setTimeout(() => {
-                    this.runAiSystem();
-                    this.runPowerUpSystem();
-                }, 3000);
-            }
         }
+
+        this.components['Multiplayer'].runEvent(event);
     }
 
     registerToEvents() {
@@ -896,18 +586,6 @@ class Game {
         this.socket.on('events', (data) => {
             data.events.forEach((event) => { this.parseEvent(event); });
         });
-    }
-
-    // Method to broadcast to  other clients (if there are any) that you have
-    // joined the game
-    joinGame() {
-        this.fireEvent({key: 'newPlayer', info: {
-            player: {
-                id: this.player.id,
-                name: this.player.name,
-                position: this.player.character.position
-            }
-        }});
     }
 }
 

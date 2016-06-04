@@ -14,7 +14,7 @@ class Component {
                 player: {id: this.game.player.id}
             }});
 
-            this.game.initDeathScreen();
+            this.game.components['CharDeathBehaviour'].init();
         };
 
         if (this.game.enemy) {
