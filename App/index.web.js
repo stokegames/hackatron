@@ -27,11 +27,15 @@ if (Utils.env.os.mobile) {
     Hackatron.GAME_HEIGHT = 640; // Game originally designed for 640px
 }
 
+// Game Constants
 Hackatron.UI_WIDTH = Hackatron.GAME_WIDTH; // UI originally designed for 700px
 Hackatron.UI_HEIGHT = Hackatron.GAME_HEIGHT; // UI originally designed for 700px
 Hackatron.TILE_COUNT_HORIZONTAL = 40;
 Hackatron.TILE_COUNT_VERTICAL = 40;
 Hackatron.GAME_TIME = 5 * 60;
+Hackatron.DEFAULT_PLAYER_SPEED = 200;
+Hackatron.POWERUP_SPAWN_INTERVAL = 5000;
+Hackatron.UPDATE_INTERVAL = 100;
 
 var gameContainer = document.getElementById('game');
 var uiContainer = document.getElementById('ui');
@@ -62,12 +66,6 @@ window.onresize = function() {
 window.onload = function () {
     Hackatron.debug = window.location.href.indexOf('localhost') !== -1;
     Hackatron.loader = new Phaser.Game(Hackatron.GAME_WIDTH, Hackatron.GAME_HEIGHT, Phaser.AUTO, gameContainer, null, true);
-
-    // Game Constants
-    // TODO: move these out of global
-    window.DEFAULT_PLAYER_SPEED = 200;
-    window.POWERUP_SPAWN_INTERVAL = 5000;
-    window.UPDATE_INTERVAL = 100;
 
     Hackatron.loader.state.add('Boot', Hackatron.Boot);
     Hackatron.loader.state.add('Preload', Hackatron.Preload);

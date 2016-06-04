@@ -37,7 +37,7 @@ class Component {
             this.game.fireEvent({key: 'powerupSpawned', info: {handler: {key: randomHandler, state: powerup.handler.state}}});
         };
 
-        this.game.powerupInterval = setInterval(run, POWERUP_SPAWN_INTERVAL);
+        this.game.powerupInterval = setInterval(run, Hackatron.POWERUP_SPAWN_INTERVAL);
 
         run();
     }

@@ -45,7 +45,7 @@ class Component {
 
                 this.game.enemy.init({
                     game: this.game.game,
-                    speed: DEFAULT_PLAYER_SPEED,
+                    speed: Hackatron.DEFAULT_PLAYER_SPEED,
                     position: event.info.enemy.position
                 });
 

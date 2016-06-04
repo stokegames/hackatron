@@ -187,7 +187,7 @@ class Game {
             this.fireEvent({key: 'updatePlayer', info: info});
 
             lastUpdateInfo = info;
-        }, UPDATE_INTERVAL);
+        }, Hackatron.UPDATE_INTERVAL);
     }
 
     initPhysics() {
@@ -250,7 +250,7 @@ class Game {
             id: Utils.generateId(),
             game: this.game,
             name: this.getRandomName(),
-            speed: DEFAULT_PLAYER_SPEED,
+            speed: Hackatron.DEFAULT_PLAYER_SPEED,
             worldPosition: worldPosition,
             points: 1000,
             keys: { // TODO: Could be architected better
@@ -504,7 +504,7 @@ class Game {
         player.init({
             id: playerId,
             game: this.game,
-            speed: DEFAULT_PLAYER_SPEED
+            speed: Hackatron.DEFAULT_PLAYER_SPEED
         });
 
         this.players[playerId] = player;

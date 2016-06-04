@@ -16,7 +16,7 @@ class Component {
             this.game.enemy = new Enemy();
             this.game.enemy.init({
                 game: this.game.game,
-                speed: DEFAULT_PLAYER_SPEED,
+                speed: Hackatron.DEFAULT_PLAYER_SPEED,
                 worldPosition: worldPosition,
                 keys: { // TODO: Could be architected better
                     up: Phaser.Keyboard.W,
@@ -45,7 +45,7 @@ class Component {
 
                 this.game.fireEvent({key: 'updateEnemy', info: info});
             }
-        }, UPDATE_INTERVAL);
+        }, Hackatron.UPDATE_INTERVAL);
     }
 }
 
