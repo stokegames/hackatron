@@ -22,7 +22,8 @@ class GameScreen extends Component {
     }
 
     clickCharacter() {
-        this.setState({showOthers: !this.state.showOthers});
+        window.GameState.showOthers =  !this.state.showOthers;
+        this.setState(window.GameState);
     }
 
     changeCharacter(key) {
@@ -38,10 +39,17 @@ class GameScreen extends Component {
         Hackatron.game.onControlUp(key);
     }
 
-    openMenu() {
-        this.setState({
-            showMenu: !this.state.showMenu
-        });
+    toggleMenu() {
+        window.GameState.showMenu =  !this.state.showMenu;
+        this.setState(window.GameState);
+    }
+
+    toggleCollisionDebugging() {
+        Hackatron.game.collisionDebuggingEnabled = !Hackatron.game.collisionDebuggingEnabled;
+    }
+
+    toggleSound() {
+        Hackatron.game.soundEnabled = !Hackatron.game.soundEnabled;
     }
 
     render() {
@@ -84,12 +92,14 @@ class GameScreen extends Component {
                 <div styles={this.state.styles.topControl} onTouchStart={()=>this.onControlDown('up')} onTouchEnd={()=>this.onControlUp('up')} onMouseDown={()=>this.onControlDown('up')} onMouseUp={()=>this.onControlUp('up')}></div>
                 <div styles={this.state.styles.bottomControl} onTouchStart={()=>this.onControlDown('down')} onTouchEnd={()=>this.onControlUp('down')} onMouseDown={()=>this.onControlDown('down')} onMouseUp={()=>this.onControlUp('down')}></div>
                 <div styles={this.state.styles.attackControl} onTouchStart={()=>this.onControlDown('att')} onTouchEnd={()=>this.onControlUp('att')} onMouseDown={()=>this.onControlDown('att')} onMouseUp={()=>this.onControlUp('att')}></div>
-                <div styles={this.state.styles.menuButton} onClick={()=>this.openMenu()}></div>
+                <div styles={this.state.styles.menuButton} onClick={()=>this.toggleMenu()}></div>
                 {this.state.showMenu && (
                     <div styles={this.state.styles.menu}>
-                        <a href="#">Show Debug</a>
-                        <a href="#">Toggle AI</a>
-                        <a href="#">Exit</a>
+                        <div>Show Debug</div>
+                        <div>Toggle AI</div>
+                        <div onClick={()=>this.toggleSound()}>Toggle Sound</div>
+                        <div onClick={()=>this.toggleCollisionDebugging()}>Toggle Collision Debugging</div>
+                        <div>Exit</div>
                     </div>
                 )}
             </div>
