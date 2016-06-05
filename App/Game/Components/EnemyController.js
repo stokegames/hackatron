@@ -15,7 +15,7 @@ class Component {
 
             this.game.enemy = new Enemy();
             this.game.enemy.init({
-                game: this.game.game,
+                game: this.game.engine,
                 speed: Hackatron.DEFAULT_PLAYER_SPEED,
                 worldPosition: worldPosition,
                 keys: { // TODO: Could be architected better

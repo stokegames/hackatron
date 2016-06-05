@@ -7,13 +7,13 @@ class Component {
     }
 
     init() {
-        this.game.game.plugins.cameraShake.shake();
+        this.game.engine.plugins.cameraShake.shake();
 
         this.game.enemy.character.worldPosition = this.game.getValidPosition();
         this.game.enemy.character.frozen = true;
 
         // var death = new Gameover();
-        // death.init(this.game.game);
+        // death.init(this.game.engine);
         // death.start();
 
         this.game.player.removePoints(100);
@@ -24,7 +24,7 @@ class Component {
 
         window.UI_GameController.setState(window.GameState);
 
-        this.game.newGameKey = this.game.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        this.game.newGameKey = this.game.engine.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         this.game.newGameKey.onDown.add(() => {
             // Remove death screen
 

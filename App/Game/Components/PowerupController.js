@@ -26,9 +26,9 @@ class Component {
     run() {
         var run = () => {
             var powerupHandlers = Object.keys(Powerup.handlers);
-            var randomHandler = powerupHandlers[this.game.game.rnd.integerInRange(0, powerupHandlers.length-1)];
+            var randomHandler = powerupHandlers[this.game.engine.rnd.integerInRange(0, powerupHandlers.length-1)];
             var powerup = new Powerup();
-            powerup.init({key: randomHandler, game: this.game.game, map: this.game.map, player: this.game.player});
+            powerup.init({key: randomHandler, game: this.game.engine, map: this.game.map, player: this.game.player});
             powerup.handler.on('started', () => { this.game.fireEvent({key: 'foundPowerup', info: {state: powerup.handler.state, player: {id: this.game.player.id}}}); });
             powerup.handler.on('destroyed', (params) => { params.positions.forEach((position) => { this.game.powerups[position.x][position.y] = null; }); });
 

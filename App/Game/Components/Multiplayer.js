@@ -44,7 +44,7 @@ class Component {
                 this.game.enemy = new Enemy();
 
                 this.game.enemy.init({
-                    game: this.game.game,
+                    game: this.game.engine,
                     speed: Hackatron.DEFAULT_PLAYER_SPEED,
                     position: event.info.enemy.position
                 });
@@ -52,7 +52,7 @@ class Component {
                 // Setup powerups
                 event.info.powerups.forEach((powerupInfo) => {
                     var powerup = new Powerup();
-                    powerup.init({key: powerupInfo.handler.key, game: this.game.game, map: this.game.map, player: this.game.player, state: powerupInfo.handler.state});
+                    powerup.init({key: powerupInfo.handler.key, game: this.game.engine, map: this.game.map, player: this.game.player, state: powerupInfo.handler.state});
                     powerup.handler.on('destroyed', (params) => { params.positions.forEach((position) => { this.game.powerups[position.x][position.y] = null; }); });
 
                     this.game.powerups[powerup.handler.state.position.x][powerup.handler.state.position.y] = powerup;

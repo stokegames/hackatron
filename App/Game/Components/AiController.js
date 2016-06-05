@@ -7,7 +7,7 @@ class Component {
 
     run() {
         this.game.ai = new AI();
-        this.game.ai.init({game: this.game.game, player: this.game.player, enemy: this.game.enemy, map: this.game.map});
+        this.game.ai.init({game: this.game.engine, player: this.game.player, enemy: this.game.enemy, map: this.game.map});
     }
 
     init() {

@@ -4,14 +4,14 @@ class Component {
     }
 
     run(event) {
-        if (!this.game.game.input.mousePointer.isDown) { return; }
+        if (!this.game.engine.input.mousePointer.isDown) { return; }
 
         // top = -1.25
         // bottom = 1
         // left = 2.5
         // right = 0
         // http://phaser.io/examples/v2/arcade-physics/angle-to-pointer
-        var angle = this.game.game.physics.arcade.angleToPointer(this.game.player.character.sprite) * (180/Math.PI);
+        var angle = this.game.engine.physics.arcade.angleToPointer(this.game.player.character.sprite) * (180/Math.PI);
 
         // right
         if (Math.abs(angle) > 0 && Math.abs(angle) <= 45) {
@@ -31,7 +31,7 @@ class Component {
         }
 
         //  if it's overlapping the mouse, don't move any more
-        // if (Phaser.Rectangle.contains(this.game.player.character.sprite.body, this.game.game.input.x, this.game.game.input.y)) {
+        // if (Phaser.Rectangle.contains(this.game.player.character.sprite.body, this.game.engine.input.x, this.game.engine.input.y)) {
         //     this.game.player.character.sprite.body.velocity.x = 0;
         //     this.game.player.character.sprite.body.velocity.y = 0;
         // }

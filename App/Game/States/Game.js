@@ -29,6 +29,7 @@ var alpha = 0;
 
 class Game {
     constructor(game) {
+        this.engine = game;
         this.enemy = null;
         this.hostId = null;
         this.player = null;

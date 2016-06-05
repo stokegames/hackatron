@@ -81,8 +81,8 @@ window.onload = function () {
 
 window.Hackatron.fitToWindow = function() {
     if (window.Hackatron.game) {
-        window.Hackatron.game.game.canvas.style['width'] = '100%';
-        window.Hackatron.game.game.canvas.style['height'] = '100%';
+        window.Hackatron.game.engine.canvas.style['width'] = '100%';
+        window.Hackatron.game.engine.canvas.style['height'] = '100%';
     }
     //this.game.canvas.style['transform'] = 'perspective(900px) rotateX(15deg) rotate(-3deg)';
     document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%';

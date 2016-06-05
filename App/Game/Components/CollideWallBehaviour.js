@@ -101,10 +101,10 @@ class Component {
         if (this.game.player.character.collisionEnabled) {
             this.game.map.collideTiles.forEach((tile) => {
                 // TODO: Throttle collideWallHandler
-                this.game.game.physics.arcade.collide(this.game.player.character.sprite, tile, collideWallHandler); // tile is an object of Phaser.Sprite
+                this.game.engine.physics.arcade.collide(this.game.player.character.sprite, tile, collideWallHandler); // tile is an object of Phaser.Sprite
                 if (this.game.enemy) {
                     this.game.enemy.character.sprite.body.immovable = false;
-                    this.game.game.physics.arcade.collide(this.game.enemy.character.sprite, tile, () => {
+                    this.game.engine.physics.arcade.collide(this.game.enemy.character.sprite, tile, () => {
                         // Stop enemy from moving. TODO: doesn't work
                         // this.game.enemy.character.sprite.body.immovable = true;
                         // this.game.enemy.character.sprite.body.velocity.x = 0;

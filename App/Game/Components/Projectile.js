@@ -8,7 +8,7 @@ class Component {
         var PROJECTILE_SPEED = 400;
         var PROJECTILE_DURATION = 0;
 
-        var projectile = this.game.game.add.sprite(event.info.x, event.info.y, 'gfx/buffs');
+        var projectile = this.game.engine.add.sprite(event.info.x, event.info.y, 'gfx/buffs');
         projectile.owner = event.info.owner;
         projectile.anchor.setTo(0.5);
 
@@ -26,7 +26,7 @@ class Component {
             PROJECTILE_DURATION = 600;
         }
 
-        this.game.game.physics.arcade.enable(projectile, Phaser.Physics.ARCADE);
+        this.game.engine.physics.arcade.enable(projectile, Phaser.Physics.ARCADE);
         projectile.body.collideWorldBounds = false;
         projectile.body.mass = .9;
         projectile.body.immovable = true;
@@ -54,7 +54,7 @@ class Component {
             break;
         }
 
-        var tween = this.game.game.add.tween(projectile).to({ alpha: 0 }, PROJECTILE_DURATION, 'Linear', true);
+        var tween = this.game.engine.add.tween(projectile).to({ alpha: 0 }, PROJECTILE_DURATION, 'Linear', true);
         tween.onComplete.add(function() { tween.stop(); });
 
         setTimeout(() => {
@@ -71,7 +71,7 @@ class Component {
         this.game.projectiles.forEach((projectile, index) => {
             if (projectile.owner !== this.game.player.id) {
                 console.log(projectile);
-                this.game.game.physics.arcade.collide(this.game.player.character.sprite, projectile, () => {
+                this.game.engine.physics.arcade.collide(this.game.player.character.sprite, projectile, () => {
                     collideProjectileHandler(index);
                     // Disable projectile physics. TODO: doesn't work
                     // projectile.body.moves = false;
@@ -79,7 +79,7 @@ class Component {
                 });
             }
             if (this.game.enemy) {
-                this.game.game.physics.arcade.collide(this.game.enemy.character.sprite, projectile, () => {
+                this.game.engine.physics.arcade.collide(this.game.enemy.character.sprite, projectile, () => {
                     // Disable projectile physics. TODO: doesn't work
                     // projectile.body.moves = false;
                     // projectile.body.immovable = false;

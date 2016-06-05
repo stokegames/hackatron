@@ -19,7 +19,7 @@ class Component {
 
         if (this.game.enemy) {
             if (this.game.player.character.collisionEnabled) {
-                this.game.game.physics.arcade.overlap(this.game.enemy.character.sprite, this.game.player.character.sprite, collideEnemyHandler);
+                this.game.engine.physics.arcade.overlap(this.game.enemy.character.sprite, this.game.player.character.sprite, collideEnemyHandler);
             }
         }
     }

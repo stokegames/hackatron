@@ -4,11 +4,11 @@ class Block {
     }
 
     run(event) {
-        var block = this.game.game.add.sprite(event.info.x, event.info.y, 'gfx/blocks/glitch');
+        var block = this.game.engine.add.sprite(event.info.x, event.info.y, 'gfx/blocks/glitch');
         block.anchor.setTo(0);
         block.animations.add('glitch', [0,1,2], 12, true, true);
         block.animations.play('glitch');
-        this.game.game.physics.arcade.enable(block, Phaser.Physics.ARCADE);
+        this.game.engine.physics.arcade.enable(block, Phaser.Physics.ARCADE);
 
         block.body.immovable = true;
         block.scale.x = 1;
@@ -17,7 +17,7 @@ class Block {
 
         // Make block fade in 2.0 seconds
         var BLOCK_DURATION = 2000;
-        var tween = this.game.game.add.tween(block).to({ alpha: 0 }, BLOCK_DURATION, 'Linear', true);
+        var tween = this.game.engine.add.tween(block).to({ alpha: 0 }, BLOCK_DURATION, 'Linear', true);
         tween.onComplete.add(function() {
             tween.stop();
         });
