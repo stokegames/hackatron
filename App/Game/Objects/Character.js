@@ -14,8 +14,8 @@ class Character extends GameObject {
         this.path = [];
         this.pathStep = -1;
 
-        this._addEmitterToSprite();
-        this._addAnimationsToSprite();
+        this.addEmitterToSprite();
+        this.addAnimationsToSprite();
     }
 
     kill() {
@@ -34,7 +34,7 @@ class Character extends GameObject {
         this.sprite.destroy();
     }
 
-    _addEmitterToSprite() {
+    addEmitterToSprite() {
         var emitter = this.game.add.emitter(this.sprite.x, this.sprite.y, 50);
         emitter.width = 5;
         emitter.makeParticles(this.emitterKey);
@@ -64,11 +64,11 @@ class Character extends GameObject {
 
         this.characterKey = key;
 
-        this._addAnimationsToSprite();
+        this.addAnimationsToSprite();
         this.sprite.frameName = oldFrameName.replace(oldKey, key);
     }
 
-    _addAnimationsToSprite() {
+    addAnimationsToSprite() {
         // Phaser.Animation.generateFrameNames(this.characterKey + '/walkDown/', 1, 3, '', 2)
         // is equal to: [
         // this.characterKey + '/walkDown/0001',

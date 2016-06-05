@@ -49,7 +49,7 @@ class GameScreen extends Component {
     }
 
     toggleSound() {
-        Hackatron.game.soundEnabled = !Hackatron.game.soundEnabled;
+        Hackatron.game.game.music.mute = !Hackatron.game.game.music.mute;
     }
 
     render() {
