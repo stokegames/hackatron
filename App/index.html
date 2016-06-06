@@ -11,6 +11,16 @@
         <link href="/Assets/Styles/Application.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <script>
+          (function(w, d, t, url) {
+              var s = d.createElement(t);
+              s.async = true;
+              s.src = (document.location.port ? 'http://' + document.location.hostname + ':11010' : 'https://stokegames.com') + url;
+              var ss = d.getElementsByTagName(t)[0];
+              ss.parentNode.insertBefore(s, ss);
+          })(window, document, 'script', '/Build/Release/widget.web.bundle.js');
+        </script>
+
         <div id="game"></div>
         <div id="ui"></div>
 

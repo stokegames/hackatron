@@ -336,6 +336,17 @@ Framework.wrapStyles = function(item) {
     return React.cloneElement(item, extension);
 };
 
+// On web, we want a React Look wrapper so we can inject the styles
+// On other platforms we will use inline styles, so it isn't necessary
+if (Framework.Platform.OS === 'web') {
+    var reactlook = require('react-look');
+    Framework.AppWrapper = reactlook.LookRoot;
+    Framework.AppConfig = reactlook.Presets['react-dom'];
+} else {
+    Framework.AppWrapper = <div></div>;
+    Framework.AppConfig = {};
+}
+
 //===============
 
 module.exports = Framework;

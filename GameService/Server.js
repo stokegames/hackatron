@@ -17,7 +17,7 @@ class Server {
     constructor() {
         this.env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
         this.host = process.env.HOST ? process.env.HOST : '0.0.0.0';
-        this.port = process.env.PORT ? process.env.PORT : 8080;
+        this.port = process.env.PORT ? process.env.PORT : 10020;
         this.events = [];
         this.clients = [];
         this.hostClient = null;
