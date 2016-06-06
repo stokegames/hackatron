@@ -18,50 +18,54 @@
          "name":"GameObjects",
          "objects":[
                 {
-                 "height":32,
+                 "height":14,
                  "id":1,
                  "name":"",
                  "properties":
                     {
-                     "id":"mid",
+                     "id":"l1",
+                     "target":"r1",
                      "type":"teleport"
                     },
                  "propertytypes":
                     {
                      "id":"string",
+                     "target":"string",
                      "type":"string"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":16,
-                 "x":64,
-                 "y":290
+                 "width":13.3333333333333,
+                 "x":82,
+                 "y":272.666666666667
                 }, 
                 {
-                 "height":32,
+                 "height":16,
                  "id":3,
                  "name":"",
                  "properties":
                     {
-                     "id":"mid",
+                     "id":"r1",
+                     "target":"l1",
                      "type":"teleport"
                     },
                  "propertytypes":
                     {
                      "id":"string",
+                     "target":"string",
                      "type":"string"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":16,
-                 "x":559,
-                 "y":288
+                 "width":12.3333333333334,
+                 "x":562.666666666667,
+                 "y":272
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":32,
          "x":0,
          "y":0

@@ -249,7 +249,7 @@ class Game {
 
         var playerParams = {
             id: Utils.generateId(),
-            game: this.game,
+            game: this.engine,
             name: this.getRandomName(),
             speed: Hackatron.DEFAULT_PLAYER_SPEED,
             worldPosition: worldPosition,
@@ -267,21 +267,39 @@ class Game {
         this.player.init(playerParams);
 
         if (Utils.env.os.mobile) {
-            this.game.camera.follow(this.player.character.sprite, Phaser.Camera.FOLLOW_LOCKON);
+            this.engine.camera.follow(this.player.character.sprite, Phaser.Camera.FOLLOW_LOCKON);
         }
     }
 
     initMap() {
         this.map = new Map2D();
-        this.map.init({game: this.game, player: this.player, enemy: this.enemy});
+        this.map.init({game: this.engine, player: this.player, enemy: this.enemy});
 
-        // var start = this.map.tilemap.objects['GameObjects'][0];
-        // var end = this.map.tilemap.objects['GameObjects'][1];
+        this.teleporters = [];
 
-        // var teleStart = new Phaser.Rectangle(start.x, start.y, start.width, start.height);
-        // var teleEnd = new Phaser.Rectangle(end.x, end.y, end.width, end.height);
-        // TODO: do stuff with tele points
+        this.map.tilemap.objects.forEach((layer) => {
+            if (layer.name === 'GameObjects') {
+                var objects = {};
 
+                layer.objects.forEach((object) => {
+                    objects[object.properties.id] = object;
+                });
+
+                layer.objects.forEach((object) => {
+                    if (object.properties.type === 'teleport') {
+                        var target = objects[object.properties.target];
+                        var bmd = this.engine.add.bitmapData(object.width, object.height);
+                        //bmd.ctx.beginPath(); bmd.ctx.rect(0, 0, object.width, object.height); bmd.ctx.fillStyle = '#ffffff'; bmd.ctx.fill();
+                        var teleporter = this.engine.add.sprite(object.x, object.y, bmd);
+                        this.engine.physics.arcade.enable(teleporter, Phaser.Physics.ARCADE);
+                        teleporter.body.immovable = true;
+                        teleporter.target = target;
+
+                        this.teleporters.push(teleporter);
+                    }
+                });
+            }
+        });
     }
 
     initCountdown() {
@@ -304,7 +322,6 @@ class Game {
         setTimeout(function() {
             window.location.reload();
         }, 2000);
-        //this.shutdown();
     }
 
 
@@ -333,11 +350,6 @@ class Game {
 
         this.socket.emit('events', JSON.stringify({events: this.events}));
         this.events = [];
-    }
-
-    moveToPointer() {
-        // Use path finder
-
     }
 
     update() {
@@ -380,6 +392,12 @@ class Game {
 
                 });
             }
+        });
+
+        this.teleporters.forEach((teleporter) => {
+            this.game.physics.arcade.collide(this.player.character.sprite, teleporter, () => {
+                this.player.character.teleport({x: teleporter.target.x / 16, y: teleporter.target.y / 16});
+            });
         });
 
         this.components['Projectile'].update();
@@ -472,7 +490,6 @@ class Game {
             // TODO: remove this hack
             window.GameState.timeLeft = this.gameState.timeLeft;
             window.UI_GameController.setState(window.GameState);
-
         }
     }
 
@@ -578,7 +595,7 @@ class Game {
             this.components['Projectile'].run(event);
         }
 
-        this.components['Multiplayer'].runEvent(event);
+        this.components['Multiplayer'].run(event);
     }
 
     registerToEvents() {

@@ -4,9 +4,6 @@ class Component {
     }
 
     run(event) {
-    }
-
-    runEvent(event) {
         if (event.key === 'newPlayer') {
             // If we're this player, we don't need to do anything
             if (this.game.player.id === event.info.player.id) { return; }
