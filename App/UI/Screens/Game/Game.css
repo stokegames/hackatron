@@ -1,6 +1,6 @@
 scoreboard {
     position: absolute;
-    top: 10px;
+    top: 60px;
     left: 70px;
     width: 100px;
     font-size: 12px;
@@ -19,7 +19,7 @@ scoreboard {
 
 characterChooser {
     position: absolute;
-    top: 10px;
+    top: 60px;
     left: 10px;
     width: 50px;
     padding: 5px;
@@ -31,7 +31,7 @@ characterChooser {
     font-family: Helvetica, sans-serif;
 
     @media (min-width: 450px) {
-        top: 20px;
+        top: 60px;
         right: 20px;
     }
 }
@@ -44,7 +44,7 @@ otherCharacterChooser {
 
 leftControl {
     position: absolute;
-    top: 50px;
+    top: 90px;
     right: 50px;
     background: #00191F url(/Assets/UI/Buttons/left-arrow.png) no-repeat 3px 3px;
     background-size: 27px auto;
@@ -61,7 +61,7 @@ leftControl {
 
 rightControl {
     position: absolute;
-    top: 50px;
+    top: 90px;
     right: 10px;
     background: #00191F url(/Assets/UI/Buttons/right-arrow.png) no-repeat 3px 3px;
     background-size: 27px auto;
@@ -78,7 +78,7 @@ rightControl {
 
 topControl {
     position: absolute;
-    top: 10px;
+    top: 50px;
     right: 33px;
     background: #00191F url(/Assets/UI/Buttons/up-arrow.png) no-repeat 3px 3px;
     background-size: auto 27px;
@@ -95,7 +95,7 @@ topControl {
 
 bottomControl {
     position: absolute;
-    top: 83px;
+    top: 123px;
     right: 33px;
     background: #00191F url(/Assets/UI/Buttons/down-arrow.png) no-repeat 3px 3px;
     background-size: auto 27px;
@@ -112,7 +112,7 @@ bottomControl {
 
 attackControl {
     position: absolute;
-    top: 83px;
+    top: 123px;
     right: 66px;
     background: #00191F url(/Assets/UI/Buttons/attack.png) no-repeat 3px 3px;
     background-size: auto 27px;
@@ -137,7 +137,7 @@ menuButton {
 
 menu {
     position: absolute;
-    top: 30px;
+    top: 70px;
     left: 30px;
     width: 200px;
     height: 300px;

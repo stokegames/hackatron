@@ -1,9 +1,27 @@
 {
-  "name": "Hackatron",
-  "description": "Hackatron",
+  "name": "vayard-alcyone",
+  "description": "",
   "version": "1.0.0",
   "author": "Stoke Games",
-  "license": "Proprietary",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": "5.5.0",
+    "npm": "3.7.2"
+  },
+  "scripts": {
+    "start": "babel-node ./GameService/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --progress -p"
+  },
+  "homepage": "https://github.com/stokegames/hackatron#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stokegames/hackatron.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stokegames/hackatron/issues"
+  },
   "dependencies": {
     "babel-cli": "6.9.0",
     "babel-core": "6.9.0",
@@ -45,22 +63,5 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-connect": "git+https://github.com/gruntjs/grunt-contrib-connect.git"
-  },
-  "engines": {
-    "node": "5.5.0",
-    "npm": "3.7.2"
-  },
-  "scripts": {
-    "start": "babel-node ./GameService/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --progress -p"
-  },
-  "homepage": "https://github.com/stokegames/hackatron#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/stokegames/hackatron.git"
-  },
-  "bugs": {
-    "url": "https://github.com/stokegames/hackatron/issues"
   }
 }
