@@ -3,12 +3,13 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        'webapp': ['./App/index.web.js'],
-        // We don't need this, thought it would be a nice placeholder
-        // 'index.ios': ['./app/index.ios.js']
+        'game.web': ['./App/index.web.js'],
+        // 'game.ios': ['./App/index.ios.js'],
+        // 'game.android': ['./App/index.android.js']
     },
     output: {
         path: __dirname + '/App/Build/Release',
+        publicPath: '/App/Build/Release/',
         filename: '[name].bundle.js',
         chunkFilename: '[id].chunk.js'
     },
@@ -42,6 +43,9 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.IgnorePlugin(/^(react-native)$/)
+        new webpack.IgnorePlugin(/^(react-native)$/),
+        new webpack.DefinePlugin({ 
+            'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') } 
+        })
     ]
 };

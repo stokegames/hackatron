@@ -1,163 +1,147 @@
-'use strict';
+const Framework = require('./Framework');
+const {React, ReactDOM, ReactNative, AppWrapper, AppConfig, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions, Router, Route, Link, createStore, browserHistory, Provider, syncHistoryWithStore, routerReducer, renderToString} = Framework;
 
-import CodePush from 'react-native-code-push';
-import React, {Component} from 'react';
-import {AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions} from 'react-native';
-import LaunchScreen from './UI/Screens/Launch';
-import { createStore } from 'redux';
-import { Provider, connect } from 'react-redux';
+import {createDevTools} from 'redux-devtools'
+import LogMonitor from 'redux-devtools-log-monitor'
+import DockMonitor from 'redux-devtools-dock-monitor'
+import {HotKeys} from 'react-hotkeys'
+import configureStore from './Game/Store'
 
-import EStyleSheet from 'react-native-extended-stylesheet';
+var routes = null
+var store = null
 
-// calculate styles
-EStyleSheet.build();
-
-
-var RNRF = require('react-native-router-flux');
-var {Route, Schema, Animations, Actions, TabBar} = RNRF;
-
-function reducer(state = {}, action) {
-    switch (action.type) {
-        case Actions.BEFORE_ROUTE:
-            //console.log("BEFORE_ROUTE:", action);
-            return state;
-        case Actions.AFTER_ROUTE:
-            //console.log("AFTER_ROUTE:", action);
-            return state;
-        case Actions.AFTER_POP:
-            //console.log("AFTER_POP:", action);
-            return state;
-        case Actions.BEFORE_POP:
-            //console.log("BEFORE_POP:", action);
-            return state;
-        case Actions.AFTER_DISMISS:
-            //console.log("AFTER_DISMISS:", action);
-            return state;
-        case Actions.BEFORE_DISMISS:
-            //console.log("BEFORE_DISMISS:", action);
-            return state;
-        default:
-            return state;
-    }
-}
-
-let store = createStore(reducer);
-const RouteContainer = connect()(RNRF.Router);
-
-class TabIcon extends Component {
-    render() {
-        return (
-            <Text style={{color: this.props.selected ? 'red' :'black'}}>{this.props.title}</Text>
-        );
-    }
-}
-
-class Header extends Component {
-    render() {
-        return <Text style={styles.header}></Text>
-    }
-}
-
-export default class Router extends Component {
-    async sync() {
-        let self = this;
-        try {
-            return await CodePush.sync(
-                {
-                    updateDialog: false,
-                    installMode: CodePush.InstallMode.ON_NEXT_RESUME
-                },
-                (syncStatus) => {
-                    switch(syncStatus) {
-                        case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
-                            self.setState({
-                                syncMessage: "Checking for update."
-                            });
-                            break;
-                        case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
-                            self.setState({
-                                syncMessage: "Downloading package."
-                            });
-                            break;
-                        case CodePush.SyncStatus.AWAITING_USER_ACTION:
-                            self.setState({
-                                syncMessage: "Awaiting user action."
-                            });
-                            break;
-                        case CodePush.SyncStatus.INSTALLING_UPDATE:
-                            self.setState({
-                                syncMessage: "Installing update."
-                            });
-                            break;
-                        case CodePush.SyncStatus.UP_TO_DATE:
-                            self.setState({
-                                syncMessage: "App up to date.",
-                                progress: false
-                            });
-                            break;
-                        case CodePush.SyncStatus.UPDATE_IGNORED:
-                            self.setState({
-                                syncMessage: "Update cancelled by user.",
-                                progress: false
-                            });
-                            break;
-                        case CodePush.SyncStatus.UPDATE_INSTALLED:
-                            self.setState({
-                                syncMessage: "Update installed and will be run when the app next resumes.",
-                                progress: false
-                            });
-                            break;
-                        case CodePush.SyncStatus.UNKNOWN_ERROR:
-                            self.setState({
-                                syncMessage: "An unknown error occurred.",
-                                progress: false
-                            });
-                            break;
-                    }
-                },
-                (progress) => {
-                    self.setState({
-                        progress: progress
-                    });
-                }
-            );
-        } catch (error) {
-            CodePush.log(error);
+if (Platform.Env.isNative) {
+    function reducer(state = {}, action) {
+        switch (action.type) {
+            case RNRF.Actions.BEFORE_ROUTE:
+                //console.log("BEFORE_ROUTE:", action);
+                return state;
+            case RNRF.Actions.AFTER_ROUTE:
+                //console.log("AFTER_ROUTE:", action);
+                return state;
+            case RNRF.Actions.AFTER_POP:
+                //console.log("AFTER_POP:", action);
+                return state;
+            case RNRF.Actions.BEFORE_POP:
+                //console.log("BEFORE_POP:", action);
+                return state;
+            case RNRF.Actions.AFTER_DISMISS:
+                //console.log("AFTER_DISMISS:", action);
+                return state;
+            case RNRF.Actions.BEFORE_DISMISS:
+                //console.log("BEFORE_DISMISS:", action);
+                return state;
+            default:
+                return state;
         }
     }
 
-    componentDidMount() {
-        CodePush.notifyApplicationReady();
-        this.sync();
+    routes = <Route key="launch" header={Header} initial={true} component={LaunchScreen} wrapRouter={true} title="Launch Screen" hideNavBar={true} />
+    store = createStore(reducer);
+} else {
+    // Polyfill for nodejs /w babel
+    if (typeof require.ensure !== "function") require.ensure = function(d, c) { c(require) };
+    if (typeof require.include !== "function") require.include = function() {};
 
-        CodePush.checkForUpdate()
-        .then((update) => {
-            if (!update) {
-                console.log("The app is up to date! 2");
-            } else {
-                console.log("An update is available! Should we download it?");
-            }
-        });
+
+    const DevTools = createDevTools(
+        <DockMonitor
+            toggleVisibilityKey='ctrl-h'
+            changePositionKey='ctrl-q'
+            changeMonitorKey='ctrl-m'
+            defaultIsVisible={false}>
+            <LogMonitor theme="tomorrow" preserveScrollTop={false} />
+        </DockMonitor>
+    )
+
+    store = configureStore(DevTools.instrument())
+
+    class Toolbar extends React.Component {
+        render() {
+            return (
+                <ul style={{
+                        position: 'fixed',
+                        left: '0',
+                        top: '0',
+                        height: '100%',
+                        width: '20%',
+                        background: '#000',
+                        color: '#fff',
+                        zIndex: 100
+                    }}>
+                    <li>
+                        <a href="http://hackatron.rocks.local:10020/">Go to Hackatron</a>
+                    </li>
+                    <li>
+                        <a href="http://ttt.stokegames.com.local:10010/">Go to TTT</a>
+                    </li>
+                </ul>
+            );
+        }
     }
 
-    render() {
-        // Provider is optional (if you want to use redux)
-        return (
-            <Provider store={store}>
-                <RouteContainer hideNavBar={true} key="root">
-                    <Route key="launch" header={Header} initial={true} component={LaunchScreen} wrapRouter={true} title="Launch Screen" hideNavBar={true}/>
-                </RouteContainer>
-            </Provider>
-        );
+    class RealRouter extends Component {
+        constructor(props) {
+            super(props)
+
+            this.toggleToolbar = this.toggleToolbar.bind(this)
+
+            this.state = {
+                toolbarActive: false
+            }
+        }
+
+        toggleToolbar() {
+            console.log('toggleToolbar')
+
+            this.setState({
+                toolbarActive: !this.state.toolbarActive
+            })
+        }
+
+        render() {
+            const handlers = {
+                'toggleToolbar': this.toggleToolbar
+            };
+
+            const map = {
+                'toggleToolbar': 'ctrl+n'
+            };
+
+            const isLocal = typeof window !== 'undefined' && window.location.hostname.indexOf('.local') !== -1
+
+            return (
+                <div>
+                    <HotKeys handlers={handlers} keyMap={map}>
+                        <div>
+                            {this.props.children}
+                            {isLocal && <DevTools />}
+                            {isLocal && this.state.toolbarActive && <Toolbar />}
+                        </div>
+                    </HotKeys>
+                </div>
+            );
+        }
+    }
+
+    const onEnterHome = function(nextState, replace) {
+        replace({
+            pathname: '/launch',
+            state: { nextPathname: nextState.location.pathname }
+        })
+    }
+
+    routes = {
+        component: RealRouter,
+        childRoutes: [
+            {path: '/', onEnter: onEnterHome},
+            {path: '/launch', getComponent: (nextState, cb) => { cb(null, require('./UI/Screens/Launch/Screen').default); } },
+            {path: '/game', getComponent: (nextState, cb) => { cb(null, require('./UI/Screens/Game').default); } },
+        ]
     }
 }
 
-var styles = StyleSheet.create({
-    header: {
-        width: Dimensions.get('window').width,
-        height: 10,
-        backgroundColor: '#000',
-        opacity: 0.8,
-        color: '#fff'
-    }
-});
+export default {
+    routes: routes,
+    store: store
+}

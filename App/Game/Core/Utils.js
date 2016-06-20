@@ -177,7 +177,7 @@ var detect = function(ua) {
     };
 };
 
-window.Utils = {
+module.exports = {
     env: detect(window.navigator.userAgent),
     generateId: function() {
       function s4() {

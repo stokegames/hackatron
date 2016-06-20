@@ -23,6 +23,14 @@ import Multiplayer from '../Components/Multiplayer';
 import PowerupController from '../Components/PowerupController';
 import EnemyController from '../Components/EnemyController';
 
+window.GameState = {
+    show: true,
+    showOthers: false,
+    currentCharacter: 'tron',
+    allCharacters: ['tron', 'ghost', 'frosty', 'one'],
+    showMenu: false,
+    timeLeft: null
+};
 
 var updateTimeout;
 var alpha = 0;
@@ -489,7 +497,7 @@ class Game {
 
             // TODO: remove this hack
             window.GameState.timeLeft = this.gameState.timeLeft;
-            window.UI_GameController.setState(window.GameState);
+            window.UI_GameController && window.UI_GameController.setState(window.GameState);
         }
     }
 

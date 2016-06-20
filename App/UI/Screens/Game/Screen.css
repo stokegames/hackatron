@@ -1,4 +1,4 @@
-scoreboard {
+.c-scoreboard {
     position: absolute;
     top: 60px;
     left: 70px;
@@ -17,7 +17,7 @@ scoreboard {
     }
 }
 
-characterChooser {
+.c-character-chooser {
     position: absolute;
     top: 60px;
     left: 10px;
@@ -36,13 +36,13 @@ characterChooser {
     }
 }
 
-otherCharacterChooser {
+.c-other-character-chooser {
     color: #fff;
     padding: 15px 0 0 5px;
     font-family: Helvetica, sans-serif;
 }
 
-leftControl {
+.c-left-control {
     position: absolute;
     top: 90px;
     right: 50px;
@@ -59,7 +59,7 @@ leftControl {
     user-select: none;
 }
 
-rightControl {
+.c-right-control {
     position: absolute;
     top: 90px;
     right: 10px;
@@ -76,7 +76,7 @@ rightControl {
     user-select: none;
 }
 
-topControl {
+.c-top-control {
     position: absolute;
     top: 50px;
     right: 33px;
@@ -93,7 +93,7 @@ topControl {
     user-select: none;
 }
 
-bottomControl {
+.c-bottom-control {
     position: absolute;
     top: 123px;
     right: 33px;
@@ -110,7 +110,7 @@ bottomControl {
     user-select: none;
 }
 
-attackControl {
+.c-attack-control {
     position: absolute;
     top: 123px;
     right: 66px;
@@ -127,7 +127,7 @@ attackControl {
     user-select: none;
 }
 
-menuButton {
+.c-menu-button {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -135,7 +135,7 @@ menuButton {
     height: 20px;
 }
 
-menu {
+.c-menu {
     position: absolute;
     top: 70px;
     left: 30px;

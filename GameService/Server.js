@@ -30,7 +30,7 @@ class Server {
 
         if (this.env === 'development') {
             webpackConfig.devtool = 'eval'; // Speed up incremental builds
-            webpackConfig.entry['webapp'].unshift('webpack-hot-middleware/client?path=/__webpack_hmr');
+            webpackConfig.entry['game.web'].unshift('webpack-hot-middleware/client?path=/__webpack_hmr');
             webpackConfig.output.publicPath = '/Build/Release/';
             webpackConfig.plugins.unshift(new webpack.HotModuleReplacementPlugin());
             webpackConfig.plugins.unshift(new webpack.NoErrorsPlugin());
@@ -73,9 +73,6 @@ class Server {
                 this.onSocketDisconnect(socket);
             });
         });
-
-        console.log('Open ' + this.host + ':' + this.port + ' on your browser.');
-        console.log('Listening...');
 
         this.monitorHost();
 
