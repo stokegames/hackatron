@@ -39,13 +39,13 @@ class App extends Component {
     }
 }
 
-ReactDOM.render(<App />, document.getElementById('ui'))
-
 
 
 ////////////// PHASER GAME
 
 window.Hackatron = {}
+Hackatron.ready = false
+Hackatron.screen = 'Menu'
 
 require('./Game/States/Boot')
 require('./Game/States/Preload')
@@ -96,19 +96,15 @@ window.onresize = function() {
 }
 
 // Load Game
-window.onload = function () {
-    Hackatron.debug = window.location.href.indexOf('localhost') !== -1
-    Hackatron.loader = new Phaser.Game(Hackatron.GAME_WIDTH, Hackatron.GAME_HEIGHT, Phaser.AUTO, gameContainer, null, true)
+Hackatron.debug = window.location.href.indexOf('localhost') !== -1
+Hackatron.loader = new Phaser.Game(Hackatron.GAME_WIDTH, Hackatron.GAME_HEIGHT, Phaser.AUTO, gameContainer, null, true)
 
-    Hackatron.loader.state.add('Boot', Hackatron.Boot)
-    Hackatron.loader.state.add('Preload', Hackatron.Preload)
-    Hackatron.loader.state.add('Menu', Hackatron.Menu)
-    Hackatron.loader.state.add('Game', Hackatron.Game)
+Hackatron.loader.state.add('Boot', Hackatron.Boot)
+Hackatron.loader.state.add('Preload', Hackatron.Preload)
+Hackatron.loader.state.add('Menu', Hackatron.Menu)
+Hackatron.loader.state.add('Game', Hackatron.Game)
 
-    Hackatron.loader.state.start('Boot')
-
-    window.onresize()
-}
+window.onresize()
 
 
 
@@ -126,3 +122,10 @@ window.Hackatron.fitToWindow = function() {
     //document.getElementById('ui').style['transform'] = 'perspective(1000px) rotateX(10deg) rotate(-2deg)'
     window.onresize()
 }
+
+
+// Render
+
+
+ReactDOM.render(<App />, document.getElementById('ui'))
+

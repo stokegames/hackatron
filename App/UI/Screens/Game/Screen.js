@@ -53,10 +53,18 @@ class Screen extends Component {
                 this.setState(window.GameState)
             }
         })
+
+        Hackatron.screen = 'Game'
+
+        if (Hackatron.ready) {
+            Hackatron.loader.state.start('Game')
+        } else {
+            Hackatron.loader.state.start('Preload')
+        }
     }
 
     render() {
-        if (!this.state.styles || !Hackatron.game) { return <View></View> }
+        if (!this.state.styles || !Hackatron.game || !Hackatron.game.player) { return <View></View> }
 
         var otherElements = null
 

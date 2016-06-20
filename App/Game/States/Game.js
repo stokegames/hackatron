@@ -145,7 +145,6 @@ class Game {
         });
 
         this.players = {};
-        this.socket = io.connect();
         this.events = [];
 
         this.initPhysics();
@@ -167,6 +166,10 @@ class Game {
         window.UI_controller.setState(window.UI_state);
 
         this.components['Multiplayer'].joinGame();
+    }
+    
+    establishConnection() {
+        const monitor = () => this.socket = window.io ? window.io.connect() : setTimeout(monitor, 50)
     }
 
     initEvents() {
@@ -353,6 +356,7 @@ class Game {
 
     broadcastEvents() {
         if (!this.events.length) { return; }
+        if (!this.socket) { return }
 
         //console.log('Broadcasting events...', JSON.stringify({events: this.events}));
 
@@ -607,6 +611,8 @@ class Game {
     }
 
     registerToEvents() {
+        if (!this.socket) { return }
+
         // Method for receiving multiple events at once
         // {events: [{key: 'eventName', info: {...data here...}]}
         this.socket.on('events', (data) => {

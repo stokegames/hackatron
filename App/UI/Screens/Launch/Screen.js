@@ -29,6 +29,8 @@ class Screen extends Component {
                 styles: styles
             })
         })
+
+        Hackatron.loader.state.start('Boot')
     }
 
     componentWillUnmount() {
@@ -46,7 +48,7 @@ class Screen extends Component {
     }
 
     clickInstantAction() {
-        Hackatron.loader.state.start('Game')
+        browserHistory.push('/game')
     }
 
     render() {
