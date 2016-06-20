@@ -7,8 +7,12 @@ class Screen extends Component {
     constructor(props) {
         super(props)
 
-        window.UI_GameController = this
-        this.state = window.GameState
+        if (typeof window !== 'undefined' && window.GameState) {
+            window.UI_GameController = this
+            this.state = window.GameState
+        } else {
+            this.state = {}
+        }
     }
 
     clickCharacter() {
@@ -30,7 +34,7 @@ class Screen extends Component {
     }
 
     toggleMenu() {
-        window.GameState.showMenu =  !this.state.showMenu
+        window.GameState.showMenu = !this.state.showMenu
         this.setState(window.GameState)
     }
 
@@ -44,8 +48,10 @@ class Screen extends Component {
 
     componentDidMount() {
         Framework.getStyles(Framework.Platform.Env.isServer ? require('fs').readFileSync(__dirname + '/Screen.css').toString() : require('./Screen.css'), 'alcyone-', (styles) => {
-            window.GameState.styles = styles
-            this.setState(window.GameState)
+            if (typeof window !== 'undefined') {
+                window.GameState.styles = styles
+                this.setState(window.GameState)
+            }
         })
     }
 

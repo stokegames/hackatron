@@ -8,7 +8,7 @@ class Boot {
         this.game.renderer.renderSession.roundPixels = true;
         Phaser.Canvas.setImageRenderingCrisp(this.game.canvas);
 
-        var assetsPath = 'Assets/';
+        var assetsPath = '/Assets/';
         this.load.image('gfx/overlays/preloader',  assetsPath + 'GFX/overlays/preloader.gif');
 
         Hackatron.fitToWindow();

@@ -35,17 +35,17 @@ class Screen extends Component {
         clearInterval(this.interval)
     }
 
-    _clickHost() {
+    clickHost() {
         window.UI_state.screenKey = 'hostGame'
         window.UI_controller.setState(window.UI_state)
     }
 
-    _clickJoin() {
+    clickJoin() {
         window.UI_state.screenKey = 'joinGame'
         window.UI_controller.setState(window.UI_state)
     }
 
-    _clickInstantAction() {
+    clickInstantAction() {
         Hackatron.loader.state.start('Game')
     }
 
@@ -54,7 +54,7 @@ class Screen extends Component {
 
         return Framework.wrapStyles(this.state.styles, 
             <View styles="container">
-                <View styles="instantActionButton" onClick={this._clickInstantAction}>INSTANT ACTION</View>
+                <View styles="instantActionButton" onClick={()=>this.clickInstantAction()}>INSTANT ACTION</View>
                 <View styles="countdown"><br />Instant action in... {this.state.instantActionTimer + ''}</View>
             </View>
         )

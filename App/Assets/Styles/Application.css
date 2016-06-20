@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-    background: #000 url(../UI/Screens/launch.png) no-repeat 0 0;
+    background: #000 url(/Assets/UI/Screens/launch.png) no-repeat 0 0;
     background-size: cover;
 
     @media (min-width: 450px) {
@@ -18,7 +18,7 @@ body {
 }
 
 body.game {
-    background-image: url(../UI/Screens/game.jpg);
+    background-image: url(/Assets/UI/Screens/game.jpg);
     background-size: auto 100%;
     overflow: hidden;
 }

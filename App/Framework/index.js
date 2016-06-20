@@ -471,7 +471,7 @@ if (typeof GLOBAL !== 'undefined' && GLOBAL.Framework) {
         var reactlook = require('react-look');
         Framework.AppWrapper = reactlook.LookRoot;
         Framework.AppConfig = reactlook.Presets['react-dom'];
-        Framework.AppConfig.styleElementId = '_nextgen-engine-stylesheet-' + 'aaaa';
+        Framework.AppConfig.styleElementId = '_nextgen-engine-stylesheet-' + 'alcyone';
     } else {
         Framework.AppWrapper = <div></div>;
         Framework.AppConfig = {};
