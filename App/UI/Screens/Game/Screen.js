@@ -59,7 +59,7 @@ class Screen extends Component {
         if (Hackatron.ready) {
             Hackatron.loader.state.start('Game')
         } else {
-            Hackatron.loader.state.start('Preload')
+            Hackatron.loader.state.start('Boot')
         }
     }
 

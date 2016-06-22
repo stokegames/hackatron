@@ -24,11 +24,11 @@ class Component {
 
         window.UI_GameController.setState(window.GameState);
 
-        this.game.newGameKey = this.game.engine.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-        this.game.newGameKey.onDown.add(() => {
+        this.game.keys.enter = this.game.engine.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        this.game.keys.enter.onDown.add(() => {
             // Remove death screen
 
-            this.game.newGameKey.onDown.remove();
+            this.game.keys.enter.onDown.remove();
         });
 
         setTimeout(() => {

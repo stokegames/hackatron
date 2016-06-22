@@ -46,7 +46,7 @@ class GameObject {
     }
 
     set worldPosition(worldPosition) {
-        this.position = {x: worldPosition.x * 16, y: worldPosition.y * 16};
+        this.position = {x: worldPosition.x * 16 + 8, y: worldPosition.y * 16 + 8};
     }
 
     get worldPosition() {

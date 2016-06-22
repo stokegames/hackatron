@@ -13,6 +13,19 @@ class Character extends GameObject {
         this.emitterKey = params.emitterKey;
         this.path = [];
         this.pathStep = -1;
+        this.nextDirection = null;
+        this.moving = {
+            right: false,
+            left: false,
+            up: false,
+            down: false
+        }
+        this.facing = {
+            right: false,
+            left: false,
+            up: false,
+            down: false
+        }
 
         this.addEmitterToSprite();
         this.addAnimationsToSprite();
@@ -122,19 +135,19 @@ class Character extends GameObject {
                 velocity.y = Math.round(velocity.y);
 
                 this.speed = 100;
-                this.inputRight = false;
-                this.inputLeft = false;
-                this.inputDown = false;
-                this.inputUp = false;
+                this.moving.right = false;
+                this.moving.left = false;
+                this.moving.down = false;
+                this.moving.up = false;
 
                 if (velocity.x === 1) {
-                    this.inputRight = true;
+                    this.moving.right = true;
                 } else if (velocity.x === -1) {
-                    this.inputLeft = true;
+                    this.moving.left = true;
                 } else if (velocity.y === 1) {
-                    this.inputDown = true;
+                    this.moving.down = true;
                 } else if (velocity.y === -1) {
-                    this.inputUp = true;
+                    this.moving.up = true;
                 }
 
                 this.updatePos();
@@ -160,11 +173,6 @@ class Character extends GameObject {
     updatePos() {
         if (!this.isAlive || this.frozen) { return; }
 
-        this.inputDown = this.inputDown || (this.sprite.downKey && this.sprite.downKey.isDown) || (this.sprite.sKey && this.sprite.sKey.isDown);
-        this.inputUp = this.inputUp || (this.sprite.upKey && this.sprite.upKey.isDown) || (this.sprite.wKey && this.sprite.wKey.isDown);
-        this.inputLeft = this.inputLeft || (this.sprite.leftKey && this.sprite.leftKey.isDown) || (this.sprite.aKey && this.sprite.aKey.isDown);
-        this.inputRight = this.inputRight || (this.sprite.rightKey && this.sprite.rightKey.isDown) || (this.sprite.dKey && this.sprite.dKey.isDown);
-
         if (!(this.sprite &&
             this.sprite.body)) {
             return;
@@ -179,7 +187,7 @@ class Character extends GameObject {
 
         //console.log(this.name + ' ' + this.sprite.x + ',' + this.sprite.y);
         var emitterOffset = 15;
-        if (this.inputUp) {
+        if (this.moving.up) {
             this.sprite.animations.play('walkUp', 3, false);
             this.sprite.body.velocity.y = -this.speed;
             this.direction = 'walkUp';
@@ -188,7 +196,7 @@ class Character extends GameObject {
                 this.sprite.emitter.x = this.sprite.x;
                 this.sprite.emitter.y = this.sprite.y + emitterOffset;
             }
-        } else if (this.inputDown) {
+        } else if (this.moving.down) {
             this.sprite.animations.play('walkDown', 3, false);
             this.sprite.body.velocity.y = this.speed;
             this.direction = 'walkDown';
@@ -197,7 +205,7 @@ class Character extends GameObject {
                 this.sprite.emitter.x = this.sprite.x;
                 this.sprite.emitter.y = this.sprite.y - emitterOffset;
             }
-        } else if (this.inputLeft) {
+        } else if (this.moving.left) {
             this.sprite.animations.play('walkLeft', 3, false);
             this.sprite.body.velocity.x = -this.speed;
             this.direction = 'walkLeft';
@@ -206,7 +214,7 @@ class Character extends GameObject {
                 this.sprite.emitter.x = this.sprite.x + emitterOffset;
                 this.sprite.emitter.y = this.sprite.y;
             }
-        } else if (this.inputRight) {
+        } else if (this.moving.right) {
             this.sprite.animations.play('walkRight', 3, false);
             this.sprite.body.velocity.x = this.speed;
             this.direction = 'walkRight';

@@ -87,6 +87,12 @@ class Game {
 
         return null;
     }
+    
+    isValidPosition(position) {
+        const tile = this.getTileAt(position)
+        
+        return !tile
+    }
 
     getValidPosition() {
         var position = null;
@@ -130,8 +136,10 @@ class Game {
 
     create() {
         Hackatron.game = this;
-
-        document.body.className += ' game';
+        
+        window.document.body.style['background'] = '#000 url(/Assets/UI/Screens/game.jpg) no-repeat 0 0'
+        window.document.body.style['background-size'] = 'auto 100%'
+        window.document.body.style['overflow'] = 'hidden'
 
         this.game.plugins.cameraShake = this.game.plugins.add(Phaser.Plugin.CameraShake);
 
@@ -154,11 +162,8 @@ class Game {
         this.initSFX();
         this.initHotkeys();
 
-        // Register to listen to events and inform
-        // other players that you have joined the game
-        this.registerToEvents();
-
         this.initEvents();
+        this.establishConnection()
 
         this.game.stage.disableVisibilityChange = true;
 
@@ -169,7 +174,17 @@ class Game {
     }
     
     establishConnection() {
-        const monitor = () => this.socket = window.io ? window.io.connect() : setTimeout(monitor, 50)
+        const monitor = () => {
+            if (!window.io) { return setTimeout(monitor, 50) }
+            
+            this.socket = window.io.connect()
+
+            // Register to listen to events and inform
+            // other players that you have joined the game
+            this.registerToEvents()
+        }
+        
+        monitor()
     }
 
     initEvents() {
@@ -207,47 +222,131 @@ class Game {
     }
 
     initHotkeys() {
-        this.fullscreenKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
-        this.fullscreenKey.onDown.add(this.toggleFullscreen, this);
-        this.aiKey = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
-        this.aiKey.onDown.add(this.toggleAI, this);
+        this.keys = {}
+
+        this.keys.fullscreen = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
+        this.keys.fullscreen.onDown.add(this.toggleFullscreen, this);
+        this.keys.i = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
+        this.keys.i.onDown.add(this.toggleAI, this);
+
+        this.keys.up = this.game.input.keyboard.addKey(Phaser.Keyboard.UP)
+        this.keys.up.onDown.add(() => this.onAction('up'))
+        this.keys.down = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN)
+        this.keys.down.onDown.add(() => this.onAction('down'))
+        this.keys.left = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT)
+        this.keys.left.onDown.add(() => this.onAction('left'))
+        this.keys.right = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT)
+        this.keys.right.onDown.add(() => this.onAction('right'))
+
+        this.keys.w = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
+        this.keys.w.onDown.add(() => this.onAction('up'))
+        this.keys.s = this.game.input.keyboard.addKey(Phaser.Keyboard.S)
+        this.keys.s.onDown.add(() => this.onAction('down'))
+        this.keys.a = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
+        this.keys.a.onDown.add(() => this.onAction('left'))
+        this.keys.d = this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+        this.keys.d.onDown.add(() => this.onAction('right'))
+
+        this.keys.att = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+        this.keys.att.onDown.add(this.player.character.triggerAttack, this.player.character)
 
         this.components['MobileMovementController'].init();
     }
 
-    onControlDown(key) {
-        if (key === 'att') {
-            this.player.character.sprite.attKey.onDown.dispatch();
-        } else {
-            this.player.character.sprite[key + 'Key'].isDown = true;
+    destroyKeys() {
+        for (var key in this.keys) {
+            this.game.input.keyboard.removeKey(this.keys[key])
         }
+    }
+
+    onAction(action) {
+        console.log('Action:', action)
+        if (action === 'swipeLeft' || action === 'left') {
+            this.onControlDown('left');
+        } else if (action === 'swipeRight' || action === 'right') {
+            this.onControlDown('right');
+        } else if (action === 'swipeUp' || action === 'up') {
+            this.onControlDown('up');
+        } else if (action === 'swipeDown' || action === 'down') {
+            this.onControlDown('down');
+        } else if (action === 'tap' || action === 'space') {
+            this.onControlDown('att');
+        }
+    }
+
+    onControlDown(key) {
+        console.log('Control down:', key)
+        if (key === 'att') {
+            this.keys.att.onDown.dispatch();
+        } else {
+            this.player.character.nextDirection = key;
+        }
+        
+        this.checkPlayerDirection()
     }
 
     onControlUp(key) {
         if (key === 'att') {
         } else {
-            this.player.character.sprite['leftKey'].isDown = false;
-            this.player.character.sprite['rightKey'].isDown = false;
-            this.player.character.sprite['upKey'].isDown = false;
-            this.player.character.sprite['downKey'].isDown = false;
+            this.stopPlayerMovement()
         }
     }
 
-    onAction(action) {
-        if (action === 'swipeLeft') {
-            this.onControlUp();
-            this.onControlDown('left');
-        } else if (action === 'swipeRight') {
-            this.onControlUp();
-            this.onControlDown('right');
-        } else if (action === 'swipeUp') {
-            this.onControlUp();
-            this.onControlDown('up');
-        } else if (action === 'swipeDown') {
-            this.onControlUp();
-            this.onControlDown('down');
-        } else if (action === 'tap') {
-            this.onControlDown('att');
+    stopPlayerMovement() {
+        for (var key in this.player.character.moving) {
+            this.player.character.moving[key] = false
+        }
+    }
+    
+    checkInput() {
+        const moveDown = this.keys.down.isDown || this.keys.s.isDown
+        const moveUp = this.keys.up.isDown || this.keys.w.isDown
+        const moveLeft = this.keys.left.isDown || this.keys.a.isDown
+        const moveRight = this.keys.right.isDown || this.keys.d.isDown
+        //var attacking = this.keys.att.isDown
+
+        if (moveDown) {
+            this.onAction('down')
+        } else if (moveUp) {
+            this.onAction('up')
+        } else if (moveLeft) {
+            this.onAction('left')
+        } else if (moveRight) {
+            this.onAction('right')
+        }
+    }
+    
+    checkPlayerDirection() {
+        var nextDirection = this.player.character.nextDirection
+
+        if (!nextDirection) { return }
+
+        var worldPosition = this.player.character.worldPosition
+
+        var opening = false
+        var nextWorldPosition = null
+
+        if (nextDirection === 'left') {
+            nextWorldPosition = {x: worldPosition.x-1, y: worldPosition.y}
+        } else if (nextDirection === 'right') {
+            nextWorldPosition = {x: worldPosition.x+1, y: worldPosition.y}
+        } else if (nextDirection === 'up') {
+            nextWorldPosition = {x: worldPosition.x, y: worldPosition.y-1}
+        } else if (nextDirection === 'down') {
+            nextWorldPosition = {x: worldPosition.x, y: worldPosition.y+1}
+        }
+        
+        nextWorldPosition.x = Math.floor(nextWorldPosition.x)
+        nextWorldPosition.y = Math.floor(nextWorldPosition.y)
+
+        opening = this.isValidPosition(nextWorldPosition)
+        if (opening) {
+            this.stopPlayerMovement()
+            this.player.character.worldPosition = nextWorldPosition
+            this.player.character.moving[nextDirection] = true
+            this.player.character.nextDirection = null
+        } else {
+            
         }
     }
 
@@ -264,14 +363,7 @@ class Game {
             name: this.getRandomName(),
             speed: Hackatron.DEFAULT_PLAYER_SPEED,
             worldPosition: worldPosition,
-            points: 1000,
-            keys: { // TODO: Could be architected better
-                up: Phaser.Keyboard.UP,
-                down: Phaser.Keyboard.DOWN,
-                left: Phaser.Keyboard.LEFT,
-                right: Phaser.Keyboard.RIGHT,
-                att: Phaser.Keyboard.SPACEBAR
-            }
+            points: 1000
         };
 
         this.player = new Player();
@@ -369,10 +461,7 @@ class Game {
             this.game.music.mute = !this.game.music.mute;
         }
 
-        this.player.character.inputRight = false;
-        this.player.character.inputLeft = false;
-        this.player.character.inputUp = false;
-        this.player.character.inputDown = false;
+        this.checkPlayerDirection()
 
         this.components['FollowMouseBehaviour'].run();
         this.components['CollideWallBehaviour'].run();
