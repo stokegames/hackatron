@@ -320,6 +320,7 @@ class Game {
         var nextDirection = this.player.character.nextDirection
 
         if (!nextDirection) { return }
+        if (nextDirection === this.player.character.currentDirection) { return }
 
         var worldPosition = this.player.character.worldPosition
 
@@ -335,7 +336,7 @@ class Game {
         } else if (nextDirection === 'down') {
             nextWorldPosition = {x: worldPosition.x, y: worldPosition.y+1}
         }
-        
+
         nextWorldPosition.x = Math.floor(nextWorldPosition.x)
         nextWorldPosition.y = Math.floor(nextWorldPosition.y)
 
@@ -344,6 +345,7 @@ class Game {
             this.stopPlayerMovement()
             this.player.character.worldPosition = nextWorldPosition
             this.player.character.moving[nextDirection] = true
+            this.player.character.currentDirection = nextDirection
             this.player.character.nextDirection = null
         } else {
             

@@ -14,6 +14,7 @@ class Character extends GameObject {
         this.path = [];
         this.pathStep = -1;
         this.nextDirection = null;
+        this.currentDirection = null
         this.moving = {
             right: false,
             left: false,
