@@ -355,8 +355,8 @@ class RageHandler extends PowerupHandler {
 
     onStopped() {
         // set back original
-        this.player.character.sprite.scale.x = 0.8;
-        this.player.character.sprite.scale.y = 0.8;
+        this.player.character.sprite.scale.x = 1;
+        this.player.character.sprite.scale.y = 1;
         this.player.character.sprite.body.setSize(this.player.character.sprite.body.width * 1.5, this.player.character.sprite.body.height * 1.5);
 
         var updatedSpeed = this.player.character.speed / 1.5;

@@ -71,7 +71,7 @@ class AI {
             return null;
         }
 
-        return targets[Math.floor(Math.random() * (targets.length - 1))];
+        return targets[Math.floor(Math.random() * (targets.length))];
     }
 
     reposition() {
