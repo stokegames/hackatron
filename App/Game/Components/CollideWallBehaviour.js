@@ -90,7 +90,7 @@ class Component {
                 // He's probably stuck because a few pixels are touching
                 // Lets round his position so he's in alignment
                 //this.game.player.character.sprite.body.velocity.setTo(0, 0);
-                this.game.player.character.position[diff.align] = position[diff.align];
+                this.game.player.character.position[diff.align] = position[diff.align] + (Math.random(0, 1) * 3);
             }
         };
 
