@@ -7,6 +7,8 @@ class Component {
     }
 
     init() {
+        if (!Utils.env.os.mobile) { return }
+
         // variables used to detect and manage swipes
         var startX;
         var startY;
