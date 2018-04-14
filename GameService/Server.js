@@ -223,7 +223,7 @@ class Server {
                 this.setHost(client);
 
                 console.log('New host: ' + this.hostClient.player.id);
-                this.io.sockets.emit('setHost', {player: this.hostClient.player});
+                this.fireAllPlayers({ key: 'setHost', info: {player: this.hostClient.player} });
             }
         }
     }
@@ -258,6 +258,8 @@ class Server {
     }
 
     parseEvent(socket, event) {
+        //this.events.push(event)
+
         if (event.key === 'newPlayer') {
             console.log('Handshaking...');
 
