@@ -68,6 +68,8 @@ class Character extends GameObject {
     }
 
     changeSkin(key) {
+        if (key == this.characterKey) { return }
+
         var oldKey = this.characterKey;
         var oldFrameName = this.sprite.frameName;
 
@@ -209,7 +211,6 @@ class Character extends GameObject {
                 this.sprite.emitter.y = this.sprite.y + emitterOffset;
             }
         } else if (this.moving.down) {
-            //this.position.x = Math.floor(this.worldPosition.x) * 16;
             this.sprite.animations.play('walkDown', 3, false);
             this.sprite.body.velocity.y = this.speed;
             this.direction = 'walkDown';
@@ -219,7 +220,6 @@ class Character extends GameObject {
                 this.sprite.emitter.y = this.sprite.y - emitterOffset;
             }
         } else if (this.moving.left) {
-            //this.position.y = Math.floor(this.worldPosition.y) * 16;
             this.sprite.animations.play('walkLeft', 3, false);
             this.sprite.body.velocity.x = -this.speed;
             this.direction = 'walkLeft';
@@ -229,7 +229,6 @@ class Character extends GameObject {
                 this.sprite.emitter.y = this.sprite.y;
             }
         } else if (this.moving.right) {
-            //this.position.y = Math.floor(this.worldPosition.y) * 16;
             this.sprite.animations.play('walkRight', 3, false);
             this.sprite.body.velocity.x = this.speed;
             this.direction = 'walkRight';
