@@ -80,6 +80,15 @@ class Character extends GameObject {
 
         this.addAnimationsToSprite();
         this.sprite.frameName = oldFrameName.replace(oldKey, key);
+
+        Hackatron.game.fireEvent({
+            key: 'changeSkin', info: {
+                player: {
+                    id: Hackatron.game.player.id
+                },
+                skinKey: key
+            }
+        });
     }
 
     addAnimationsToSprite() {

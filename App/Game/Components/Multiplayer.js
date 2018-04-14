@@ -102,6 +102,14 @@ class Component {
                     this.game.components['PowerupController'].run();
                 }, 3000);
             }
+        } else if (event.key === 'changeSkin') {
+            if (this.game.player.id === event.info.player.id) { return; }
+
+            var player = this.game.getPlayerById(event.info.player.id);
+
+            if (!player) { return }
+
+            player.character.changeSkin(event.info.skinKey);
         }
     }
 
