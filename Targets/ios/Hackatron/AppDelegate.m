@@ -84,7 +84,7 @@
   
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"Router"
+                                                      moduleName:@"App"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
   

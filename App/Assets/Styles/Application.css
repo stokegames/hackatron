@@ -6,21 +6,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-}
-
-body {
-    background: #000 url(../UI/Screens/launch.png) no-repeat 0 0;
-    background-size: cover;
-
-    @media (min-width: 450px) {
-        background-size: auto 75%;
-    }
-}
-
-body.game {
-    background-image: url(../UI/Screens/game.jpg);
-    background-size: auto 100%;
-    overflow: hidden;
+    background: transparent;
 }
 
 #ui {
@@ -29,4 +15,25 @@ body.game {
 
 #game {
     margin: auto;
+}
+
+body:before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.8;
+    background-color: #000;
+    background-image: url('/Assets/UI/Screens/game.jpg');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
 }

@@ -1,7 +1,14 @@
-'use strict';
+const Framework = require('./Framework');
+const {React, ReactDOM, ReactNative, AppWrapper, AppConfig, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView, Animated, Dimensions, Router, Route, Link, browserHistory, Provider, syncHistoryWithStore, routerReducer, renderToString} = Framework;
 
-var React = require('react');
-var {AppRegistry} = React;
-import App from '../package/release/assets/app/index';
+console.disableYellowBox = true;
+
+class App extends Component {
+    render() {
+        return (
+            <View></View>
+        );
+    }
+}
 
 AppRegistry.registerComponent('App', () => App);

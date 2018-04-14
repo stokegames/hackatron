@@ -38,7 +38,7 @@ class Preload {
 
         this.game.add.plugin(Phaser.Plugin.Tiled);
 
-        var assetsPath = 'Assets/'; //window.location.hostname === 'localhost' ? 'http://localhost:8080/assets/' : 'https://raw.githubusercontent.com/tony-dinh/hackatron/master/assets/';
+        var assetsPath = '/Assets/'; //window.location.hostname === 'localhost' ? 'http://localhost:8080/assets/' : 'https://raw.githubusercontent.com/tony-dinh/hackatron/master/assets/';
 
         // Screens
         this.load.image('ui/screens/launch', assetsPath + 'UI/Screens/launch.png');
@@ -72,7 +72,8 @@ class Preload {
 
     update() {
         if(!!this.ready) {
-            this.game.state.start('Menu');
+            Hackatron.ready = true;
+            this.game.state.start(Hackatron.screen);
         }
         Hackatron.fitToWindow();
     }

@@ -1,4 +1,4 @@
-container {
+.container {
     position: absolute;
     top: 210px;
     right: 0px;
@@ -16,7 +16,7 @@ container {
     }
 }
 
-instantActionButton {
+.instantActionButton {
     width: 215px;
     height: 55px;
     font-family: "Press Start 2P";
@@ -27,7 +27,7 @@ instantActionButton {
     line-height: 17px;
 }
 
-countdown {
+.countdown {
     font-family: "Press Start 2P";
     font-size: 8px;
     padding: 12px 0 0 0;

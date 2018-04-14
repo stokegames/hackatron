@@ -23,8 +23,8 @@ class GameObject {
         } else {
             this.sprite = this.game.add.sprite(this.position.x, this.position.y, this.spriteKey);
         }
-        this.sprite.scale.x = 0.8;
-        this.sprite.scale.y = 0.8;
+        this.sprite.scale.x = 1;
+        this.sprite.scale.y = 1;
 
         var offset = 0.5;
         this.game.physics.arcade.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -46,7 +46,7 @@ class GameObject {
     }
 
     set worldPosition(worldPosition) {
-        this.position = {x: worldPosition.x * 16, y: worldPosition.y * 16};
+        this.position = {x: worldPosition.x * 16 + 8, y: worldPosition.y * 16 + 8};
     }
 
     get worldPosition() {

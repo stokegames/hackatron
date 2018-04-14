@@ -8,16 +8,58 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../webpack.config.web.js';
 
+
+import { Router, RouterContext, match } from 'react-router';
+import { applyMiddleware, createStore } from 'redux';
+import { Provider } from 'react-redux';
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+
+var indexHTML = '';
+
+fs.readFile(__dirname + '/main.html', function(err, html) {
+    indexHTML = html.toString();
+});
+
+function renderFullPage(html, state) {
+    var result = indexHTML + '';
+    // We need to add an extra <div> wrapper here
+    // http://stackoverflow.com/questions/33521047/warning-react-attempted-to-reuse-markup-in-a-container-but-the-checksum-was-inv
+    let initialState = JSON.stringify(state);
+    result = result.replace(
+        `
+            <div id="ui"></div>
+        `.trim(),
+        `
+            <div id="ui"><div>${html}</div></div>
+            <script>window.$REDUX_STATE = ${initialState}</script>
+        `.trim()
+    )
+
+    return result
+}
+
+function fetchComponentData(dispatch, components, params) {
+  const needs = components.reduce((prev, current) => {
+  	return Object.keys(current).reduce((acc, key) => {
+  		return current[key].hasOwnProperty('needs') ? current[key].needs.concat(acc) : acc
+  	}, prev)
+  }, []);
+
+  const promises = needs.map(need => dispatch(need(params)));
+
+  return Promise.all(promises);
+}
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
 
 class Server {
     constructor() {
         this.env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
         this.host = process.env.HOST ? process.env.HOST : '0.0.0.0';
-        this.port = process.env.PORT ? process.env.PORT : 8080;
+        this.port = process.env.PORT ? process.env.PORT : 10020;
         this.events = [];
         this.clients = [];
         this.hostClient = null;
@@ -30,7 +72,7 @@ class Server {
 
         if (this.env === 'development') {
             webpackConfig.devtool = 'eval'; // Speed up incremental builds
-            webpackConfig.entry['webapp'].unshift('webpack-hot-middleware/client?path=/__webpack_hmr');
+            webpackConfig.entry['game.web'].unshift('webpack-hot-middleware/client?path=/__webpack_hmr');
             webpackConfig.output.publicPath = '/Build/Release/';
             webpackConfig.plugins.unshift(new webpack.HotModuleReplacementPlugin());
             webpackConfig.plugins.unshift(new webpack.NoErrorsPlugin());
@@ -63,6 +105,82 @@ class Server {
 
         // Web server
         this.app.use(express.static(__dirname + '/../App'));
+
+        // React app
+        this.app.use((req, res, next) => {
+            var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+            console.info('Requested: ' + fullUrl)
+            var Router2 = require('../App/Router').default;
+
+            // https://github.com/mz026/universal-redux-template/blob/master/app/server/server.js
+            var LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
+            Router2.store.dispatch({
+              type: LOCATION_CHANGE,
+              payload: req.url
+            });
+
+            // react-router
+            match({
+                routes: Router2.routes,
+                location: req.url
+            }, (error, redirectLocation, renderProps) => {
+                console.log('Error:', error ? true : false);
+                console.log('redirectLocation:', redirectLocation ? true : false);
+                console.log('renderProps:', renderProps ? true : false);
+
+                if (error) {
+                    return res.status(500).send(error.message);
+                }
+
+                if (redirectLocation) {
+                    return res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+                }
+
+                if (!renderProps) {
+                    // return next('err msg: route not found'); // yield control to next middleware to handle the request
+                    return res.status(404).send('Not found');
+                }
+
+                // console.log( '\nserver > renderProps: \n', require('util').inspect( renderProps, false, 1, true) )
+                // console.log( '\nserver > renderProps: \n', require('util').inspect( renderProps.components, false, 3, true) )
+
+                // this is where universal rendering happens,
+                // fetchComponentData() will trigger actions listed in static "needs" props in each container component
+                // and wait for all of them to complete before continuing rendering the page,
+                // hence ensuring all data needed was fetched before proceeding
+                //
+                // renderProps: contains all necessary data, e.g: routes, router, history, components...
+                fetchComponentData(
+                    Router2.store.dispatch,
+                    renderProps.components,
+                    renderProps.params
+                )
+                .then(() => {
+                    const initView = renderToString((
+                        <Provider store={Router2.store}>
+                            <RouterContext {...renderProps} />
+                        </Provider>
+                    ))
+
+                    // console.log('\ninitView:\n', initView);
+
+                    let state = Router2.store.getState();
+                    // console.log( '\nstate: ', state )
+                    
+                    let page = renderFullPage(initView, state)
+                    // console.log( '\npage:\n', page );
+
+                    return page;
+                })
+                .then(page => {
+                    res.status(200).send(page)
+                })
+                .catch(err => {
+                    console.log('Caught error while rendering components', err.stack, err.line, err.file, err)
+                    res.end(err.message)
+                });
+            })
+        })
     }
 
     start() {
@@ -73,9 +191,6 @@ class Server {
                 this.onSocketDisconnect(socket);
             });
         });
-
-        console.log('Open ' + this.host + ':' + this.port + ' on your browser.');
-        console.log('Listening...');
 
         this.monitorHost();
 
@@ -108,7 +223,7 @@ class Server {
                 this.setHost(client);
 
                 console.log('New host: ' + this.hostClient.player.id);
-                this.io.sockets.emit('setHost', {player: this.hostClient.player});
+                this.fireAllPlayers({ key: 'setHost', info: {player: this.hostClient.player} });
             }
         }
     }
@@ -143,6 +258,8 @@ class Server {
     }
 
     parseEvent(socket, event) {
+        //this.events.push(event)
+
         if (event.key === 'newPlayer') {
             console.log('Handshaking...');
 

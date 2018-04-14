@@ -8400,11 +8400,11 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 
     if (document.hidden || document.mozHidden || document.msHidden || document.webkitHidden || event.type === "pause")
     {
-        this.game.gamePaused(event);
+        this.game.enginePaused(event);
     }
     else
     {
-        this.game.gameResumed(event);
+        this.game.engineResumed(event);
     }
 
 };

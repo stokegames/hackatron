@@ -13,31 +13,7 @@ class Player {
         this.id = params.id;
         this.game = params.game;
         this.name = params.name;
-        this.keys = params.keys;
         this.points = params.points || 0;
-
-        this.setupKeys();
-    }
-
-    // Method for registering hardware keys to a given sprite
-    setupKeys() {
-        if (!this.keys) { return; }
-
-        if (this.keys.up) { this.character.sprite.upKey = this.game.input.keyboard.addKey(this.keys.up); }
-        if (this.keys.down) { this.character.sprite.downKey = this.game.input.keyboard.addKey(this.keys.down); }
-        if (this.keys.left) { this.character.sprite.leftKey = this.game.input.keyboard.addKey(this.keys.left); }
-        if (this.keys.right) { this.character.sprite.rightKey = this.game.input.keyboard.addKey(this.keys.right); }
-
-        if (this.keys.up) { this.character.sprite.wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W); }
-        if (this.keys.down) { this.character.sprite.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S); }
-        if (this.keys.left) { this.character.sprite.aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A); }
-        if (this.keys.right) { this.character.sprite.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D); }
-
-        // register attack key if it exists
-        if (this.keys.att) {
-            this.character.sprite.attKey = this.game.input.keyboard.addKey(this.keys.att);
-            this.character.sprite.attKey.onDown.add(this.character.triggerAttack, this.character);
-        }
     }
 
     removePoints(points) {
@@ -62,19 +38,13 @@ class Player {
 
     kill() {
         this.character.kill();
+
+        this.removePoints(100);
     }
 
     destroy() {
         this.nameText.destroy();
-
-        if (this.keys) {
-            this.keys.up && this.game.input.keyboard.removeKey(this.keys.up);
-            this.keys.down && this.game.input.keyboard.removeKey(this.keys.down);
-            this.keys.left && this.game.input.keyboard.removeKey(this.keys.left);
-            this.keys.right && this.game.input.keyboard.removeKey(this.keys.right);
-
-            this.keys.att && this.game.input.keyboard.removeKey(this.keys.att);
-        }
+        this.character.destroy();
     }
 
     get name() {

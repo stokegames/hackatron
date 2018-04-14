@@ -10,21 +10,59 @@ import AI from '../Core/AI';
 const Framework = require('../../Framework');
 const {React, Platform, Component, AppRegistry, Navigator, StyleSheet, Text, View, TouchableHighlight, WebView} = Framework;
 
+import Projectile from '../Components/Projectile';
+import Block from '../Components/Block';
+import PlayerLeaveBehaviour from '../Components/PlayerLeaveBehaviour';
+import CollideEnemyBehaviour from '../Components/CollideEnemyBehaviour';
+import CollideWallBehaviour from '../Components/CollideWallBehaviour';
+import FollowMouseBehaviour from '../Components/FollowMouseBehaviour';
+import CharDeathBehaviour from '../Components/CharDeathBehaviour';
+import AiController from '../Components/AiController';
+import MobileMovementController from '../Components/MobileMovementController';
+import Multiplayer from '../Components/Multiplayer';
+import PowerupController from '../Components/PowerupController';
+import EnemyController from '../Components/EnemyController';
+
+window.GameState = {
+    show: true,
+    showOthers: false,
+    currentCharacter: 'tron',
+    allCharacters: ['tron', 'ghost', 'frosty', 'one'],
+    showMenu: false,
+    timeLeft: null
+};
 
 var updateTimeout;
 var alpha = 0;
 
 class Game {
     constructor(game) {
+        this.engine = game;
         this.enemy = null;
         this.hostId = null;
         this.player = null;
         this.blocks = [];
-        this.fireballs = [];
         this.players = null;
         this.gameState = {
             startTime: null,
             timeLeft: null
+        };
+        this.collisionDebuggingEnabled = false;
+        this.soundEnabled = false;
+
+        this.components = {
+            'Projectile': new Projectile(this),
+            'Block': new Block(this),
+            'PlayerLeaveBehaviour': new PlayerLeaveBehaviour(this),
+            'CollideEnemyBehaviour': new CollideEnemyBehaviour(this),
+            'CollideWallBehaviour': new CollideWallBehaviour(this),
+            'FollowMouseBehaviour': new FollowMouseBehaviour(this),
+            'CharDeathBehaviour': new CharDeathBehaviour(this),
+            'AiController': new AiController(this),
+            'MobileMovementController': new MobileMovementController(this),
+            'Multiplayer': new Multiplayer(this),
+            'PowerupController': new PowerupController(this),
+            'EnemyController': new EnemyController(this)
         };
     }
 
@@ -48,6 +86,12 @@ class Game {
         }
 
         return null;
+    }
+    
+    isValidPosition(position) {
+        const tile = this.getTileAt(position)
+        
+        return !tile
     }
 
     getValidPosition() {
@@ -92,8 +136,10 @@ class Game {
 
     create() {
         Hackatron.game = this;
-
-        document.body.className += ' game';
+        
+        // window.document.body.style['background'] = 'rgba(0, 0, 0, 0.4) url(/Assets/UI/Screens/game.jpg) no-repeat 0 0'
+        // window.document.body.style['background-size'] = 'cover'
+        // window.document.body.style['overflow'] = 'hidden'
 
         this.game.plugins.cameraShake = this.game.plugins.add(Phaser.Plugin.CameraShake);
 
@@ -107,27 +153,38 @@ class Game {
         });
 
         this.players = {};
-        this.socket = io.connect();
         this.events = [];
 
         this.initPhysics();
         this.initMap();
-        this.initPowerUps();
+        this.components['PowerupController'].init();
         this.initPlayer();
         this.initSFX();
         this.initHotkeys();
 
-        // Register to listen to events and inform
-        // other players that you have joined the game
-        this.registerToEvents();
-        this.joinGame();
-
         this.initEvents();
+        this.establishConnection()
 
         this.game.stage.disableVisibilityChange = true;
 
         window.UI_state.screenKey = 'game';
         window.UI_controller.setState(window.UI_state);
+
+        this.components['Multiplayer'].joinGame();
+    }
+    
+    establishConnection() {
+        const monitor = () => {
+            if (!window.io) { return setTimeout(monitor, 50) }
+            
+            this.socket = window.io.connect()
+
+            // Register to listen to events and inform
+            // other players that you have joined the game
+            this.registerToEvents()
+        }
+        
+        monitor()
     }
 
     initEvents() {
@@ -139,7 +196,7 @@ class Game {
         this.updatePosInterval = setInterval(() => {
             this.player.character.updatePos();
 
-            if (!this.player.character.sprite.body) { return;}
+            if (!this.player.character.sprite.body) { return; }
             if (!this.player.character.dirty) { return; }
 
             var info = {
@@ -157,26 +214,7 @@ class Game {
             this.fireEvent({key: 'updatePlayer', info: info});
 
             lastUpdateInfo = info;
-        }, UPDATE_INTERVAL);
-
-        // If this is the host
-        // Send enemy position every 50ms
-        this.enemyInterval = setInterval(() => {
-            if (this.enemy && this.player.id === this.hostId) {
-                //this.enemy.character.updatePos();
-
-                if (!this.enemy.character.dirty) { return; }
-
-                this.enemy.character.dirty = false;
-
-                var info = {
-                    position: this.enemy.character.position,
-                    direction: this.enemy.character.direction
-                };
-
-                this.fireEvent({key: 'updateEnemy', info: info});
-            }
-        }, UPDATE_INTERVAL);
+        }, Hackatron.UPDATE_INTERVAL);
     }
 
     initPhysics() {
@@ -184,106 +222,133 @@ class Game {
     }
 
     initHotkeys() {
-        this.fullscreenKey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
-        this.fullscreenKey.onDown.add(this.toggleFullscreen, this);
-        this.aiKey = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
-        this.aiKey.onDown.add(this.toggleAI, this);
+        this.keys = {}
 
-        // variables used to detect and manage swipes
-        var startX;
-        var startY;
-        var endX;
-        var endY;
+        this.keys.fullscreen = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
+        this.keys.fullscreen.onDown.add(this.toggleFullscreen, this);
+        this.keys.i = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
+        this.keys.i.onDown.add(this.toggleAI, this);
 
-        // when the player begins to swipe we only save mouse/finger coordinates, remove the touch/click
-        // input listener and add a new listener to be fired when the mouse/finger has been released,
-        // then we call endSwipe function
-        var beginSwipe = function() {
-            startX = this.game.input.worldX;
-            startY = this.game.input.worldY;
-            this.game.input.onDown.remove(beginSwipe, this);
-            this.game.input.onUp.add(endSwipe, this);
-        };
+        this.keys.up = this.game.input.keyboard.addKey(Phaser.Keyboard.UP)
+        this.keys.up.onDown.add(() => this.onAction('up'))
+        this.keys.down = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN)
+        this.keys.down.onDown.add(() => this.onAction('down'))
+        this.keys.left = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT)
+        this.keys.left.onDown.add(() => this.onAction('left'))
+        this.keys.right = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT)
+        this.keys.right.onDown.add(() => this.onAction('right'))
 
-        // function to be called when the player releases the mouse/finger
-        var endSwipe = function() {
-            // saving mouse/finger coordinates
-            endX = this.game.input.worldX;
-            endY = this.game.input.worldY;
-            // determining x and y distance travelled by mouse/finger from the start
-            // of the swipe until the end
-            var distX = startX-endX;
-            var distY = startY-endY;
-            // in order to have an horizontal swipe, we need that x distance is at least twice the y distance
-            // and the amount of horizontal distance is at least 10 pixels
-            if (Math.abs(distX)>Math.abs(distY)*2 && Math.abs(distX)>30){
-                // moving left, calling move function with horizontal and vertical tiles to move as arguments
-                if (distX > 0) {
-                    this.onAction('swipeLeft');
-                }
-                // moving right, calling move function with horizontal and vertical tiles to move as arguments
-                else {
-                    this.onAction('swipeRight');
-                }
-            }
-            // in order to have a vertical swipe, we need that y distance is at least twice the x distance
-            // and the amount of vertical distance is at least 10 pixels
-            else if (Math.abs(distY)>Math.abs(distX)*2 && Math.abs(distY)>30){
-                // moving up, calling move function with horizontal and vertical tiles to move as arguments
-                if (distY > 0) {
-                    this.onAction('swipeUp');
-                }
-                // moving down, calling move function with horizontal and vertical tiles to move as arguments
-                else {
-                    this.onAction('swipeDown');
-                }
-            }
-            else {
-                this.onAction('tap');
-            }
+        this.keys.w = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
+        this.keys.w.onDown.add(() => this.onAction('up'))
+        this.keys.s = this.game.input.keyboard.addKey(Phaser.Keyboard.S)
+        this.keys.s.onDown.add(() => this.onAction('down'))
+        this.keys.a = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
+        this.keys.a.onDown.add(() => this.onAction('left'))
+        this.keys.d = this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+        this.keys.d.onDown.add(() => this.onAction('right'))
 
-            // stop listening for the player to release finger/mouse, let's start listening for the player to click/touch
-            this.game.input.onDown.add(beginSwipe, this);
-            this.game.input.onUp.remove(endSwipe, this);
-        };
+        this.keys.att = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+        this.keys.att.onDown.add(this.player.character.triggerAttack, this.player.character)
 
-        // Wait for the player to touch or click
-        this.game.input.onDown.add(beginSwipe, this);
+        this.components['MobileMovementController'].init();
+    }
+
+    destroyKeys() {
+        for (var key in this.keys) {
+            this.game.input.keyboard.removeKey(this.keys[key])
+        }
+    }
+
+    onAction(action) {
+        console.log('Action:', action)
+        if (action === 'swipeLeft' || action === 'left') {
+            this.onControlDown('left');
+        } else if (action === 'swipeRight' || action === 'right') {
+            this.onControlDown('right');
+        } else if (action === 'swipeUp' || action === 'up') {
+            this.onControlDown('up');
+        } else if (action === 'swipeDown' || action === 'down') {
+            this.onControlDown('down');
+        } else if (action === 'tap' || action === 'space') {
+            this.onControlDown('att');
+        }
     }
 
     onControlDown(key) {
+        console.log('Control down:', key)
         if (key === 'att') {
-            this.player.character.sprite.attKey.onDown.dispatch();
+            this.keys.att.onDown.dispatch();
         } else {
-            this.player.character.sprite[key + 'Key'].isDown = true;
+            this.player.character.nextDirection = key;
         }
+        
+        this.checkPlayerDirection()
     }
 
     onControlUp(key) {
         if (key === 'att') {
         } else {
-            this.player.character.sprite['leftKey'].isDown = false;
-            this.player.character.sprite['rightKey'].isDown = false;
-            this.player.character.sprite['upKey'].isDown = false;
-            this.player.character.sprite['downKey'].isDown = false;
+            this.stopPlayerMovement()
         }
     }
 
-    onAction(action) {
-        if (action === 'swipeLeft') {
-            this.onControlUp();
-            this.onControlDown('left');
-        } else if (action === 'swipeRight') {
-            this.onControlUp();
-            this.onControlDown('right');
-        } else if (action === 'swipeUp') {
-            this.onControlUp();
-            this.onControlDown('up');
-        } else if (action === 'swipeDown') {
-            this.onControlUp();
-            this.onControlDown('down');
-        } else if (action === 'tap') {
-            this.onControlDown('att');
+    stopPlayerMovement() {
+        for (var key in this.player.character.moving) {
+            this.player.character.moving[key] = false
+        }
+    }
+    
+    checkInput() {
+        const moveDown = this.keys.down.isDown || this.keys.s.isDown
+        const moveUp = this.keys.up.isDown || this.keys.w.isDown
+        const moveLeft = this.keys.left.isDown || this.keys.a.isDown
+        const moveRight = this.keys.right.isDown || this.keys.d.isDown
+        //var attacking = this.keys.att.isDown
+
+        if (moveDown) {
+            this.onAction('down')
+        } else if (moveUp) {
+            this.onAction('up')
+        } else if (moveLeft) {
+            this.onAction('left')
+        } else if (moveRight) {
+            this.onAction('right')
+        }
+    }
+    
+    checkPlayerDirection() {
+        var nextDirection = this.player.character.nextDirection
+
+        if (!nextDirection) { return }
+        if (nextDirection === this.player.character.currentDirection) { return }
+
+        var worldPosition = this.player.character.worldPosition
+
+        var opening = false
+        var nextWorldPosition = null
+
+        if (nextDirection === 'left') {
+            nextWorldPosition = {x: worldPosition.x-1, y: worldPosition.y}
+        } else if (nextDirection === 'right') {
+            nextWorldPosition = {x: worldPosition.x+1, y: worldPosition.y}
+        } else if (nextDirection === 'up') {
+            nextWorldPosition = {x: worldPosition.x, y: worldPosition.y-1}
+        } else if (nextDirection === 'down') {
+            nextWorldPosition = {x: worldPosition.x, y: worldPosition.y+1}
+        }
+
+        nextWorldPosition.x = Math.floor(nextWorldPosition.x)
+        nextWorldPosition.y = Math.floor(nextWorldPosition.y)
+
+        opening = this.isValidPosition(nextWorldPosition)
+        if (opening) {
+            this.stopPlayerMovement()
+            this.player.character.worldPosition = nextWorldPosition
+            this.player.character.moving[nextDirection] = true
+            this.player.character.currentDirection = nextDirection
+            this.player.character.nextDirection = null
+        } else {
+            
         }
     }
 
@@ -291,69 +356,55 @@ class Game {
         this.ai.enabled = !this.ai.enabled;
     }
 
-    runAiSystem() {
-        this.ai = new AI();
-        this.ai.init({game: this.game, player: this.player, enemy: this.enemy, map: this.map});
-    }
-
-    runEnemySystem() {
-        // Create enemy for the host
-        if (!this.enemy) {
-            var worldPosition = this.getValidPosition();
-
-            this.enemy = new Enemy();
-            this.enemy.init({
-                game: this.game,
-                speed: DEFAULT_PLAYER_SPEED,
-                worldPosition: worldPosition,
-                keys: { // TODO: Could be architected better
-                    up: Phaser.Keyboard.W,
-                    down: Phaser.Keyboard.S,
-                    left: Phaser.Keyboard.A,
-                    right: Phaser.Keyboard.D
-                }
-            });
-        }
-    }
-
     initPlayer() {
         var worldPosition = this.getValidPosition();
 
         var playerParams = {
             id: Utils.generateId(),
-            game: this.game,
+            game: this.engine,
             name: this.getRandomName(),
-            speed: DEFAULT_PLAYER_SPEED,
+            speed: Hackatron.DEFAULT_PLAYER_SPEED,
             worldPosition: worldPosition,
-            points: 1000,
-            keys: { // TODO: Could be architected better
-                up: Phaser.Keyboard.UP,
-                down: Phaser.Keyboard.DOWN,
-                left: Phaser.Keyboard.LEFT,
-                right: Phaser.Keyboard.RIGHT,
-                att: Phaser.Keyboard.SPACEBAR
-            }
+            points: 1000
         };
 
         this.player = new Player();
         this.player.init(playerParams);
 
         if (Utils.env.os.mobile) {
-            this.game.camera.follow(this.player.character.sprite, Phaser.Camera.FOLLOW_LOCKON);
+            this.engine.camera.follow(this.player.character.sprite, Phaser.Camera.FOLLOW_LOCKON);
         }
     }
 
     initMap() {
         this.map = new Map2D();
-        this.map.init({game: this.game, player: this.player, enemy: this.enemy});
+        this.map.init({game: this.engine, player: this.player, enemy: this.enemy});
 
-        // var start = this.map.tilemap.objects['GameObjects'][0];
-        // var end = this.map.tilemap.objects['GameObjects'][1];
+        this.teleporters = [];
 
-        // var teleStart = new Phaser.Rectangle(start.x, start.y, start.width, start.height);
-        // var teleEnd = new Phaser.Rectangle(end.x, end.y, end.width, end.height);
-        // TODO: do stuff with tele points
+        this.map.tilemap.objects.forEach((layer) => {
+            if (layer.name === 'GameObjects') {
+                var objects = {};
 
+                layer.objects.forEach((object) => {
+                    objects[object.properties.id] = object;
+                });
+
+                layer.objects.forEach((object) => {
+                    if (object.properties.type === 'teleport') {
+                        var target = objects[object.properties.target];
+                        var bmd = this.engine.add.bitmapData(object.width, object.height);
+                        //bmd.ctx.beginPath(); bmd.ctx.rect(0, 0, object.width, object.height); bmd.ctx.fillStyle = '#ffffff'; bmd.ctx.fill();
+                        var teleporter = this.engine.add.sprite(object.x, object.y, bmd);
+                        this.engine.physics.arcade.enable(teleporter, Phaser.Physics.ARCADE);
+                        teleporter.body.immovable = true;
+                        teleporter.target = target;
+
+                        this.teleporters.push(teleporter);
+                    }
+                });
+            }
+        });
     }
 
     initCountdown() {
@@ -376,44 +427,8 @@ class Game {
         setTimeout(function() {
             window.location.reload();
         }, 2000);
-        //this.shutdown();
     }
 
-    initDeathScreen() {
-        this.game.plugins.cameraShake.shake();
-
-        this.enemy.character.worldPosition = this.getValidPosition();
-        this.enemy.character.frozen = true;
-
-        // var death = new Gameover();
-        // death.init(this.game);
-        // death.start();
-
-        this.player.removePoints(100);
-
-        for(var id in this.players) {
-            this.players[id].addPoints(100 / this.players.length);
-        }
-
-        window.UI_GameController.setState(window.GameState);
-
-        this.newGameKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-        this.newGameKey.onDown.add(() => {
-            // Remove death screen
-
-            this.newGameKey.onDown.remove();
-        });
-
-        setTimeout(() => {
-            //death.sprite.destroy();
-            this.player.character.worldPosition = this.getValidPosition();
-            this.player.character.revive();
-
-            setTimeout(() => {
-                this.enemy.character.frozen = false;
-            }, 1000);
-        }, 2000);
-    }
 
     initSFX() {
         this.musicKey = this.input.keyboard.addKey(Phaser.Keyboard.M);
@@ -424,53 +439,18 @@ class Game {
         // fx.addMarker('jump', 0, 0.24);
     }
 
-    initPowerUps() {
-        this.powerups = [];
-        for (var i = 0; i <= Hackatron.TILE_COUNT_VERTICAL; i++) {
-            this.powerups.push([]);
-        }
-
-        this.powerupCheckInterval = setInterval(() => {
-            this.powerups.forEach((_, row) => {
-                this.powerups[row].forEach((_, column) => {
-                    var powerup = this.powerups[row][column];
-                    if (powerup && powerup.handler.ended) {
-                        this.powerups[row][column] = null;
-                    }
-                });
-            });
-        }, 1000);
-    }
-
-    runPowerUpSystem() {
-        var run = () => {
-            var powerupHandlers = Object.keys(Powerup.handlers);
-            var randomHandler = powerupHandlers[this.game.rnd.integerInRange(0, powerupHandlers.length-1)];
-            var powerup = new Powerup();
-            powerup.init({key: randomHandler, game: this.game, map: this.map, player: this.player});
-            powerup.handler.on('started', () => { this.fireEvent({key: 'foundPowerup', info: {state: powerup.handler.state, player: {id: this.player.id}}}); });
-            powerup.handler.on('destroyed', (params) => { params.positions.forEach((position) => { this.powerups[position.x][position.y] = null; }); });
-
-            this.powerups[powerup.handler.state.position.x][powerup.handler.state.position.y] = powerup;
-
-            this.fireEvent({key: 'powerupSpawned', info: {handler: {key: randomHandler, state: powerup.handler.state}}});
-        };
-
-        this.powerupInterval = setInterval(run, POWERUP_SPAWN_INTERVAL);
-
-        run();
-    }
-
     fireEvent(event) {
         this.events.push(event);
 
-        if (event.key === 'fireballFired') {
+        if (event.key === 'projectileFired'
+        || event.key === 'blockSpawned') {
             this.parseEvent(event);
         }
     }
 
     broadcastEvents() {
         if (!this.events.length) { return; }
+        if (!this.socket) { return }
 
         //console.log('Broadcasting events...', JSON.stringify({events: this.events}));
 
@@ -478,223 +458,29 @@ class Game {
         this.events = [];
     }
 
-    moveToPointer() {
-        // Use path finder
-
-    }
-
-    followMouse() {
-        // top = -1.25
-        // bottom = 1
-        // left = 2.5
-        // right = 0
-        // http://phaser.io/examples/v2/arcade-physics/angle-to-pointer
-        var angle = this.game.physics.arcade.angleToPointer(this.player.character.sprite) * (180/Math.PI);
-
-        // right
-        if (Math.abs(angle) > 0 && Math.abs(angle) <= 45) {
-            this.player.character.inputRight = true;
-        }
-        // left
-        if (Math.abs(angle) > 135 && Math.abs(angle) <= 180) {
-            this.player.character.inputLeft = true;
-        }
-        // up
-        if (Math.abs(angle) > 45 && Math.abs(angle) <= 135 && angle < 0) {
-            this.player.character.inputUp = true;
-        }
-        // down
-        if (Math.abs(angle) > 45 && Math.abs(angle) <= 135 && angle > 0) {
-            this.player.character.inputDown = true;
-        }
-
-        //  if it's overlapping the mouse, don't move any more
-        // if (Phaser.Rectangle.contains(this.player.character.sprite.body, this.game.input.x, this.game.input.y)) {
-        //     this.player.character.sprite.body.velocity.x = 0;
-        //     this.player.character.sprite.body.velocity.y = 0;
-        // }
-    }
-
-    constrainVelocity(sprite, maxVelocity) {
-        if (!sprite || !sprite.body) { return; }
-        var body = sprite.body;
-        var angle, currVelocitySqr, vx, vy;
-        vx = body.velocity.x;
-        vy = body.velocity.y;
-        currVelocitySqr = vx * vx + vy * vy;
-        if (currVelocitySqr > maxVelocity * maxVelocity) {
-            angle = Math.atan2(vy, vx);
-            vx = Math.cos(angle) * maxVelocity;
-            vy = Math.sin(angle) * maxVelocity;
-            body.velocity.x = vx;
-            body.velocity.y = vy;
-        }
-    }
-
     update() {
         if (this.musicKey.isDown) {
             this.game.music.mute = !this.game.music.mute;
         }
 
-        this.player.character.inputRight = false;
-        this.player.character.inputLeft = false;
-        this.player.character.inputUp = false;
-        this.player.character.inputDown = false;
+        this.checkPlayerDirection()
 
-        if (this.game.input.mousePointer.isDown) {
-            this.followMouse();
-        }
-        else {
-        }
+        this.components['FollowMouseBehaviour'].run();
+        this.components['CollideWallBehaviour'].run();
+        this.components['CollideEnemyBehaviour'].run();
+        this.components['PowerupController'].update();
 
-        var collideEnemyHandler = () => {
-            if (!this.player.character.isAlive) { return; }
-            if (this.player.character.invincible) { return; }
-
-            this.player.kill();
-
-            this.fireEvent({key: 'playerKilled', info: {
-                player: {id: this.player.id}
-            }});
-
-            this.initDeathScreen();
-        };
-
-        var SLIDE_SPEED = this.player.character.speed/4;
-        var SLIDE_DISTANCE = 5;
-
-        var closestInRangeOf = (params) => {
-            var dir = params.range > 0 ? 1 : -1; // are we going backwards?
-            var startPos = params.position[params.align];
-            var endPos = startPos + params.range;
-
-            for(var i = startPos; i != endPos; i+= dir) {
-                var x = params.align === 'x' ? i : params.position.x;
-                var y = params.align === 'y' ? i : params.position.y;
-                var tile = this.getTileAt({x: x, y: y});
-                if (!tile || !tile.collides) {
-                    return i;
-                }
-            }
-
-            return null;
-        };
-
-        var getNearestOpening = (params) => {
-            var align;
-            var dir;
-            var index;
-            var direction = params.direction;
-            var position = params.position;
-
-            if (direction === 'walkLeft') { align = 'y'; dir = -1; }
-            if (direction === 'walkRight') { align = 'y'; dir = +1; }
-            if (direction === 'walkUp') { align = 'x'; dir = -1; }
-            if (direction === 'walkDown') { align = 'x'; dir = +1; }
-
-            var seekPositionLeft = {x: Math.floor(position.x), y: Math.floor(position.y)};
-            seekPositionLeft[align === 'x' ? 'y' : 'x'] += dir; // get the beside row/column
-            seekPositionLeft[align === 'y' ? 'y' : 'x'] -= 1; // get the beside row/column
-            var seekPositionRight = {x: Math.floor(position.x), y: Math.floor(position.y)};
-            seekPositionRight[align === 'x' ? 'y' : 'x'] += dir; // get the beside row/column
-            seekPositionRight[align === 'y' ? 'y' : 'x'] += 1; // get the beside row/column
-
-            var closestLeft = closestInRangeOf({position: seekPositionLeft, align: align, range: -SLIDE_DISTANCE});
-            var closestRight = closestInRangeOf({position: seekPositionRight, align: align, range: SLIDE_DISTANCE});
-
-            // must be all blocked
-            if (!closestLeft && !closestRight) {
-                return;
-            }
-
-            var diffLeft = Math.abs(params.position[align] - closestLeft);
-            var diffRight = Math.abs(params.position[align] - closestRight);
-
-            return {align: align, left: diffLeft, right: diffRight};
-        };
-
-        var collideWallHandler = () => {
-            if (!this.player.character.direction) {
-                return;
-            }
-            // Find nearest opening and go that way
-            // Get current world position
-            // Check if direction is up, down, left, or right
-            // If direction is up,
-            //   check from my position to 0 for the closest opening
-            //   check from my position to mapWidth for the closest opening
-            // If closest is left, set velocity x = -500
-            // If closest is right, set velocity x = 500
-            var position = this.player.character.worldPosition;
-            var direction = this.player.character.direction;
-            var diff = getNearestOpening({position: position, direction: direction});
-
-            if (!diff) {
-                return;
-            }
-
-            if (diff.left < diff.right) {
-                // going left or up
-                this.player.character.sprite.body.velocity[diff.align] = -SLIDE_SPEED; // the -SLIDE_SPEED / 5 * diff.left part lets us base the speed we move with how far it is
-                //goToPosition = closest * 16 + 8;
-            } else if (diff.right < diff.left) {
-                // going right or down
-                this.player.character.sprite.body.velocity[diff.align] = SLIDE_SPEED;
-                //goToPosition = closest * 16 - 8;
-            } else {
-                // He's probably stuck because a few pixels are touching
-                // Lets round his position so he's in alignment
-                //this.player.character.sprite.body.velocity.setTo(0, 0);
-                this.player.character.position[diff.align] = position[diff.align];
-            }
-        };
-
-        if (this.enemy) {
-            //this.constrainVelocity(this.enemy.character.sprite, 10);
-        }
-
-        if (this.player.character.collisionEnabled) {
-            this.map.collideTiles.forEach((tile) => {
-                // TODO: Throttle collideWallHandler
-                this.game.physics.arcade.collide(this.player.character.sprite, tile, collideWallHandler); // tile is an object of Phaser.Sprite
-                if (this.enemy) {
-                    this.enemy.character.sprite.body.immovable = false;
-                    this.game.physics.arcade.collide(this.enemy.character.sprite, tile, () => {
-                        // Stop enemy from moving. TODO: doesn't work
-                        // this.enemy.character.sprite.body.immovable = true;
-                        // this.enemy.character.sprite.body.velocity.x = 0;
-                        // this.enemy.character.sprite.body.velocity.y = 0;
-                    });
-                }
-            });
-        }
-
-
-        if (this.enemy) {
-            if (this.player.character.collisionEnabled) {
-                this.game.physics.arcade.overlap(this.enemy.character.sprite, this.player.character.sprite, collideEnemyHandler);
-            }
-        }
-
-        this.powerups.forEach((row) => {
-            row.forEach((powerup) => {
-                if (powerup) {
-                    powerup.handler.update();
-                }
-            });
-        });
-
-        var collideFireballHandler = (index) => {
-            // We don't want to destroy fireballs on contact
+        var collideProjectileHandler = (index) => {
+            // We don't want to destroy projectiles on contact
             this.player.character.dirty = true;
 
-            this.player.removePoints(10);
+            //this.player.removePoints(10);
             window.UI_GameController.setState(window.GameState);
         };
 
         var collideBlockHandler = () => {
             this.player.character.dirty = true;
-            this.player.removePoints(2);
+            //this.player.removePoints(2);
             window.UI_GameController.setState(window.GameState);
         };
 
@@ -711,24 +497,13 @@ class Game {
             }
         });
 
-        this.fireballs.forEach((fireball, index) => {
-            if (fireball.owner !== this.player.id) {
-                console.log(fireball);
-                this.game.physics.arcade.collide(this.player.character.sprite, fireball, () => {
-                    collideFireballHandler(index);
-                    // Disable fireball physics. TODO: doesn't work
-                    // fireball.body.moves = false;
-                    // fireball.body.immovable = false;
-                });
-            }
-            if (this.enemy) {
-                this.game.physics.arcade.collide(this.enemy.character.sprite, fireball, () => {
-                    // Disable fireball physics. TODO: doesn't work
-                    // fireball.body.moves = false;
-                    // fireball.body.immovable = false;
-                });
-            }
+        this.teleporters.forEach((teleporter) => {
+            this.game.physics.arcade.collide(this.player.character.sprite, teleporter, () => {
+                this.player.character.teleport({x: teleporter.target.x / 16, y: teleporter.target.y / 16});
+            });
         });
+
+        this.components['Projectile'].update();
 
         if (this.player) {
             this.game.world.bringToTop(this.player.character.sprite);
@@ -755,7 +530,7 @@ class Game {
                 this.game.canvas.style['width'] = '90%';
                 this.game.canvas.style['height'] = '90%';
             }
-            this.game.canvas.style['transform'] = 'perspective(' + pers + 'px) skew(' + xSkew + 'deg, 0deg) rotateX(' + xDeg + 'deg) rotateY(' + yDeg + 'deg) rotate(' + rDeg + 'deg)';
+            //this.game.canvas.style['transform'] = 'perspective(' + pers + 'px) skew(' + xSkew + 'deg, 0deg) rotateX(' + xDeg + 'deg) rotateY(' + yDeg + 'deg) rotate(' + rDeg + 'deg)';
         }
 
         if (Platform.Env.isMobile) {
@@ -784,7 +559,7 @@ class Game {
 
     render() {
         this.fitToWindow();
-        //this.enableCollisionDebugging();
+        this.collisionDebugging();
 
         if (this.player && this.enemy) {
             var distance = this.game.physics.arcade.distanceBetween(this.player.character.sprite, this.enemy.character.sprite);
@@ -817,12 +592,12 @@ class Game {
 
             // TODO: remove this hack
             window.GameState.timeLeft = this.gameState.timeLeft;
-            window.UI_GameController.setState(window.GameState);
-
+            window.UI_GameController && window.UI_GameController.setState(window.GameState);
         }
     }
 
-    enableCollisionDebugging() {
+    collisionDebugging() {
+        if (!this.collisionDebuggingEnabled) { return; }
         this.game.debug.bodyInfo(this.player.character.sprite, 32, 32);
         this.game.debug.body(this.player.character.sprite);
     }
@@ -839,7 +614,7 @@ class Game {
     }
 
     getRandomName() {
-        var names = ['riffongrief', 'Blood', 'Midnight', 'Puritytempest', 'Jester', 'Goldmagus', 'Lightning', 'Madguard', 'Lionshadow', 'Tempest', 'Eternity', 'Faunaguard', 'Lordbeast', 'Darklord', 'Veil', 'Tombmourner', 'Hateghost', 'Spirittotem', 'Cometzealot', 'Wind', 'Paradox', 'Tombsinner', 'Darkgod', 'Reaper', 'Firereaper', 'Shadowhowl', 'Spiritlord', 'Gust', 'Song', 'Lord', 'Gunner', 'Dawn', 'King', 'King', 'Knightkiller', 'Rubyguard', 'Whitemidnight', 'Flame', 'Roseice', 'Mourner', 'Lordicon', 'Pandemonium', 'Fellkiller', 'Rascalfinder', 'Claw', 'Ragechaos', 'Ragnarok', 'Demonheart', 'Talonknight', 'Bane', 'Windseeker', 'Warsaber', 'Lionslayer', 'Veil', 'Darkbeast', 'Honorreaper', 'Lancequake', 'Victory', 'Warlockmage', 'Nemesis', 'Queen', 'Bloodbattler', 'Jericho', 'Roguegriffon', 'Wanderlust', 'Mageslayer', 'Cursefinder', 'Legend', 'Beastclaw', 'Shadow', 'Faunaknight', 'Grave', 'Demonfinder', 'Fauna', 'Cult', 'Noblewarlock', 'Faunachanter', 'Battler', 'Talonreaper', 'Steeliron'];
+        var names = ['Riffongrief', 'Blood', 'Midnight', 'Puritytempest', 'Jester', 'Goldmagus', 'Lightning', 'Madguard', 'Lionshadow', 'Tempest', 'Eternity', 'Faunaguard', 'Lordbeast', 'Darklord', 'Veil', 'Tombmourner', 'Hateghost', 'Spirittotem', 'Cometzealot', 'Wind', 'Paradox', 'Tombsinner', 'Darkgod', 'Reaper', 'Firereaper', 'Shadowhowl', 'Spiritlord', 'Gust', 'Song', 'Lord', 'Gunner', 'Dawn', 'King', 'King', 'Knightkiller', 'Rubyguard', 'Whitemidnight', 'Flame', 'Roseice', 'Mourner', 'Lordicon', 'Pandemonium', 'Fellkiller', 'Rascalfinder', 'Claw', 'Ragechaos', 'Ragnarok', 'Demonheart', 'Talonknight', 'Bane', 'Windseeker', 'Warsaber', 'Lionslayer', 'Veil', 'Darkbeast', 'Honorreaper', 'Lancequake', 'Victory', 'Warlockmage', 'Nemesis', 'Queen', 'Bloodbattler', 'Jericho', 'Roguegriffon', 'Wanderlust', 'Mageslayer', 'Cursefinder', 'Legend', 'Beastclaw', 'Shadow', 'Faunaknight', 'Grave', 'Demonfinder', 'Fauna', 'Cult', 'Noblewarlock', 'Faunachanter', 'Battler', 'Talonreaper', 'Steeliron'];
 
         return names[Math.floor(Math.random() * names.length)]
     }
@@ -850,7 +625,7 @@ class Game {
         player.init({
             id: playerId,
             game: this.game,
-            speed: DEFAULT_PLAYER_SPEED
+            speed: Hackatron.DEFAULT_PLAYER_SPEED
         });
 
         this.players[playerId] = player;
@@ -858,58 +633,11 @@ class Game {
         // We probably don't need physics for other players - they are telling us where they are already
         //this.game.physics.arcade.collide(player.character.sprite, this.map.layer);
         this.game.physics.arcade.collide(player.character.sprite, this.player.character.sprite, () => {
-            this.player.removePoints(5);
-            player.removePoints(5);
+            //this.player.removePoints(5);
+            //player.removePoints(5);
         }, null, this.game);
 
         return player;
-    }
-
-    welcomePlayer(playerId) {
-        // Add players
-        var players = [];
-        for(playerId in this.players) {
-            var player = this.players[playerId];
-
-            players.push({
-                id: player.id,
-                name: player.name,
-                position: player.character.position,
-                points: player.points
-            });
-        }
-
-        // Add the host
-        // TODO: Wat? Needs clarification
-        players.push({
-            id: this.player.id,
-            name: this.player.name,
-            position: this.player.character.position,
-            points: this.player.points
-        });
-
-        // Add powerups
-        var powerups = [];
-        for(var row in this.powerups) {
-            for(var column in this.powerups[row]) {
-                var powerup = this.powerups[row][column];
-
-                if (!powerup) { continue; }
-
-                powerups.push({handler: {key: powerup.handler.key, state: powerup.handler.state}});
-            }
-        }
-
-        // Compile the game data
-        var gameData = {
-            player: {id: playerId},
-            enemy: {position: this.enemy.character.position},
-            powerups: powerups,
-            players: players,
-            gameState: this.gameState
-        };
-
-        this.fireEvent({key: 'welcomePlayer', info: gameData});
     }
 
 // ============================================================================
@@ -940,84 +668,11 @@ class Game {
                 player.character.position = position;
             }
         } else if (event.key === 'updateEnemy') {
-            if (this.player.id !== this.hostId) {
-                if (this.enemy) {
-                    this.enemy.character.position = event.info.position;
-                }
-            }
+            if (event.info.owner === this.player.id) { return; }
+            if (!this.enemy) { return; }
+
+            this.enemy.character.position = event.info.position;
         // When new player joins, host shall send them data about the 'position'
-        } else if (event.key === 'newPlayer') {
-            // If we're this player, we don't need to do anything
-            if (this.player.id === event.info.player.id) { return; }
-
-            if (this.player.id === this.hostId) {
-                this.welcomePlayer(event.info.player.id);
-            }
-
-            var player = this.getPlayerById(event.info.player.id);
-
-            if (!player) {
-                player = this.createPlayer(event.info.player.id);
-            }
-
-            player.name = event.info.player.name;
-            player.character.position = event.info.player.position;
-
-            console.log('New player ' + event.info.player.id + ' has joined the game!');
-        // Set up game state as a new player receiving game data from host
-        } else if (event.key === 'welcomePlayer') {
-            if (this.player.id === event.info.player.id) {
-                // Setup players
-                event.info.players.forEach((playerInfo) => {
-                    var player = this.createPlayer(playerInfo.id);
-                    player.name = playerInfo.name;
-                    if (playerInfo.position) {
-                        player.character.position = playerInfo.position;
-                    }
-                    player.points = playerInfo.points;
-
-                    this.players[player.id] = player;
-                });
-
-                // Setup enemy
-                this.enemy = new Enemy();
-
-                this.enemy.init({
-                    game: this.game,
-                    speed: DEFAULT_PLAYER_SPEED,
-                    position: event.info.enemy.position
-                });
-
-                // Setup powerups
-                event.info.powerups.forEach((powerupInfo) => {
-                    var powerup = new Powerup();
-                    powerup.init({key: powerupInfo.handler.key, game: this.game, map: this.map, player: this.player, state: powerupInfo.handler.state});
-                    powerup.handler.on('destroyed', (params) => { params.positions.forEach((position) => { this.powerups[position.x][position.y] = null; }); });
-
-                    this.powerups[powerup.handler.state.position.x][powerup.handler.state.position.y] = powerup;
-                });
-
-                this.gameState = event.info.gameState;
-            }
-        // Method for handling received deaths of other clients
-        } else if (event.key === 'playerKilled') {
-            var player = this.players[event.info.player.id];
-
-            if (player) {
-                player.kill();
-            }
-
-            this.player.addPoints(100 / this.players.length);
-            window.UI_GameController.setState(window.GameState);
-        // Method for handling player leaves
-        } else if (event.key === 'playerLeave') {
-            if (this.players[event.info.player.id]) {
-                var player = this.players[event.info.player.id];
-                player.kill();
-
-                delete this.players[event.info.player.id];
-            }
-        // Method for handling spawned power ups by the host
         } else if (event.key === 'powerupSpawned') {
             // TODO: we already do this above, refactor it out
             var powerup = new Powerup();
@@ -1038,138 +693,22 @@ class Game {
             }
         // Method for handling spawned blocks by other players
         } else if (event.key === 'blockSpawned') {
-            var block = this.game.add.sprite(event.info.x, event.info.y, 'gfx/blocks/glitch');
-            // block.key.copyRect('powerups', getRect(5, 4), 0, 0);
-            this.game.physics.arcade.enable(block, Phaser.Physics.ARCADE);
-            block.animations.add('glitch', [0,1,2], 12, true, true);
-            block.animations.play('glitch');
-            block.scale.x = 1.6;
-            block.scale.y = 1.3;
-            block.body.immovable = true;
-
-            // Make block fade in 2.0 seconds
-            var BLOCK_DURATION = 2000;
-            this.game.add.tween(block).to({ alpha: 0 },  BLOCK_DURATION, 'Linear', true, 0, -1);
-
-            this.blocks.push(block);
-            setTimeout(() => {
-                Hackatron.game.blocks = Hackatron.game.blocks.filter((b) => {
-                    return (b !== block);
-                });
-
-                block.destroy();
-            },  BLOCK_DURATION);
-        } else if (event.key === 'fireballFired') {
-            var FIREBALL_SPEED = 400;
-            var FIREBALL_DURATION = 0;
-
-            var fireball = this.game.add.sprite(event.info.x, event.info.y, 'gfx/buffs');
-            fireball.owner = event.info.owner;
-            fireball.anchor.setTo(0.5);
-
-            if (event.info.characterKey === 'super-saiyan') {
-                fireball.animations.add('fireball', ['buffs/blast-attack/1', 'buffs/blast-attack/2', 'buffs/blast-attack/3'], 60, true, true);
-                fireball.scale.x = 0.5;
-                fireball.scale.y = 0.5;
-                // makes block fade away within a 0.2 seconds
-                FIREBALL_DURATION = 200;
-            } else if (event.info.characterKey === 'one') {
-                fireball.animations.add('fireball', ['buffs/lightning-attack/1', 'buffs/lightning-attack/2', 'buffs/lightning-attack/3', 'buffs/lightning-attack/4', 'buffs/lightning-attack/5', 'buffs/lightning-attack/6'], 90, true, true);
-                fireball.scale.x = 0.5;
-                fireball.scale.y = 0.5;
-                // makes block fade away within a 0.4 seconds
-                FIREBALL_DURATION = 600;
-            }
-
-            this.game.physics.arcade.enable(fireball, Phaser.Physics.ARCADE);
-            fireball.body.collideWorldBounds = false;
-            fireball.body.mass = .9;
-            fireball.body.immovable = true;
-
-            fireball.animations.play('fireball');
-            this.fireballs.push(fireball);
-
-            switch (event.info.direction) {
-            case 'walkUp':
-                fireball.body.velocity.y = -FIREBALL_SPEED;
-                fireball.angle = -90;
-                break;
-            case 'walkDown':
-                fireball.body.velocity.y = FIREBALL_SPEED;
-                fireball.angle = 90;
-                break;
-            case 'walkLeft':
-                fireball.body.velocity.x = -FIREBALL_SPEED;
-                fireball.angle = 180;
-                break;
-            case 'walkRight':
-                fireball.body.velocity.x = FIREBALL_SPEED;
-                break;
-            default:
-                break;
-            }
-
-            var tween = this.game.add.tween(fireball).to( { alpha: 0 }, FIREBALL_DURATION, 'Linear', true);
-            tween.onComplete.add(function() {
-                tween.stop();
-            });
-
-            setTimeout(function() {
-                if (fireball) {
-                    Hackatron.game.fireballs = Hackatron.game.fireballs.filter(function(fb) {
-                        return (fb !== fireball);
-                    });
-                    fireball.destroy();
-                }
-            }, FIREBALL_DURATION);
-        } else if (event.key === 'setHost') {
-            // If there's currently no host then this is a new game
-            // There should be a countdown
-            if (!this.hostId) {
-                this.initCountdown();
-            }
-            // Check if we already know this is the host,
-            // And if it's this player, we don't need to set ourselves up again
-            if (this.hostId === event.info.player.id) { return; }
-
-            this.hostId = event.info.player.id;
-
-            // If this player is the new host, lets set them up
-            if (this.hostId === this.player.id) {
-                console.log('Hey now the host, lets do this!\n' + this.hostId);
-
-                this.runEnemySystem();
-
-                if (!this.gameState.startTime) {
-                    this.gameState.startTime = new Date();
-                }
-
-                setTimeout(() => {
-                    this.runAiSystem();
-                    this.runPowerUpSystem();
-                }, 3000);
-            }
+            this.components['Block'].run(event);
+        } else if (event.key === 'projectileFired') {
+            this.components['Projectile'].run(event);
         }
+
+        this.components['Multiplayer'].run(event);
     }
 
-    registerToEvents () {
+    registerToEvents() {
+        if (!this.socket) { return }
+
         // Method for receiving multiple events at once
         // {events: [{key: 'eventName', info: {...data here...}]}
         this.socket.on('events', (data) => {
             data.events.forEach((event) => { this.parseEvent(event); });
         });
-    }
-
-    // Method to broadcast to  other clients (if there are any) that you have
-    // joined the game
-    joinGame () {
-        this.fireEvent({key: 'newPlayer', info: {
-            player: {
-                id: this.player.id,
-                name: this.player.name,
-                position: this.player.character.position
-            }
-        }});
     }
 }
 

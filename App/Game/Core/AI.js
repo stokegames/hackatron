@@ -71,7 +71,7 @@ class AI {
             return null;
         }
 
-        return targets[Math.floor(Math.random() * (targets.length - 1))];
+        return targets[Math.floor(Math.random() * (targets.length))];
     }
 
     reposition() {
@@ -81,7 +81,9 @@ class AI {
     monitorCharacter(character) {
         var oldPosition = null;
 
-        this.monitorCharacterInterval = setInterval(function() {
+        this.monitorCharacterInterval = setInterval(() => {
+            if (!this.enabled) { return; }
+
             if (!oldPosition) {
                 oldPosition = character.worldPosition;
                 return;
@@ -99,7 +101,7 @@ class AI {
             }
 
             oldPosition = character.worldPosition;
-        }.bind(this), 1000);
+        }, 1000);
     }
 
     init(params) {

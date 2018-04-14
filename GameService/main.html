@@ -1,16 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html 🚀 lang="en">
     <head>
         <meta charset="utf-8" />
         <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-        <meta content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" name="viewport" />
-        <meta content="Hackatron, non-stop deathmatch action!" name="description" />
 
         <title>Hackatron</title>
+        <meta content="Hackatron, non-stop deathmatch action!" name="description" />
+        
+        <link href="/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+
+        <meta content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" name="viewport" />
 
         <link href="/Assets/Styles/Application.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <script>
+          (function(w, d, t, url) {
+              var s = d.createElement(t);
+              s.async = true;
+              s.src = (document.location.port ? 'http://' + document.location.hostname + ':11010' : 'https://stokegames.com') + url;
+              var ss = d.getElementsByTagName(t)[0];
+              ss.parentNode.insertBefore(s, ss);
+          })(window, document, 'script', '/Build/Release/widget.web.bundle.js');
+        </script>
+
         <div id="game"></div>
         <div id="ui"></div>
 
@@ -21,7 +34,7 @@
         <script src="/Assets/Vendor/phaser-debug.js"></script>
         <script src="/Assets/Vendor/phaser-camera-shake.js"></script>
 
-        <script src="/Build/Release/webapp.bundle.js"></script>
+        <script src="/Build/Release/game.web.bundle.js"></script>
 
         <script>
             WebFontConfig = {

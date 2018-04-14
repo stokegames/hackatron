@@ -183,7 +183,7 @@ class KaihanHandler extends PowerupHandler {
         this.player.character.invincible = true;
         this.oldSkinKey = this.player.character.characterKey;
         this.player.character.changeSkin('one');
-        if (this.player.character.speed < DEFAULT_PLAYER_SPEED*Math.pow(1.5, 3)) {
+        if (this.player.character.speed < Hackatron.DEFAULT_PLAYER_SPEED*Math.pow(1.5, 3)) {
             this.player.character.speed *= 1.5;
         }
 
@@ -197,8 +197,8 @@ class KaihanHandler extends PowerupHandler {
         this.player.character.characterKey = this.oldSkinKey;
         this.oldSkinKey = undefined;
         var updatedSpeed = this.player.character.speed / 1.5;
-        if (updatedSpeed < DEFAULT_PLAYER_SPEED) {
-            this.player.character.speed = DEFAULT_PLAYER_SPEED;
+        if (updatedSpeed < Hackatron.DEFAULT_PLAYER_SPEED) {
+            this.player.character.speed = Hackatron.DEFAULT_PLAYER_SPEED;
         } else {
             this.player.character.speed = updatedSpeed;
         }
@@ -223,7 +223,7 @@ class SaiyanHandler extends PowerupHandler {
         this.player.character.invincible = true;
         this.oldSkinKey = this.player.character.characterKey;
         this.player.character.changeSkin('super-saiyan');
-        if (this.player.character.speed < DEFAULT_PLAYER_SPEED*Math.pow(1.5, 3)) {
+        if (this.player.character.speed < Hackatron.DEFAULT_PLAYER_SPEED*Math.pow(1.5, 3)) {
             this.player.character.speed *= 1.5;
         }
 
@@ -237,8 +237,8 @@ class SaiyanHandler extends PowerupHandler {
         this.player.character.characterKey = this.oldSkinKey;
         this.oldSkinKey = undefined;
         var updatedSpeed = this.player.character.speed / 1.5;
-        if (updatedSpeed < DEFAULT_PLAYER_SPEED) {
-            this.player.character.speed = DEFAULT_PLAYER_SPEED;
+        if (updatedSpeed < Hackatron.DEFAULT_PLAYER_SPEED) {
+            this.player.character.speed = Hackatron.DEFAULT_PLAYER_SPEED;
         } else {
             this.player.character.speed = updatedSpeed;
         }
@@ -259,15 +259,15 @@ class SpeedBoostHandler extends PowerupHandler {
 
     onStarted() {
         // Allows stacking of max of 3 speed boosts
-        if (this.player.character.speed < DEFAULT_PLAYER_SPEED*Math.pow(1.5,3)) {
+        if (this.player.character.speed < Hackatron.DEFAULT_PLAYER_SPEED*Math.pow(1.5,3)) {
             this.player.character.speed *= 1.5;
         }
     }
 
     onStopped() {
         var updatedSpeed = this.player.character.speed / 1.5;
-        if (updatedSpeed < DEFAULT_PLAYER_SPEED) {
-            this.player.character.speed = DEFAULT_PLAYER_SPEED;
+        if (updatedSpeed < Hackatron.DEFAULT_PLAYER_SPEED) {
+            this.player.character.speed = Hackatron.DEFAULT_PLAYER_SPEED;
         } else {
             this.player.character.speed = updatedSpeed;
         }
@@ -305,7 +305,7 @@ class BlockUpHandler extends PowerupHandler {
     }
 
     onStarted() {
-        this.player.character.blocks += 3;
+        this.player.character.maxBlocks += 3;
     }
 }
 
@@ -345,21 +345,23 @@ class RageHandler extends PowerupHandler {
     onStarted() {
         this.player.character.sprite.scale.x = 1.5;
         this.player.character.sprite.scale.y = 1.5;
+        this.player.character.sprite.body.setSize(this.player.character.sprite.body.width / 1.5, this.player.character.sprite.body.height / 1.5);
 
         // Allows stacking of max of 3 speed boosts
-        if (this.player.character.speed < DEFAULT_PLAYER_SPEED*Math.pow(1.5,3)) {
+        if (this.player.character.speed < Hackatron.DEFAULT_PLAYER_SPEED*Math.pow(1.5,3)) {
             this.player.character.speed *= 1.5;
         }
     }
 
     onStopped() {
         // set back original
-        this.player.character.sprite.scale.x = 0.8;
-        this.player.character.sprite.scale.y = 0.8;
+        this.player.character.sprite.scale.x = 1;
+        this.player.character.sprite.scale.y = 1;
+        this.player.character.sprite.body.setSize(this.player.character.sprite.body.width * 1.5, this.player.character.sprite.body.height * 1.5);
 
         var updatedSpeed = this.player.character.speed / 1.5;
-        if (updatedSpeed < DEFAULT_PLAYER_SPEED) {
-            this.player.character.speed = DEFAULT_PLAYER_SPEED;
+        if (updatedSpeed < Hackatron.DEFAULT_PLAYER_SPEED) {
+            this.player.character.speed = Hackatron.DEFAULT_PLAYER_SPEED;
         } else {
             this.player.character.speed = updatedSpeed;
         }
