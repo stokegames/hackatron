@@ -34,6 +34,7 @@ class Component {
         setTimeout(() => {
             //death.sprite.destroy();
             this.game.player.character.worldPosition = this.game.getValidPosition();
+            this.game.player.character.dirty = true;
             this.game.player.character.revive();
 
             setTimeout(() => {
