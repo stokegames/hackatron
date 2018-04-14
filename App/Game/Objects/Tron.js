@@ -15,7 +15,7 @@ class Tron extends Character {
     }
 
     eatPellet(pellet) {
-        this.addPoints(pellet.getPoints());
+        //this.addPoints(pellet.getPoints());
         pellet.eaten();
     }
 

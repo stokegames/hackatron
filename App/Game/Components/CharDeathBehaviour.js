@@ -16,11 +16,11 @@ class Component {
         // death.init(this.game.engine);
         // death.start();
 
-        this.game.player.removePoints(100);
+        //this.game.player.removePoints(100);
 
-        for(var id in this.game.players) {
-            this.game.players[id].addPoints(100 / this.game.players.length);
-        }
+        // for(var id in this.game.players) {
+        //     this.game.players[id].addPoints(100 / this.game.players.length);
+        // }
 
         window.UI_GameController.setState(window.GameState);
 

@@ -38,10 +38,13 @@ class Player {
 
     kill() {
         this.character.kill();
+
+        this.removePoints(100);
     }
 
     destroy() {
         this.nameText.destroy();
+        this.character.destroy();
     }
 
     get name() {

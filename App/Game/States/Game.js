@@ -474,13 +474,13 @@ class Game {
             // We don't want to destroy projectiles on contact
             this.player.character.dirty = true;
 
-            this.player.removePoints(10);
+            //this.player.removePoints(10);
             window.UI_GameController.setState(window.GameState);
         };
 
         var collideBlockHandler = () => {
             this.player.character.dirty = true;
-            this.player.removePoints(2);
+            //this.player.removePoints(2);
             window.UI_GameController.setState(window.GameState);
         };
 
@@ -633,8 +633,8 @@ class Game {
         // We probably don't need physics for other players - they are telling us where they are already
         //this.game.physics.arcade.collide(player.character.sprite, this.map.layer);
         this.game.physics.arcade.collide(player.character.sprite, this.player.character.sprite, () => {
-            this.player.removePoints(5);
-            player.removePoints(5);
+            //this.player.removePoints(5);
+            //player.removePoints(5);
         }, null, this.game);
 
         return player;

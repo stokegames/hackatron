@@ -1,3 +1,6 @@
+import Enemy from '../Objects/Enemy';
+import Powerup from '../Objects/Powerup';
+
 class Component {
     constructor(game) {
         this.game = game;
@@ -19,6 +22,7 @@ class Component {
             }
 
             player.name = event.info.player.name;
+            player.points = event.info.player.points;
             player.character.position = event.info.player.position;
 
             console.log('New player ' + event.info.player.id + ' has joined the game!');
@@ -65,7 +69,7 @@ class Component {
                 player.kill();
             }
 
-            this.game.player.addPoints(100 / this.game.players.length);
+//            this.game.player.addPoints(100 / this.game.players.length);
             window.UI_GameController.setState(window.GameState);
         // Method for handling player leaves
         } else if (event.key === 'playerLeave') {
@@ -155,6 +159,7 @@ class Component {
             player: {
                 id: this.game.player.id,
                 name: this.game.player.name,
+                points: this.game.player.points,
                 position: this.game.player.character.position
             }
         }});

@@ -7,6 +7,7 @@ class Component {
         if (this.game.players[event.info.player.id]) {
             var player = this.game.players[event.info.player.id];
             player.kill();
+            player.destroy();
 
             delete this.game.players[event.info.player.id];
         }
