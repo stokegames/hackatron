@@ -137,9 +137,9 @@ class Game {
     create() {
         Hackatron.game = this;
         
-        window.document.body.style['background'] = '#000 url(/Assets/UI/Screens/game.jpg) no-repeat 0 0'
-        window.document.body.style['background-size'] = 'auto 100%'
-        window.document.body.style['overflow'] = 'hidden'
+        // window.document.body.style['background'] = 'rgba(0, 0, 0, 0.4) url(/Assets/UI/Screens/game.jpg) no-repeat 0 0'
+        // window.document.body.style['background-size'] = 'cover'
+        // window.document.body.style['overflow'] = 'hidden'
 
         this.game.plugins.cameraShake = this.game.plugins.add(Phaser.Plugin.CameraShake);
 

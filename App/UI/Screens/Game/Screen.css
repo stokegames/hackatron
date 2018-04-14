@@ -1,6 +1,6 @@
 .c-scoreboard {
     position: absolute;
-    top: 90px;
+    top: 30px;
     left: 10px;
     width: 150px;
     font-size: 12px;
@@ -13,10 +13,28 @@
     padding: 7px;
 }
 
+.c-scoreboard-title {
+    text-align: center;
+}
+
+.c-time {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0px 0px 4px #000;
+    font-size: 24px;
+}
+
 .c-character-chooser {
     position: absolute;
     top: 30px;
-    left: 10px;
+    left: 170px;
     width: 50px;
     padding: 5px;
     opacity: 0.8;
@@ -25,11 +43,6 @@
     border: 3px solid #1583C8;
     color: #fff;
     font-family: Helvetica, sans-serif;
-
-    @media (min-width: 450px) {
-        top: 20px;
-        right: 20px;
-    }
 }
 
 .c-other-character-chooser {
@@ -51,9 +64,15 @@
 
 .c-block-counter-item {
     display: inline-block;
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     overflow: hidden;
+    opacity: 0.8;
+    padding: 3px;
+    background: #fff;
+    box-shadow: 2px 1px #000;
+    border: 1px solid #fff;
+    margin-left: 5px;
 }
 
 .c-left-control {
@@ -64,7 +83,7 @@
     background-size: 27px auto;
     width: 37px;
     height: 30px;
-    opacity: 0.4;
+    opacity: 0.8;
     padding: 5px;
     box-shadow: 2px 1px #000;
     border: 2px solid #fff;
@@ -81,7 +100,7 @@
     background-size: 27px auto;
     width: 37px;
     height: 30px;
-    opacity: 0.4;
+    opacity: 0.8;
     padding: 5px;
     box-shadow: 2px 1px #000;
     border: 2px solid #fff;
@@ -98,7 +117,7 @@
     background-size: auto 27px;
     width: 30px;
     height: 37px;
-    opacity: 0.4;
+    opacity: 0.8;
     padding: 5px;
     box-shadow: 2px 1px #000;
     border: 2px solid #fff;
@@ -115,7 +134,7 @@
     background-size: auto 27px;
     width: 30px;
     height: 37px;
-    opacity: 0.4;
+    opacity: 0.8;
     padding: 5px;
     box-shadow: 2px 1px #000;
     border: 2px solid #fff;
@@ -132,7 +151,7 @@
     background-size: auto 27px;
     width: 95px;
     height: 37px;
-    opacity: 0.4;
+    opacity: 0.8;
     padding: 5px;
     box-shadow: 2px 1px #000;
     border: 2px solid #fff;
