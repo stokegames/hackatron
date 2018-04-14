@@ -11,7 +11,7 @@
   "scripts": {
     "start": "babel-node ./GameService/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --progress -p"
+    "build": "webpack --progress -p --config webpack.config.web.js"
   },
   "homepage": "https://github.com/stokegames/hackatron#readme",
   "repository": {
