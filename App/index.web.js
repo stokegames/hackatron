@@ -116,7 +116,8 @@ window.Hackatron.fitToWindow = function() {
     //this.game.canvas.style['transform'] = 'perspective(900px) rotateX(15deg) rotate(-3deg)'
     document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%'
     document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%'
-    if (Platform.Env.isMobile) {
+
+    if (Utils.env.os.mobile) {
         document.body.style['background-size'] = 'contain'
     } else {
         document.body.style['background-size'] = 'cover'
