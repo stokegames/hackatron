@@ -87,7 +87,7 @@ class Screen extends Component {
         players.push({name: Hackatron.game.player.name, points: Hackatron.game.player.points})
         for (var id in Hackatron.game.players) {
             var player = Hackatron.game.players[id]
-            players.push({name: player.name, points: '?'})
+            players.push({ name: player.name, points: player.points })
         }
 
         return Framework.wrapStyles(this.state.styles, 
@@ -98,7 +98,7 @@ class Screen extends Component {
                 </View>
                 <View styles="c-scoreboard">
                     <View>Time Left: {this.state.timeLeft}</View>
-                    {players.map((item) => <View key={item.name}>{item.name}: {item.points}</View>)}
+                    {players.map((player) => <View key={player.name}>{player.name}: {player.points}</View>)}
                 </View>
                 <View styles="c-left-control" onTouchStart={()=>this.onControlDown('left')} onTouchEnd={()=>this.onControlUp('left')} onMouseDown={()=>this.onControlDown('left')} onMouseUp={()=>this.onControlUp('left')}></View>
                 <View styles="c-right-control" onTouchStart={()=>this.onControlDown('right')} onTouchEnd={()=>this.onControlUp('right')} onMouseDown={()=>this.onControlDown('right')} onMouseUp={()=>this.onControlUp('right')}></View>

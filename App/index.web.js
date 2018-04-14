@@ -118,6 +118,8 @@ window.Hackatron.fitToWindow = function() {
     document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%'
     if (Platform.Env.isMobile) {
         document.body.style['background-size'] = 'contain'
+    } else {
+        document.body.style['background-size'] = 'cover'
     }
     //document.getElementById('ui').style['transform'] = 'perspective(1000px) rotateX(10deg) rotate(-2deg)'
     window.onresize()
@@ -125,6 +127,4 @@ window.Hackatron.fitToWindow = function() {
 
 
 // Render
-
-
 ReactDOM.render(<App />, document.getElementById('ui'))
