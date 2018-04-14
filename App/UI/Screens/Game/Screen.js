@@ -82,6 +82,11 @@ class Screen extends Component {
             )
         }
 
+        var blocks = 0
+
+        if (Hackatron.game.player && Hackatron.game.player.character.blocks)
+            blocks = Hackatron.game.player.character.blocks
+
         var players = []
 
         players.push({name: Hackatron.game.player.name, points: Hackatron.game.player.points})
@@ -105,6 +110,11 @@ class Screen extends Component {
                 <View styles="c-top-control" onTouchStart={()=>this.onControlDown('up')} onTouchEnd={()=>this.onControlUp('up')} onMouseDown={()=>this.onControlDown('up')} onMouseUp={()=>this.onControlUp('up')}></View>
                 <View styles="c-bottom-control" onTouchStart={()=>this.onControlDown('down')} onTouchEnd={()=>this.onControlUp('down')} onMouseDown={()=>this.onControlDown('down')} onMouseUp={()=>this.onControlUp('down')}></View>
                 <View styles="c-attack-control" onTouchStart={()=>this.onControlDown('att')} onTouchEnd={()=>this.onControlUp('att')} onMouseDown={()=>this.onControlDown('att')} onMouseUp={()=>this.onControlUp('att')}></View>
+                <View styles="c-block-counter">
+                    {[...Array(blocks).keys()].map(() => (
+                        <div styles="c-block-counter-item"><img src="/Assets/GFX/blocks/glitch.png" /></div>
+                    ))}
+                </View>
                 <View styles="c-menu-button" onClick={()=>this.toggleMenu()}></View>
                 {this.state.showMenu && (
                     <View styles="c-menu">

@@ -305,7 +305,7 @@ class BlockUpHandler extends PowerupHandler {
     }
 
     onStarted() {
-        this.player.character.blocks += 3;
+        this.player.character.maxBlocks += 3;
     }
 }
 

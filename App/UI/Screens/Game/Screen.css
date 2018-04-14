@@ -38,6 +38,24 @@
     font-family: Helvetica, sans-serif;
 }
 
+.c-block-counter {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 400px;
+    padding: 5px;
+    opacity: 0.8;
+    background: rgba(0, 0, 0, 0);
+    color: #fff;
+}
+
+.c-block-counter-item {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    overflow: hidden;
+}
+
 .c-left-control {
     position: absolute;
     top: 90px;

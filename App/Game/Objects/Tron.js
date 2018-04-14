@@ -9,9 +9,21 @@ class Tron extends Character {
         super.init(params);
 
         this.blocks = 3;
+        this.maxBlocks = 3;
         this.frozen = false;
         this.invincible = false;
         this.teleported = false;
+
+        var offset = 0.3;
+        this.sprite.body.setSize(this.dimensions.width * offset, this.dimensions.height * offset, 0, 0);
+
+        setInterval(() => {
+            if (!this.isAlive) { return }
+
+            if (this.blocks >= this.maxBlocks) { return }
+
+            this.blocks += 1;
+        }, 1000)
     }
 
     eatPellet(pellet) {
@@ -50,6 +62,8 @@ class Tron extends Character {
             if (blockPosition.y + 32 >= (Hackatron.TILE_COUNT_VERTICAL - 1) * 16) {
                 blockPosition.y -= 16;
             }
+
+            this.blocks -= 1;
 
             Hackatron.game.fireEvent({
                 key: 'blockSpawned',
