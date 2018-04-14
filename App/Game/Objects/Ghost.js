@@ -5,6 +5,9 @@ class Ghost extends Character {
 
     init(params) {
         super.init(params);
+
+        var offset = 0.3;
+        this.sprite.body.setSize(this.dimensions.width * offset, this.dimensions.height * offset, 0, 0);
     }
 }
 

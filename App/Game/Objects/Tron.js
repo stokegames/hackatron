@@ -14,8 +14,8 @@ class Tron extends Character {
         this.invincible = false;
         this.teleported = false;
 
-        var offset = 0.3;
-        this.sprite.body.setSize(this.dimensions.width * offset, this.dimensions.height * offset, 0, 0);
+        // var offset = 0.1;
+        // this.sprite.body.setSize(this.dimensions.width * offset, this.dimensions.height * offset, 0, 0);
 
         setInterval(() => {
             if (!this.isAlive) { return }
