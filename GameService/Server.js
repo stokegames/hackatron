@@ -110,7 +110,7 @@ class Server {
         this.app.use((req, res, next) => {
             var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
             console.info('Requested: ' + fullUrl)
-            var Router2 = require('../App/Router').default;
+            var Router2 = require('../App/router').default;
 
             // https://github.com/mz026/universal-redux-template/blob/master/app/server/server.js
             var LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
