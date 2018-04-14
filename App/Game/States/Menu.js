@@ -8,9 +8,6 @@ class Menu {
             //this.game.add.plugin(Phaser.Plugin.Debug);
         }
 
-        window.document.body.style['background'] = '#000 url(/Assets/UI/Screens/launch.png) no-repeat 0 0'
-        window.document.body.style['background-size'] = 'cover'
-
         // @media (min-width: 450px) {
         //     background-size: auto 75%;
         // }
