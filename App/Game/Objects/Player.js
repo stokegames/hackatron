@@ -39,7 +39,7 @@ class Player {
     kill() {
         this.character.kill();
 
-        this.removePoints(100);
+        //this.removePoints(100);
     }
 
     destroy() {

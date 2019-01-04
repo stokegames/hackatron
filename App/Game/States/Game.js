@@ -365,15 +365,15 @@ class Game {
             name: this.getRandomName(),
             speed: Hackatron.DEFAULT_PLAYER_SPEED,
             worldPosition: worldPosition,
-            points: 1000
+            points: 0
         };
 
         this.player = new Player();
         this.player.init(playerParams);
 
-        if (Utils.env.os.mobile) {
+        //if (Utils.env.os.mobile) {
             this.engine.camera.follow(this.player.character.sprite, Phaser.Camera.FOLLOW_LOCKON);
-        }
+        //}
     }
 
     initMap() {
@@ -398,7 +398,7 @@ class Game {
                         var teleporter = this.engine.add.sprite(object.x, object.y, bmd);
                         this.engine.physics.arcade.enable(teleporter, Phaser.Physics.ARCADE);
                         teleporter.body.immovable = true;
-                        teleporter.target = target;
+                        teleporter.target = JSON.parse(target);
 
                         this.teleporters.push(teleporter);
                     }
@@ -527,8 +527,8 @@ class Game {
                 this.game.canvas.style['height'] = '110%';
                 this.game.canvas.style['margin-top'] = '-20%';
             } else {
-                this.game.canvas.style['width'] = '90%';
-                this.game.canvas.style['height'] = '90%';
+                this.game.canvas.style['width'] = '100%';
+                this.game.canvas.style['height'] = '100%';
             }
             //this.game.canvas.style['transform'] = 'perspective(' + pers + 'px) skew(' + xSkew + 'deg, 0deg) rotateX(' + xDeg + 'deg) rotateY(' + yDeg + 'deg) rotate(' + rDeg + 'deg)';
         }
@@ -538,8 +538,8 @@ class Game {
             document.getElementById('game').style['height'] = 100 + '%';
             document.getElementById('ui').style['transform'] = 'none';
         } else {
-            document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%';
-            document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%';
+            document.getElementById('game').style['width'] = 100 + '%'; //Hackatron.getWidthRatioScale() * 100 + '%';
+            document.getElementById('game').style['height'] = 100 + '%'; //Hackatron.getHeightRatioScale() * 100 + '%';
             document.getElementById('ui').style['transform'] = 'none';
         }
     }
@@ -587,7 +587,7 @@ class Game {
                 this.gameState.timeLeft = 0;
                 // Show game over
                 // CONTINUE HERE
-                this.initGameover();
+                //this.initGameover();
             }
 
             // TODO: remove this hack

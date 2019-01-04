@@ -41,7 +41,7 @@ class Preload {
         var assetsPath = '/Assets/'; //window.location.hostname === 'localhost' ? 'http://localhost:8080/assets/' : 'https://raw.githubusercontent.com/tony-dinh/hackatron/master/assets/';
 
         // Screens
-        this.load.image('ui/screens/launch', assetsPath + 'UI/Screens/launch.png');
+        this.load.image('ui/screens/launch', assetsPath + 'UI/Screens/launch.jpg');
 
         // Effects
         this.load.image('gfx/effects/pellet', assetsPath + 'GFX/Effects/pellet.png');

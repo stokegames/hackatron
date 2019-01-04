@@ -56,18 +56,18 @@ if (Utils.env.os.mobile) {
     window.Hackatron.GAME_WIDTH = 256 // Game originally designed for 512px
     window.Hackatron.GAME_HEIGHT = 256 * (window.innerHeight / window.innerWidth) // Game originally designed for 512px
 } else {
-    window.Hackatron.GAME_WIDTH = 640 // Game originally designed for 640px
-    window.Hackatron.GAME_HEIGHT = 640 // Game originally designed for 640px
+    window.Hackatron.GAME_WIDTH = 600 // Game originally designed for 512px
+    window.Hackatron.GAME_HEIGHT = 600 * (window.innerHeight / window.innerWidth) // Game originally designed for 512px
 }
 
 // Game Constants
-window.Hackatron.UI_WIDTH = window.Hackatron.GAME_WIDTH // UI originally designed for 700px
-window.Hackatron.UI_HEIGHT = window.Hackatron.GAME_HEIGHT // UI originally designed for 700px
-window.Hackatron.TILE_COUNT_HORIZONTAL = 40
-window.Hackatron.TILE_COUNT_VERTICAL = 40
-window.Hackatron.GAME_TIME = 5 * 60
+window.Hackatron.UI_WIDTH = 700 //window.Hackatron.GAME_WIDTH // UI originally designed for 700px
+window.Hackatron.UI_HEIGHT = 700 //window.Hackatron.GAME_HEIGHT // UI originally designed for 700px
+window.Hackatron.TILE_COUNT_HORIZONTAL = 64
+window.Hackatron.TILE_COUNT_VERTICAL = 64
+window.Hackatron.GAME_TIME = 5000000 * 60
 window.Hackatron.DEFAULT_PLAYER_SPEED = 200
-window.Hackatron.POWERUP_SPAWN_INTERVAL = 5000
+window.Hackatron.POWERUP_SPAWN_INTERVAL = 2000
 window.Hackatron.UPDATE_INTERVAL = 100
 
 var gameContainer = document.getElementById('game')
@@ -114,8 +114,8 @@ window.Hackatron.fitToWindow = function() {
         window.Hackatron.game.engine.canvas.style['height'] = '100%'
     }
     //this.game.canvas.style['transform'] = 'perspective(900px) rotateX(15deg) rotate(-3deg)'
-    document.getElementById('game').style['width'] = Hackatron.getWidthRatioScale() * 100 + '%'
-    document.getElementById('game').style['height'] = Hackatron.getHeightRatioScale() * 100 + '%'
+    document.getElementById('game').style['width'] = '100%' //Hackatron.getWidthRatioScale() * 100 + '%'
+    document.getElementById('game').style['height'] = '100%' //Hackatron.getHeightRatioScale() * 100 + '%'
 
     if (Utils.env.os.mobile) {
         document.body.style['background-size'] = 'contain'

@@ -74,8 +74,8 @@ class PowerupHandler {
         } else if (this.spriteMode === 'tilemap') {
             this.sprite = this.game.add.sprite(this.state.position.x * 16, this.state.position.y * 16, this.game.add.bitmapData(16, 16));
             this.sprite.key.copyRect(this.spriteTilemap, this._getRect(this.spritePosition.column, this.spritePosition.row), 0, 0);
-            this.sprite.scale.x = 1.2;
-            this.sprite.scale.y = 1.2;
+            this.sprite.scale.x = 1;
+            this.sprite.scale.y = 1;
         }
 
         this.sprite.alpha = 0;
@@ -120,8 +120,8 @@ class PowerupHandler {
             this.impactText = this.game.add.text(this.game.camera.view.x + this.game.camera.width / 2, this.game.camera.view.y + this.game.camera.height / 2, text, style);
             this.impactText.anchor.set(0.5);
             var scale = this.game.width / this.game.height;
-            this.impactText.width = this.game.width * 0.8;
-            this.impactText.height /= scale; // TODO: should work
+            this.impactText.width = this.game.width * 0.5;
+            this.impactText.height /= scale * 0.5; // TODO: should work
             this.game.add.tween(this.impactText).to({alpha: 0}, 1000, 'Linear', true, 0);
         }
 
@@ -345,7 +345,7 @@ class RageHandler extends PowerupHandler {
     onStarted() {
         this.player.character.sprite.scale.x = 1.5;
         this.player.character.sprite.scale.y = 1.5;
-        this.player.character.sprite.body.setSize(this.player.character.sprite.body.width / 1.5, this.player.character.sprite.body.height / 1.5);
+        //this.player.character.sprite.body.setSize(this.player.character.sprite.body.width / 1.5, this.player.character.sprite.body.height / 1.5);
 
         // Allows stacking of max of 3 speed boosts
         if (this.player.character.speed < Hackatron.DEFAULT_PLAYER_SPEED*Math.pow(1.5,3)) {
@@ -357,7 +357,7 @@ class RageHandler extends PowerupHandler {
         // set back original
         this.player.character.sprite.scale.x = 1;
         this.player.character.sprite.scale.y = 1;
-        this.player.character.sprite.body.setSize(this.player.character.sprite.body.width * 1.5, this.player.character.sprite.body.height * 1.5);
+        //this.player.character.sprite.body.setSize(this.player.character.sprite.body.width * 1.5, this.player.character.sprite.body.height * 1.5);
 
         var updatedSpeed = this.player.character.speed / 1.5;
         if (updatedSpeed < Hackatron.DEFAULT_PLAYER_SPEED) {

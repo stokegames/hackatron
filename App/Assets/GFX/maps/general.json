@@ -9,6 +9,14 @@
         {
             "type": "image",
             "subtype": "tileset",
+            "key": "map_tileset_grassy1",
+            "name": "grassy1",
+            "url": "/Assets/GFX/maps/tron/grassy1.png",
+            "overwrite": false
+        },
+        {
+            "type": "image",
+            "subtype": "tileset",
             "key": "map_tileset_redmap",
             "name": "redmap",
             "url": "/Assets/GFX/maps/tron/redmap.png",

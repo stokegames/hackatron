@@ -2307,9 +2307,10 @@ module.exports = {
                     }
         
                     tile = layer.tilesOriginal[y][x];
-        
-                    if (tile && tile.collides)
+                    
+                    if (tile) // && tile.properties.collides) // TODO Fix
                     {
+                        
                         if (optimize)
                         {
                             right = map.getTileRight(layer.index, x, y);
@@ -2320,8 +2321,8 @@ module.exports = {
                                 sy = tile.y;
                                 width = tile.width;
                             }
-        
-                            if (right && right.collides)
+                            
+                            if (right && right.properties.collides)
                             {
                                 width += tile.width;
                             }
@@ -2409,7 +2410,7 @@ module.exports = {
         
                     tile = layer.tilesOriginal[y][x];
         
-                    if (tile && tile.collides)
+                    if (tile && tile.properties.collides)
                     {
                         if (optimize)
                         {
@@ -2422,7 +2423,7 @@ module.exports = {
                                 width = tile.width;
                             }
         
-                            if (right && right.collides)
+                            if (right && right.properties.collides)
                             {
                                 width += tile.width;
                             }
@@ -2775,7 +2776,7 @@ Objectlayer.prototype.spawn = function (physicsBodyType, spawnCallback) {
         obj.blendMode = blendMode ? Phaser.blendModes[blendMode] : Phaser.blendModes.NORMAL;
 
         // create physics if this body is physical.
-        if (props.collides || props.tileprops.collides) {
+        if (props.properties.collides || props.tileprops.collides) {
             this.game.physics.enable(obj, physicsBodyType, props.debug || props.tileprops.debug);
 
             obj.body.setRectangle(obj.width, obj.height, obj.width / 2, -obj.height / 2, obj.rotation);
@@ -4745,7 +4746,7 @@ Tilemap.prototype.calculateFaces = function (layer) {
                 left = this.getTileLeft(layer, x, y);
                 right = this.getTileRight(layer, x, y);
 
-                if (tile.collides)
+                if (tile.properties.collides)
                 {
                     tile.faceTop = true;
                     tile.faceBottom = true;
@@ -4753,28 +4754,28 @@ Tilemap.prototype.calculateFaces = function (layer) {
                     tile.faceRight = true;
                 }
 
-                if (above && above.collides)
+                if (above && above.properties.collides)
                 {
                     //  There is a tile above this one that also collides,
                     // so the top of this tile is no longer interesting
                     tile.faceTop = false;
                 }
 
-                if (below && below.collides)
+                if (below && below.properties.collides)
                 {
                     //  There is a tile below this one that also collides,
                     // so the bottom of this tile is no longer interesting
                     tile.faceBottom = false;
                 }
 
-                if (left && left.collides)
+                if (left && left.properties.collides)
                 {
                     //  There is a tile left this one that also collides,
                     // so the left of this tile is no longer interesting
                     tile.faceLeft = false;
                 }
 
-                if (right && right.collides)
+                if (right && right.properties.collides)
                 {
                     //  There is a tile right this one that also collides,
                     // so the right of this tile is no longer interesting

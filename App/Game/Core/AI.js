@@ -125,9 +125,9 @@ class AI {
                 convertedLevel[i][j] = 0;
             }
         }
-
+        
         this.map.collideTiles.forEach((tile) => {
-            if (!tile || !tile.collides) { return; }
+            if (!tile) { return; } // TODO  || !tile.properties.collides
 
             convertedLevel[tile.tilePosition.y][tile.tilePosition.x] = 1;
         });

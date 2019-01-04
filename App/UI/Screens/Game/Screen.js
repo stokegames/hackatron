@@ -101,9 +101,6 @@ class Screen extends Component {
                     <View style={{width: 32, height: 32, background: '#01242C url(/Assets/GFX/characters/' + this.state.currentCharacter + '/walkDown-0002.png) no-repeat 0 0'}} onClick={()=>this.clickCharacter()}></View>
                     {this.state.showOthers && otherElements}
                 </View>
-                <View styles="c-time">
-                    <View>Time Left: {this.state.timeLeft}</View>
-                </View>
                 <View styles="c-scoreboard">
                     <h3 styles="c-scoreboard-title">Scoreboard</h3>
                     {players.map((player) => <View key={player.name}>{player.name}: {player.points}</View>)}
