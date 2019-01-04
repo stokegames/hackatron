@@ -210,7 +210,8 @@ class Character extends GameObject {
                 this.sprite.emitter.x = this.sprite.x;
                 this.sprite.emitter.y = this.sprite.y + emitterOffset;
             }
-        } else if (this.moving.down) {
+        }
+        if (this.moving.down) {
             this.sprite.animations.play('walkDown', 3, false);
             this.sprite.body.velocity.y = this.speed;
             this.direction = 'walkDown';
@@ -219,7 +220,8 @@ class Character extends GameObject {
                 this.sprite.emitter.x = this.sprite.x;
                 this.sprite.emitter.y = this.sprite.y - emitterOffset;
             }
-        } else if (this.moving.left) {
+        }
+        if (this.moving.left) {
             this.sprite.animations.play('walkLeft', 3, false);
             this.sprite.body.velocity.x = -this.speed;
             this.direction = 'walkLeft';
@@ -228,7 +230,8 @@ class Character extends GameObject {
                 this.sprite.emitter.x = this.sprite.x + emitterOffset;
                 this.sprite.emitter.y = this.sprite.y;
             }
-        } else if (this.moving.right) {
+        } 
+         if (this.moving.right) {
             this.sprite.animations.play('walkRight', 3, false);
             this.sprite.body.velocity.x = this.speed;
             this.direction = 'walkRight';
@@ -237,11 +240,12 @@ class Character extends GameObject {
                 this.sprite.emitter.x = this.sprite.x - emitterOffset;
                 this.sprite.emitter.y = this.sprite.y;
             }
-        } else {
-            if (this.sprite.emitter) {
-                this.sprite.emitter.on = false;
-            }
         }
+        //  {
+        //     if (this.sprite.emitter) {
+        //         this.sprite.emitter.on = false;
+        //     }
+        // }
 
         // Check if player has gone beyond the right edge
         // And send him to the beginning

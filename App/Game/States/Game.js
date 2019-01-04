@@ -230,22 +230,22 @@ class Game {
         this.keys.i.onDown.add(this.toggleAI, this);
 
         this.keys.up = this.game.input.keyboard.addKey(Phaser.Keyboard.UP)
-        this.keys.up.onDown.add(() => this.onAction('up'))
+        //this.keys.up.onDown.add(() => this.checkInput())
         this.keys.down = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN)
-        this.keys.down.onDown.add(() => this.onAction('down'))
+        //this.keys.down.onDown.add(() => this.checkInput())
         this.keys.left = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT)
-        this.keys.left.onDown.add(() => this.onAction('left'))
+        // this.keys.left.onDown.add(() => this.checkInput())
         this.keys.right = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT)
-        this.keys.right.onDown.add(() => this.onAction('right'))
+        // this.keys.right.onDown.add(() => this.checkInput())
 
         this.keys.w = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
-        this.keys.w.onDown.add(() => this.onAction('up'))
+        // this.keys.w.onDown.add(() => this.checkInput())
         this.keys.s = this.game.input.keyboard.addKey(Phaser.Keyboard.S)
-        this.keys.s.onDown.add(() => this.onAction('down'))
+        // this.keys.s.onDown.add(() => this.checkInput())
         this.keys.a = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
-        this.keys.a.onDown.add(() => this.onAction('left'))
+        // this.keys.a.onDown.add(() => this.checkInput())
         this.keys.d = this.game.input.keyboard.addKey(Phaser.Keyboard.D)
-        this.keys.d.onDown.add(() => this.onAction('right'))
+        // this.keys.d.onDown.add(() => this.checkInput())
 
         this.keys.att = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
         this.keys.att.onDown.add(this.player.character.triggerAttack, this.player.character)
@@ -260,30 +260,25 @@ class Game {
     }
 
     onAction(action) {
-        console.log('Action:', action)
-        if (action === 'swipeLeft' || action === 'left') {
-            this.onControlDown('left');
-        } else if (action === 'swipeRight' || action === 'right') {
-            this.onControlDown('right');
-        } else if (action === 'swipeUp' || action === 'up') {
-            this.onControlDown('up');
-        } else if (action === 'swipeDown' || action === 'down') {
-            this.onControlDown('down');
-        } else if (action === 'tap' || action === 'space') {
-            this.onControlDown('att');
-        }
-    }
-
-    onControlDown(key) {
-        console.log('Control down:', key)
-        if (key === 'att') {
+        //console.log('Action:', action)
+        if (action === 'tap' || action === 'space') {
             this.keys.att.onDown.dispatch();
         } else {
-            this.player.character.nextDirection = key;
+            this.player.character.nextDirection = action;
         }
-        
         this.checkPlayerDirection()
     }
+
+    // onControlDown(key) {
+    //     console.log('Control down:', key)
+    //     if (key === 'att') {
+    //         this.keys.att.onDown.dispatch();
+    //     } else {
+    //         this.player.character.nextDirection = key;
+    //     }
+        
+    //     this.checkPlayerDirection()
+    // }
 
     onControlUp(key) {
         if (key === 'att') {
@@ -305,8 +300,16 @@ class Game {
         const moveRight = this.keys.right.isDown || this.keys.d.isDown
         //var attacking = this.keys.att.isDown
 
-        if (moveDown) {
+        if (moveDown && moveLeft) {
+            this.onAction('downLeft')
+        } else if (moveDown && moveRight) {
+            this.onAction('downRight')
+        } else if (moveDown) {
             this.onAction('down')
+        } else if (moveUp && moveLeft) {
+            this.onAction('upLeft')
+        } else if (moveUp && moveRight) {
+            this.onAction('upRight')
         } else if (moveUp) {
             this.onAction('up')
         } else if (moveLeft) {
@@ -318,7 +321,7 @@ class Game {
     
     checkPlayerDirection() {
         var nextDirection = this.player.character.nextDirection
-
+ 
         if (!nextDirection) { return }
         if (nextDirection === this.player.character.currentDirection) { return }
 
@@ -331,11 +334,19 @@ class Game {
             nextWorldPosition = {x: worldPosition.x-1, y: worldPosition.y}
         } else if (nextDirection === 'right') {
             nextWorldPosition = {x: worldPosition.x+1, y: worldPosition.y}
+        } else if (nextDirection === 'upLeft') {
+            nextWorldPosition = { x: worldPosition.x - 1, y: worldPosition.y - 1 }
+        } else if (nextDirection === 'upRight') {
+            nextWorldPosition = { x: worldPosition.x + 1, y: worldPosition.y - 1 }
         } else if (nextDirection === 'up') {
             nextWorldPosition = {x: worldPosition.x, y: worldPosition.y-1}
+        } else if (nextDirection === 'downLeft') {
+            nextWorldPosition = { x: worldPosition.x - 1, y: worldPosition.y + 1 }
+        } else if (nextDirection === 'downRight') {
+            nextWorldPosition = { x: worldPosition.x + 1, y: worldPosition.y + 1 }
         } else if (nextDirection === 'down') {
             nextWorldPosition = {x: worldPosition.x, y: worldPosition.y+1}
-        }
+        } 
 
         nextWorldPosition.x = Math.floor(nextWorldPosition.x)
         nextWorldPosition.y = Math.floor(nextWorldPosition.y)
@@ -343,10 +354,31 @@ class Game {
         opening = this.isValidPosition(nextWorldPosition)
         if (opening) {
             this.stopPlayerMovement()
-            this.player.character.worldPosition = nextWorldPosition
-            this.player.character.moving[nextDirection] = true
+            //this.player.character.worldPosition = nextWorldPosition
             this.player.character.currentDirection = nextDirection
             this.player.character.nextDirection = null
+
+            if (nextDirection === 'left') {
+                this.player.character.moving['left'] = true
+            } else if (nextDirection === 'right') {
+                this.player.character.moving['right'] = true
+            } else if (nextDirection === 'upLeft') {
+                this.player.character.moving['up'] = true
+                this.player.character.moving['left'] = true
+            } else if (nextDirection === 'upRight') {
+                this.player.character.moving['up'] = true
+                this.player.character.moving['right'] = true
+            } else if (nextDirection === 'up') {
+                this.player.character.moving['up'] = true
+            } else if (nextDirection === 'downLeft') {
+                this.player.character.moving['down'] = true
+                this.player.character.moving['left'] = true
+            } else if (nextDirection === 'downRight') {
+                this.player.character.moving['down'] = true
+                this.player.character.moving['right'] = true
+            }else if (nextDirection === 'down') {
+                this.player.character.moving['down'] = true
+            } 
         } else {
             
         }
@@ -463,7 +495,7 @@ class Game {
             this.game.music.mute = !this.game.music.mute;
         }
 
-        this.checkPlayerDirection()
+        this.checkInput()
 
         this.components['FollowMouseBehaviour'].run();
         this.components['CollideWallBehaviour'].run();

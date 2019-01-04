@@ -27,15 +27,15 @@ class Component {
             this.game.player.character.moving.right = true;
         }
         // left
-        else if (Math.abs(angle) > 135 && Math.abs(angle) <= 180) {
+        if (Math.abs(angle) > 135 && Math.abs(angle) <= 180) {
             this.game.player.character.moving.left = true;
         }
         // up
-        else if (Math.abs(angle) > 45 && Math.abs(angle) <= 135 && angle < 0) {
+        if (Math.abs(angle) > 45 && Math.abs(angle) <= 135 && angle < 0) {
             this.game.player.character.moving.up = true;
         }
         // down
-        else if (Math.abs(angle) > 45 && Math.abs(angle) <= 135 && angle > 0) {
+        if (Math.abs(angle) > 45 && Math.abs(angle) <= 135 && angle > 0) {
             this.game.player.character.moving.down = true;
         }
         //  if it's overlapping the mouse, don't move any more
