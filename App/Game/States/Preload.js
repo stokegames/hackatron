@@ -73,7 +73,7 @@ class Preload {
     update() {
         if(!!this.ready) {
             Hackatron.ready = true;
-            this.game.state.start('Game');
+            this.game.state.start(Hackatron.screen);
         }
         Hackatron.fitToWindow();
     }

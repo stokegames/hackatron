@@ -28,12 +28,14 @@ class Menu {
         this.game.music = this.game.add.audio('audio/bg-0002', 1, true);
         this.game.music.play('', 0, 1, true);
         this.game.music.mute = true;
+
+        this.game.state.start('Game');
     }
 
     update() {
-        if (this.startKey.isDown) {
-            this.game.state.start('Game');
-        }
+        // if (this.startKey.isDown) {
+        //     this.game.state.start('Game');
+        // }
 
         if (this.musicKey.isDown) {
             this.game.music.mute = !this.game.music.mute;
