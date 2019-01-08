@@ -56,8 +56,6 @@ class Screen extends Component {
 
         return Framework.wrapStyles(this.state.styles, 
             <View styles="container">
-                <View styles="instantActionButton" onClick={()=>this.clickInstantAction()}>INSTANT ACTION</View>
-                <View styles="countdown"><br />Instant action in... {this.state.instantActionTimer + ''}</View>
             </View>
         )
     }
